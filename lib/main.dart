@@ -1,3 +1,4 @@
+import 'package:agenda/screens/base.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:agenda/screens/login_page.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Google Auth',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const LoginPage(),
+      home: const BasePage(),
     );
   }
 }

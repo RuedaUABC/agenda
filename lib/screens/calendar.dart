@@ -3,22 +3,18 @@ import 'package:agenda/screens/desktop/desktop_body.dart';
 import 'package:agenda/utils/responsive_layout.dart';
 import 'package:flutter/material.dart';
 
-class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+class CalendarPage extends StatefulWidget {
+  const CalendarPage({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
-class _HomepageState extends State<Homepage> {
-
+class _CalendarPageState extends State<CalendarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ResponsiveLayout(
-        mobile: MyMobileBody(), 
-        desktop: MyDesktopBody())
+      body: ResponsiveLayout(mobile: MyMobileBody(), desktop: MyDesktopBody()),
     );
   }
-  
 }

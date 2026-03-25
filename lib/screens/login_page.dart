@@ -89,10 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    icon: Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg',
-                      height: 24,
-                    ),
                     label: const Text(
                       "Continuar con Google",
                       style: TextStyle(fontSize: 16),
