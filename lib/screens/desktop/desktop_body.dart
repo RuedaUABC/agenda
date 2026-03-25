@@ -9,9 +9,6 @@ class MyDesktopBody extends StatelessWidget {
     final currentHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Desktop Body'),
-      ),
       body: Center(
         child: Text(currentWidth.toString() + ' x ' + currentHeight.toString()),
       ),

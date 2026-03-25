@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:agenda/services/auth/auth_service.dart'; // Asegúrate de que la ruta sea correcta
 
 class LoginPage extends StatefulWidget {

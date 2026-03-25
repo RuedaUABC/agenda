@@ -13,10 +13,8 @@ class BasePage extends StatefulWidget {
 }
 
 class _BasePageState extends State<BasePage> {
-  // Índice para controlar la página activa
   int _currentIndex = 0;
 
-  // Lista de páginas (Asegúrate de que Homepage, SchedulePage, etc., existan en tus archivos)
   final List<Widget> _pages = [
     const Homepage(),
     const SchedulePage(),
@@ -27,47 +25,49 @@ class _BasePageState extends State<BasePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Se muestra la página correspondiente al índice actual
       body: _pages[_currentIndex],
 
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withValues(alpha: 0.1),
-            ),
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Colors.grey[300]!,
-              hoverColor: Colors.grey[100]!,
-              gap: 8,
-              activeColor: Colors.blueAccent,
-              iconSize: 24,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: const Duration(milliseconds: 400),
-              tabBackgroundColor: Colors.blueAccent.withValues(alpha: 0.1),
-              color: Colors.black,
+      // 1. Agregamos el botón flotante central
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Aquí puedes abrir un formulario para agregar nueva tarea
+          debugPrint("Agregar nueva tarea");
+        },
+        backgroundColor: Colors.blueAccent,
+        shape: const CircleBorder(),
+        child: const Icon(Icons.add, color: Colors.white, size: 30),
+      ),
 
-              // Vinculación del estado
-              selectedIndex: _currentIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
-              tabs: const [
-                GButton(icon: Icons.home, text: 'Inicio'),
-                GButton(icon: Icons.schedule, text: 'Horario'),
-                GButton(icon: Icons.calendar_today, text: 'Calendario'),
-                GButton(icon: Icons.settings, text: 'Ajustes'),
-              ],
-            ),
+      bottomNavigationBar: BottomAppBar(
+        padding: EdgeInsets.zero,
+        notchMargin: 8.0,
+        shape: const CircularNotchedRectangle(), // Crea la curva para el botón
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8),
+          child: GNav(
+            rippleColor: Colors.grey[300]!,
+            hoverColor: Colors.grey[100]!,
+            gap: 5, // Reducimos el gap para que quepan bien con el botón
+            activeColor: Colors.blueAccent,
+            iconSize: 32,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            duration: const Duration(milliseconds: 400),
+            tabBackgroundColor: Colors.blueAccent.withValues(alpha: 0.1),
+            color: Colors.black,
+            selectedIndex: _currentIndex,
+            onTabChange: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+            },
+            tabs: const [
+              GButton(icon: Icons.home, text: 'Inicio'),
+              GButton(icon: Icons.schedule, text: 'Horario'),
+              // Espaciador invisible para el botón central
+              GButton(icon: Icons.calendar_today, text: 'Calendario'),
+              GButton(icon: Icons.settings, text: 'Ajustes'),
+            ],
           ),
         ),
       ),

@@ -9,9 +9,6 @@ class MyMobileBody extends StatelessWidget {
     final currentHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mobile Body'),
-      ),
       body: Center(
         child: Text(currentWidth.toString() + ' x ' + currentHeight.toString()),
       ),
