@@ -1,6 +1,6 @@
-import 'package:agenda/screens/mobile/mobile_body.dart';
-import 'package:agenda/screens/desktop/desktop_body.dart';
-import 'package:agenda/utils/responsive_layout.dart';
+import 'package:agenda/features/navegacion/presentation/mobile.dart';
+import 'package:agenda/features/navegacion/presentation/desktop.dart';
+import 'package:agenda/core/utils/responsive_layout.dart';
 import 'package:flutter/material.dart';
 
 class CalendarPage extends StatefulWidget {

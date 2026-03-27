@@ -1,6 +1,6 @@
-import 'package:agenda/screens/desktop/desktop_home.dart';
-import 'package:agenda/screens/mobile/mobile_home.dart';
-import 'package:agenda/utils/responsive_layout.dart';
+import 'package:agenda/features/home/presentation/desktop.dart';
+import 'package:agenda/features/home/presentation/mobile.dart';
+import 'package:agenda/core/utils/responsive_layout.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
