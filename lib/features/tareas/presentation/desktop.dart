@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:agenda/core/widgets/desktop_colums.dart';
-import 'package:agenda/features/home/presentation/widgets/task_card.dart';
-import 'package:agenda/features/home/domain/tarea.dart';
+import 'package:agenda/features/tareas/presentation/widgets/task_card.dart';
+import 'package:agenda/features/tareas/domain/tarea.dart';
 
-class MyDesktopHome extends StatelessWidget {
-  MyDesktopHome({super.key});
+class MyDesktopBody extends StatelessWidget {
+  MyDesktopBody({super.key});
 
   final List<Widget> cards = [
     TaskCard(

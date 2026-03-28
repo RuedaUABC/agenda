@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 // Importa tus páginas reales aquí
-import 'package:agenda/features/home/presentation/home.dart';
+import 'package:agenda/features/tareas/presentation/tareas.dart';
 import 'package:agenda/features/horario/presentation/schedule.dart';
 import 'package:agenda/features/calendario/presentation/calendar.dart';
 import 'package:agenda/features/configuracion/presentation/settings.dart';
@@ -19,7 +19,7 @@ class _navState extends State<nav> {
 
   // SOLUCIÓN: Asegúrate de que la lista tenga las páginas reales
   final List<Widget> _pages = [
-    const Homepage(),
+    const TasksPage(),
     const SchedulePage(),
     const CalendarPage(),
     const SettingsPage(),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:agenda/core/widgets/card_list.dart';
 
-class MyMobileHome extends StatelessWidget {
-  const MyMobileHome({super.key});
+class MyMobileBody extends StatelessWidget {
+  const MyMobileBody({super.key});
 
   @override
   Widget build(BuildContext context) {

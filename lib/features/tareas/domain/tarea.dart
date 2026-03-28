@@ -17,11 +17,12 @@ class Tarea {
 
   factory Tarea.fromJson(Map<String, dynamic> json) {
     return Tarea(
-      id: json['id'],
-      titulo: json['titulo'],
-      asignatura: json['asignatura'],
-      descripcion: json['descripcion'],
-      fecha: json['fecha'],
+      id: json['id'] ?? '',
+      titulo: json['titulo'] ?? '',
+      asignatura: json['asignatura'] ?? '',
+      descripcion: json['descripcion'] ?? '',
+      fecha: DateTime.parse(json['fecha']),
+      completada: json['completada'] ?? false,
     );
   }
 
@@ -31,7 +32,9 @@ class Tarea {
       'titulo': titulo,
       'asignatura': asignatura,
       'descripcion': descripcion,
-      'fecha': fecha,
+      // Al convertir de vuelta a JSON, convertimos la fecha a String ISO-8601
+      'fecha': fecha.toIso8601String(),
+      'completada': completada,
     };
   }
 }

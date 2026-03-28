@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:agenda/features/home/domain/tarea.dart';
+import 'package:agenda/features/tareas/domain/tarea.dart';
 
 class TaskCard extends StatelessWidget {
   final Tarea tarea;

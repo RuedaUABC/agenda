@@ -1,5 +1,5 @@
-import 'package:agenda/features/navegacion/presentation/mobile.dart';
-import 'package:agenda/features/navegacion/presentation/desktop.dart';
+import 'package:agenda/features/horario/presentation/mobile.dart';
+import 'package:agenda/features/horario/presentation/desktop.dart';
 import 'package:agenda/core/utils/responsive_layout.dart';
 import 'package:flutter/material.dart';
 
