@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
+import 'settings_controller.dart';
+import 'notificacion_config_widget.dart';
 
 class MyDesktopBody extends StatelessWidget {
-  const MyDesktopBody({super.key});
+  final SettingsController controller;
+  const MyDesktopBody({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final currentWidth = MediaQuery.of(context).size.width;
-    final currentHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      body: Center(
-        child: Text(currentWidth.toString() + ' x ' + currentHeight.toString()),
-      ),
+    return Row(
+      children: [
+        Expanded(
+          flex: 2,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: NotificacionConfigWidget(controller: controller),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Container(),
+        ),
+      ],
     );
   }
 }

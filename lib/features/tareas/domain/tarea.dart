@@ -12,29 +12,30 @@ class Tarea {
     required this.asignatura,
     required this.descripcion,
     required this.fecha,
-    this.completada = false,
+    required this.completada,
   });
 
-  factory Tarea.fromJson(Map<String, dynamic> json) {
-    return Tarea(
-      id: json['id'] ?? '',
-      titulo: json['titulo'] ?? '',
-      asignatura: json['asignatura'] ?? '',
-      descripcion: json['descripcion'] ?? '',
-      fecha: DateTime.parse(json['fecha']),
-      completada: json['completada'] ?? false,
-    );
+  // Convertir objeto a Map para SQLite
+  Map<String, dynamic> toMap() {
+    return {
+      "id": id,
+      "titulo": titulo,
+      "asignatura": asignatura,
+      "descripcion": descripcion,
+      "fecha": fecha.toIso8601String(), // Guardar como String
+      "completada": completada ? 1 : 0, // Guardar como int
+    };
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'titulo': titulo,
-      'asignatura': asignatura,
-      'descripcion': descripcion,
-      // Al convertir de vuelta a JSON, convertimos la fecha a String ISO-8601
-      'fecha': fecha.toIso8601String(),
-      'completada': completada,
-    };
+  // Crear objeto desde Map de SQLite
+  factory Tarea.fromMap(Map<String, dynamic> map) {
+    return Tarea(
+      id: map["id"],
+      titulo: map["titulo"],
+      asignatura: map["asignatura"] ?? "",
+      descripcion: map["descripcion"] ?? "",
+      fecha: DateTime.parse(map["fecha"]), // Convertir String a DateTime
+      completada: map["completada"] == 1,
+    );
   }
 }

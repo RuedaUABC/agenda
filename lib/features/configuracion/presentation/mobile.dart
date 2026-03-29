@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'settings_controller.dart';
+import 'notificacion_config_widget.dart';
 
 class MyMobileBody extends StatelessWidget {
-  const MyMobileBody({super.key});
+  final SettingsController controller;
+  const MyMobileBody({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final currentWidth = MediaQuery.of(context).size.width;
-    final currentHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      body: Center(
-        child: Text(currentWidth.toString() + ' x ' + currentHeight.toString()),
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          NotificacionConfigWidget(controller: controller),
+        ],
       ),
     );
   }

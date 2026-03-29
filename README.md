@@ -1,22 +1,48 @@
-# agenda
+# Agenda 
+Una aplicación multiplataforma desarrollada en **Flutter** para la gestión personal y académica. Permite a los usuarios administrar sus tareas, horarios de clases y ver eventos en un calendario. El proyecto está diseñado con un enfoque responsivo y modular, asegurando escalabilidad y facilidad de mantenimiento.
 
-A new Flutter project.
+---
 
-## Getting Started
+## Arquitectura
 
-This project is a starting point for a Flutter application.
+El proyecto utiliza una arquitectura **Feature-First** (Orientada a Funcionalidades). Dentro de cada funcionalidad, se aplican principios de **Clean Architecture**, dividiendo el código en capas de datos, dominio y presentación.
 
-A few resources to get you started if this is your first Flutter project:
+### Estructura de Carpetas
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+La carpeta principal `lib/` está organizada de la siguiente manera:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```text
+lib/
+├── main.dart                 # Punto de entrada de la aplicación
+├── firebase_options.dart     # Configuración generada para Firebase
+├── core/                     # Código transversal compartido en toda la app
+│   ├── db/                   # Configuración de SQLite (database_helper.dart)
+│   ├── theme/                # Temas visuales (app_theme.dart)
+│   ├── utils/                # Utilidades, como responsive_layout.dart
+│   └── widgets/              # Componentes UI reutilizables (card_list, desktop_columns)
+└── features/                 # Módulos de la aplicación
+    ├── auth/                 # Autenticación de usuarios
+    ├── calendario/           # Vista y gestión de eventos
+    ├── configuracion/        # Ajustes generales y de notificaciones
+    ├── horario/              # Gestión de clases semanales
+    ├── navegacion/           # Sistema de enrutamiento y menús base
+    └── tareas/               # Gestión, progreso y creación de tareas
+```
 
-## Diagrama de clases
+### Anatomía de una "Feature"
+
+Cada módulo dentro de `features/` sigue esta estructura (ejemplo con `tareas`):
+* **`domain/`**: Modelos de datos puros y reglas de negocio (ej. `tarea.dart`).
+* **`data/`**: Fuentes de datos, servicios externos (APIs, Firebase) o DAOs.
+* **`repository/`**: Interfaces e implementaciones que conectan `data` con la lógica de estado.
+* **`presentation/`**: Toda la interfaz de usuario.
+    * **Diseño Responsivo:** Se utilizan archivos separados como `desktop.dart` y `mobile.dart` gestionados por el `responsive_layout.dart` del core para adaptar la vista al tamaño de pantalla.
+
+---
+
+## Diagrama de Clases (UML)
+
+A continuación, se detalla la arquitectura de las clases, repositorios y controladores que dan vida a la lógica de la aplicación:
 
 ```mermaid
 classDiagram
@@ -296,4 +322,35 @@ classDiagram
     AppNavigation *-- SchedulePage
     AppNavigation *-- CalendarPage
     AppNavigation *-- SettingsPage
+```
+
+---
+
+## Tecnologías y Librerías Principales
+* **[Flutter](https://flutter.dev/):** SDK para el desarrollo multiplataforma.
+* **[Dart](https://dart.dev/):** Lenguaje de programación.
+* **SQLite / `sqflite`:** Para el almacenamiento persistente y sin conexión.
+* **Firebase:** Servicios de backend en la nube (Core y Auth integrados).
+* **Flutter Local Notifications:** Para el sistema inteligente de alarmas y recordatorios.
+
+---
+
+## Cómo Empezar
+
+Sigue estos pasos para ejecutar el proyecto en tu máquina local:
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/RuedaUABC/agenda.git
+   ```
+2. Instala las dependencias:
+   ```bash
+   flutter pub get
+   ```
+3. Ejecuta la aplicación (asegúrate de tener un emulador abierto o un dispositivo físico conectado):
+   ```bash
+   flutter run
+   ```
+
+*Nota: Para que la autenticación de Firebase funcione correctamente, asegúrate de tener configurado tu archivo de entorno y los parámetros en tu consola de Firebase.*
 ```
