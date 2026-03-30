@@ -6,7 +6,7 @@ class DatabaseHelper {
 
   // Nombre y versión de la base de datos
   static const String _dbName = "agenda.db";
-  static const int _dbVersion = 1;
+  static const int _dbVersion = 2;
 
   // Inicializar la base de datos
   Future<Database> initDB() async {
@@ -27,7 +27,7 @@ class DatabaseHelper {
   // Crear tablas iniciales
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE tareas (
+      CREATE TABLE IF NOT EXISTS tareas (
         id TEXT PRIMARY KEY,
         titulo TEXT NOT NULL,
         asignatura TEXT,
@@ -38,29 +38,36 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE clases (
+      CREATE TABLE IF NOT EXISTS clases (
         id TEXT PRIMARY KEY,
         materia TEXT NOT NULL,
         inicio TEXT,
         fin TEXT,
         aula TEXT,
-        recurrenteSemanal INTEGER NOT NULL
+        recurrenceRule TEXT,
+        color INTEGER
       )
     ''');
 
     await db.execute('''
-      CREATE TABLE eventos (
+      CREATE TABLE IF NOT EXISTS eventos (
         id TEXT PRIMARY KEY,
         titulo TEXT NOT NULL,
-        fechaInicio TEXT,
-        fechaFin TEXT
+        inicio TEXT,
+        fin TEXT,
+        descripcion TEXT,
+        color INTEGER
       )
     ''');
   }
 
   // Manejo de migraciones futuras
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    // Aquí puedes manejar cambios de esquema
+    if (oldVersion < 2) {
+      await db.execute("DROP TABLE IF EXISTS clases");
+      await db.execute("DROP TABLE IF EXISTS eventos");
+      await _onCreate(db, newVersion);
+    }
   }
 
   // Cerrar la base de datos

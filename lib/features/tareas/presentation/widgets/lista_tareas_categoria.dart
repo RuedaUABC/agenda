@@ -51,7 +51,6 @@ class ListaTareasCategoria extends StatelessWidget {
             trailing: IconButton(
               icon: Icon(
                 isCompletedMode ? Icons.undo : Icons.check_circle_outline,
-                color: isCompletedMode ? Colors.green : null,
               ),
               onPressed: () async {
                 final tareaActualizada = Tarea(
