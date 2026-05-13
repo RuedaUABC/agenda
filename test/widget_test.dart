@@ -1,30 +1,56 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:agenda/features/tareas/domain/tarea.dart';
+import 'package:agenda/features/tareas/presentation/taskcontroller.dart';
+import 'package:agenda/features/tareas/presentation/widgets/tarea_form.dart';
+import 'package:agenda/features/tareas/repository/tarea_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:agenda/main.back';
+class _FakeTareaRepository implements TareaRepository {
+  final List<Tarea> tareas = [];
+
+  @override
+  Future<void> addTarea(Tarea tarea) async {
+    tareas.add(tarea);
+  }
+
+  @override
+  Future<void> deleteTarea(String id) async {
+    tareas.removeWhere((tarea) => tarea.id == id);
+  }
+
+  @override
+  Future<List<Tarea>> fetchTareas() async => List<Tarea>.from(tareas);
+
+  @override
+  Future<void> programarNotificacionesTarea(String tareaId) async {}
+
+  @override
+  Future<void> updateTarea(Tarea tarea) async {
+    final index = tareas.indexWhere((item) => item.id == tarea.id);
+    if (index == -1) {
+      tareas.add(tarea);
+    } else {
+      tareas[index] = tarea;
+    }
+  }
+}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('TareaForm muestra validacion cuando falta el titulo', (
+    tester,
+  ) async {
+    final controller = TasksController(repository: _FakeTareaRepository());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(body: TareaForm(controller: controller)),
+      ),
+    );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.tap(find.text('Guardar'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Nueva Tarea'), findsOneWidget);
+    expect(find.textContaining('requerido'), findsOneWidget);
   });
 }
