@@ -16,11 +16,21 @@ class FakeTareaRepository implements TareaRepository {
 
   @override
   Future<void> deleteTarea(String id) async {
-    stored.removeWhere((tarea) => tarea.id == id);
+    final index = stored.indexWhere((tarea) => tarea.id == id);
+    if (index != -1) {
+      stored[index] = stored[index].copyWith(eliminada: true);
+    }
   }
 
   @override
-  Future<List<Tarea>> fetchTareas() async => List<Tarea>.from(stored);
+  Future<List<Tarea>> fetchTareas() async {
+    return stored.where((tarea) => !tarea.eliminada).toList();
+  }
+
+  @override
+  Future<List<Tarea>> fetchTareasEliminadas() async {
+    return stored.where((tarea) => tarea.eliminada).toList();
+  }
 
   @override
   Future<void> programarNotificacionesTarea(String tareaId) async {
@@ -34,6 +44,14 @@ class FakeTareaRepository implements TareaRepository {
       stored.add(tarea);
     } else {
       stored[index] = tarea;
+    }
+  }
+
+  @override
+  Future<void> restoreTarea(String id) async {
+    final index = stored.indexWhere((tarea) => tarea.id == id);
+    if (index != -1) {
+      stored[index] = stored[index].copyWith(eliminada: false);
     }
   }
 }
@@ -67,24 +85,50 @@ void main() {
       expect(controller.tareas.single.id, '1');
     });
 
-    test('crea, actualiza y elimina tareas recargando la lista', () async {
-      final repo = FakeTareaRepository();
+    test(
+      'crea, actualiza y envia tareas a papelera recargando la lista',
+      () async {
+        final repo = FakeTareaRepository();
+        final controller = TasksController(repository: repo);
+        final original = tarea(id: '1', fecha: DateTime.now(), titulo: 'Leer');
+        final updated = tarea(
+          id: '1',
+          fecha: DateTime.now().add(const Duration(days: 1)),
+          titulo: 'Leer capitulo 2',
+        );
+
+        await controller.createTarea(original);
+        expect(controller.tareas.single.titulo, 'Leer');
+
+        await controller.updateTarea(updated);
+        expect(controller.tareas.single.titulo, 'Leer capitulo 2');
+
+        await controller.deleteTarea('1');
+        expect(controller.tareas, isEmpty);
+        expect(controller.papelera.single.id, '1');
+        expect(controller.papelera.single.eliminada, isTrue);
+      },
+    );
+
+    test('recupera una tarea eliminada desde la papelera', () async {
+      final repo = FakeTareaRepository([
+        tarea(
+          id: '1',
+          fecha: DateTime.now(),
+          titulo: 'Ensayo',
+        ).copyWith(eliminada: true),
+      ]);
       final controller = TasksController(repository: repo);
-      final original = tarea(id: '1', fecha: DateTime.now(), titulo: 'Leer');
-      final updated = tarea(
-        id: '1',
-        fecha: DateTime.now().add(const Duration(days: 1)),
-        titulo: 'Leer capitulo 2',
-      );
 
-      await controller.createTarea(original);
-      expect(controller.tareas.single.titulo, 'Leer');
-
-      await controller.updateTarea(updated);
-      expect(controller.tareas.single.titulo, 'Leer capitulo 2');
-
-      await controller.deleteTarea('1');
+      await controller.loadTareas();
       expect(controller.tareas, isEmpty);
+      expect(controller.papelera.single.titulo, 'Ensayo');
+
+      await controller.restoreTarea('1');
+
+      expect(controller.papelera, isEmpty);
+      expect(controller.tareas.single.titulo, 'Ensayo');
+      expect(controller.tareas.single.eliminada, isFalse);
     });
 
     test(

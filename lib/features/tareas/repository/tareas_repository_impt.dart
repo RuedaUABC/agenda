@@ -27,6 +27,11 @@ class TareaRepositoryImpl implements TareaRepository {
   }
 
   @override
+  Future<List<Tarea>> fetchTareasEliminadas() async {
+    return await tareaDao.getTareasEliminadas();
+  }
+
+  @override
   Future<void> addTarea(Tarea tarea) async {
     await tareaDao.insertTarea(tarea);
     await programarNotificacionesTarea(tarea.id);
@@ -42,6 +47,12 @@ class TareaRepositoryImpl implements TareaRepository {
   Future<void> deleteTarea(String id) async {
     await tareaDao.deleteTarea(id);
     await scheduler.cancelNotification(id);
+  }
+
+  @override
+  Future<void> restoreTarea(String id) async {
+    await tareaDao.restoreTarea(id);
+    await programarNotificacionesTarea(id);
   }
 
   @override

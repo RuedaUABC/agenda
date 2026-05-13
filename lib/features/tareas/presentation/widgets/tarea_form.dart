@@ -91,6 +91,7 @@ class _TareaFormState extends State<TareaForm> {
         descripcion: _descripcionController.text,
         fecha: fechaCompleta,
         completada: widget.tarea?.completada ?? false,
+        eliminada: widget.tarea?.eliminada ?? false,
       );
 
       if (widget.tarea == null) {

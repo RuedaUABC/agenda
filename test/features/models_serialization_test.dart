@@ -13,15 +13,18 @@ void main() {
         descripcion: 'Borrador final',
         fecha: DateTime(2026, 5, 13, 18, 30),
         completada: true,
+        eliminada: true,
       );
 
       final map = tarea.toMap();
       final restored = Tarea.fromMap(map);
 
       expect(map['completada'], 1);
+      expect(map['eliminada'], 1);
       expect(restored.id, tarea.id);
       expect(restored.fecha, tarea.fecha);
       expect(restored.completada, isTrue);
+      expect(restored.eliminada, isTrue);
     });
 
     test('Evento conserva fecha, descripcion y color', () {

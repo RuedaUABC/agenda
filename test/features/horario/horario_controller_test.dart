@@ -57,6 +57,22 @@ Clase clase({
 
 void main() {
   group('HorarioController', () {
+    test('carga clases desde el repositorio y apaga isLoading', () async {
+      final repo = FakeHorarioRepository([
+        clase(id: '1', materia: 'Fisica'),
+        clase(id: '2', materia: 'Historia'),
+      ]);
+      final controller = HorarioController(repository: repo);
+
+      await controller.loadClases();
+
+      expect(controller.isLoading, isFalse);
+      expect(controller.clases.map((clase) => clase.materia), [
+        'Fisica',
+        'Historia',
+      ]);
+    });
+
     test('agrega, actualiza y elimina clases recargando el estado', () async {
       final repo = FakeHorarioRepository();
       final controller = HorarioController(repository: repo);
@@ -71,6 +87,40 @@ void main() {
       expect(controller.clases, isEmpty);
       expect(controller.isLoading, isFalse);
     });
+
+    test('mantiene la fecha seleccionada en un ValueNotifier actualizable', () {
+      final controller = HorarioController(repository: FakeHorarioRepository());
+      final selected = DateTime(2026, 5, 18);
+
+      controller.selectedDate.value = selected;
+
+      expect(controller.selectedDate.value, selected);
+    });
+
+    test('updateClase inserta clase cuando no existe previamente', () async {
+      final repo = FakeHorarioRepository();
+      final controller = HorarioController(repository: repo);
+
+      await controller.updateClase(clase(id: 'nueva', materia: 'Quimica'));
+
+      expect(controller.clases, hasLength(1));
+      expect(controller.clases.single.id, 'nueva');
+      expect(controller.clases.single.materia, 'Quimica');
+    });
+
+    test(
+      'deleteClase ignora ids inexistentes sin alterar las clases',
+      () async {
+        final repo = FakeHorarioRepository([
+          clase(id: '1', materia: 'Algebra'),
+        ]);
+        final controller = HorarioController(repository: repo);
+
+        await controller.deleteClase('no-existe');
+
+        expect(controller.clases.single.materia, 'Algebra');
+      },
+    );
   });
 
   test('ClaseDataSource transforma clases en appointments del calendario', () {
@@ -80,7 +130,7 @@ void main() {
         materia: 'Programacion',
         aula: 'Lab 3',
         recurrenceRule: 'FREQ=WEEKLY;COUNT=4',
-        color: Colors.blueGrey.value,
+        color: Colors.blueGrey.toARGB32(),
       ),
     ]);
 
@@ -90,7 +140,7 @@ void main() {
     expect(appointment.subject, 'Programacion');
     expect(appointment.location, 'Lab 3');
     expect(appointment.recurrenceRule, 'FREQ=WEEKLY;COUNT=4;BYDAY=WE');
-    expect(appointment.color.value, Colors.blueGrey.value);
+    expect(appointment.color.toARGB32(), Colors.blueGrey.toARGB32());
   });
 
   test('ClaseDataSource normaliza reglas semanales antiguas sin BYDAY', () {
@@ -106,5 +156,32 @@ void main() {
     final appointment = source.appointments!.single as Appointment;
 
     expect(appointment.recurrenceRule, 'FREQ=WEEKLY;INTERVAL=1;BYDAY=WE');
+  });
+
+  test('normalizeWeeklyRecurrenceRule conserva reglas nulas o vacias', () {
+    final start = DateTime(2026, 5, 13);
+
+    expect(normalizeWeeklyRecurrenceRule(null, start), isNull);
+    expect(normalizeWeeklyRecurrenceRule('', start), '');
+  });
+
+  test('normalizeWeeklyRecurrenceRule no cambia reglas no semanales', () {
+    final rule = 'FREQ=DAILY;COUNT=5';
+
+    expect(normalizeWeeklyRecurrenceRule(rule, DateTime(2026, 5, 13)), rule);
+  });
+
+  test('weekdayToRecurrenceDay mapea todos los dias de la semana', () {
+    expect(weekdayToRecurrenceDay(DateTime.monday), 'MO');
+    expect(weekdayToRecurrenceDay(DateTime.tuesday), 'TU');
+    expect(weekdayToRecurrenceDay(DateTime.wednesday), 'WE');
+    expect(weekdayToRecurrenceDay(DateTime.thursday), 'TH');
+    expect(weekdayToRecurrenceDay(DateTime.friday), 'FR');
+    expect(weekdayToRecurrenceDay(DateTime.saturday), 'SA');
+    expect(weekdayToRecurrenceDay(DateTime.sunday), 'SU');
+  });
+
+  test('weekdayToRecurrenceDay rechaza dias invalidos', () {
+    expect(() => weekdayToRecurrenceDay(0), throwsArgumentError);
   });
 }

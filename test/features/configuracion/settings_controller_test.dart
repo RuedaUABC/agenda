@@ -18,11 +18,21 @@ class FakeTareaRepository implements TareaRepository {
 
   @override
   Future<void> deleteTarea(String id) async {
-    stored.removeWhere((tarea) => tarea.id == id);
+    final index = stored.indexWhere((tarea) => tarea.id == id);
+    if (index != -1) {
+      stored[index] = stored[index].copyWith(eliminada: true);
+    }
   }
 
   @override
-  Future<List<Tarea>> fetchTareas() async => List<Tarea>.from(stored);
+  Future<List<Tarea>> fetchTareas() async {
+    return stored.where((tarea) => !tarea.eliminada).toList();
+  }
+
+  @override
+  Future<List<Tarea>> fetchTareasEliminadas() async {
+    return stored.where((tarea) => tarea.eliminada).toList();
+  }
 
   @override
   Future<void> programarNotificacionesTarea(String tareaId) async {
@@ -36,6 +46,14 @@ class FakeTareaRepository implements TareaRepository {
       stored.add(tarea);
     } else {
       stored[index] = tarea;
+    }
+  }
+
+  @override
+  Future<void> restoreTarea(String id) async {
+    final index = stored.indexWhere((tarea) => tarea.id == id);
+    if (index != -1) {
+      stored[index] = stored[index].copyWith(eliminada: false);
     }
   }
 }
@@ -104,5 +122,52 @@ void main() {
         expect(repo.scheduledIds, ['pendiente']);
       },
     );
+
+    test('carga preferencias previamente persistidas', () async {
+      SharedPreferences.setMockInitialValues({
+        'clase_notificacion_minutes': 120,
+        'tarea_notificaciones_minutes': ['30', '1440'],
+      });
+      final prefs = PreferencesHelper();
+      await prefs.init();
+      final controller = SettingsController(prefs: prefs);
+
+      await controller.loadSettings();
+
+      expect(controller.globalClaseNotif, const Duration(hours: 2));
+      expect(controller.globalTareaNotifs, [
+        const Duration(minutes: 30),
+        const Duration(days: 1),
+      ]);
+    });
+
+    test(
+      'guarda lista vacia de avisos de tareas y la mantiene en memoria',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        final prefs = PreferencesHelper();
+        await prefs.init();
+        final controller = SettingsController(prefs: prefs);
+
+        await controller.updateGlobalTareaNotifs([]);
+
+        expect(controller.globalTareaNotifs, isEmpty);
+        expect(prefs.getGlobalTareaNotificaciones(), [
+          const Duration(minutes: 60),
+          const Duration(days: 1),
+        ]);
+      },
+    );
+
+    test('no reprograma tareas cuando no se inyecta repositorio', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = PreferencesHelper();
+      await prefs.init();
+      final controller = SettingsController(prefs: prefs);
+
+      await controller.updateGlobalTareaNotifs([const Duration(minutes: 15)]);
+
+      expect(controller.globalTareaNotifs, [const Duration(minutes: 15)]);
+    });
   });
 }

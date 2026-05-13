@@ -6,7 +6,7 @@ class DatabaseHelper {
 
   // Nombre y versión de la base de datos
   static const String _dbName = "agenda.db";
-  static const int _dbVersion = 2;
+  static const int _dbVersion = 3;
 
   // Inicializar la base de datos
   Future<Database> initDB() async {
@@ -33,7 +33,8 @@ class DatabaseHelper {
         asignatura TEXT,
         descripcion TEXT,
         fecha TEXT,
-        completada INTEGER NOT NULL
+        completada INTEGER NOT NULL,
+        eliminada INTEGER NOT NULL DEFAULT 0
       )
     ''');
 
@@ -67,6 +68,11 @@ class DatabaseHelper {
       await db.execute("DROP TABLE IF EXISTS clases");
       await db.execute("DROP TABLE IF EXISTS eventos");
       await _onCreate(db, newVersion);
+    }
+    if (oldVersion < 3) {
+      await db.execute(
+        "ALTER TABLE tareas ADD COLUMN eliminada INTEGER NOT NULL DEFAULT 0",
+      );
     }
   }
 

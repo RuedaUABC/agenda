@@ -5,6 +5,7 @@ class TasksController {
   final TareaRepository repository;
 
   List<Tarea> tareas = [];
+  List<Tarea> papelera = [];
   bool isLoading = false;
 
   TasksController({required this.repository});
@@ -12,7 +13,12 @@ class TasksController {
   Future<void> loadTareas() async {
     isLoading = true;
     tareas = await repository.fetchTareas();
+    papelera = await repository.fetchTareasEliminadas();
     isLoading = false;
+  }
+
+  Future<void> loadPapelera() async {
+    papelera = await repository.fetchTareasEliminadas();
   }
 
   Future<void> createTarea(Tarea tarea) async {
@@ -27,6 +33,11 @@ class TasksController {
 
   Future<void> deleteTarea(String id) async {
     await repository.deleteTarea(id);
+    await loadTareas();
+  }
+
+  Future<void> restoreTarea(String id) async {
+    await repository.restoreTarea(id);
     await loadTareas();
   }
 
