@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/utils/responsive_layout.dart';
-import 'desktop.dart';
-import 'mobile.dart';
-import 'horario_controller.dart';
-import '../repository/horario_repository_impl.dart';
 import '../data/clase_dao.dart';
+import '../domain/clase.dart';
+import '../repository/horario_repository_impl.dart';
+import 'desktop.dart';
+import 'horario_controller.dart';
+import 'mobile.dart';
+import 'widgets/clase_form.dart';
 
 class HorarioPage extends StatefulWidget {
   const HorarioPage({super.key});
@@ -24,9 +27,7 @@ class _HorarioPageState extends State<HorarioPage> {
   }
 
   Future<void> _initDependencies() async {
-    final repo = HorarioRepositoryImpl(
-      claseDao: ClaseDao(),
-    );
+    final repo = HorarioRepositoryImpl(claseDao: ClaseDao());
 
     controller = HorarioController(repository: repo);
     await controller.loadClases();
@@ -56,11 +57,28 @@ class _HorarioPageState extends State<HorarioPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // TODO: Implementar formulario de nueva clase (similar a TareaForm)
-        },
+        onPressed: _showClaseForm,
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Future<void> _showClaseForm() async {
+    final clase = await showModalBottomSheet<Clase>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return ClaseForm(initialDate: controller.selectedDate.value);
+      },
+    );
+
+    if (clase == null) return;
+
+    controller.selectedDate.value = clase.inicio;
+    await controller.addClase(clase);
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 }

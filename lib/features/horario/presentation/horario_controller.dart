@@ -8,7 +8,9 @@ class HorarioController {
 
   List<Clase> clases = [];
   bool isLoading = false;
-  final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(DateTime.now());
+  final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(
+    DateTime.now(),
+  );
 
   HorarioController({required this.repository});
 
@@ -43,9 +45,40 @@ class ClaseDataSource extends CalendarDataSource {
         startTime: clase.inicio,
         endTime: clase.fin,
         location: clase.aula,
-        recurrenceRule: clase.recurrenceRule,
+        recurrenceRule: normalizeWeeklyRecurrenceRule(
+          clase.recurrenceRule,
+          clase.inicio,
+        ),
         color: Color(clase.color),
       );
     }).toList();
+  }
+}
+
+String? normalizeWeeklyRecurrenceRule(String? rule, DateTime startDate) {
+  if (rule == null || rule.isEmpty) return rule;
+  if (!rule.contains('FREQ=WEEKLY') || rule.contains('BYDAY=')) return rule;
+
+  return '$rule;BYDAY=${weekdayToRecurrenceDay(startDate.weekday)}';
+}
+
+String weekdayToRecurrenceDay(int weekday) {
+  switch (weekday) {
+    case DateTime.monday:
+      return 'MO';
+    case DateTime.tuesday:
+      return 'TU';
+    case DateTime.wednesday:
+      return 'WE';
+    case DateTime.thursday:
+      return 'TH';
+    case DateTime.friday:
+      return 'FR';
+    case DateTime.saturday:
+      return 'SA';
+    case DateTime.sunday:
+      return 'SU';
+    default:
+      throw ArgumentError.value(weekday, 'weekday', 'Dia invalido');
   }
 }

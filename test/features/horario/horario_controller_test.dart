@@ -89,7 +89,22 @@ void main() {
     expect(appointment.id, 'clase-1');
     expect(appointment.subject, 'Programacion');
     expect(appointment.location, 'Lab 3');
-    expect(appointment.recurrenceRule, 'FREQ=WEEKLY;COUNT=4');
+    expect(appointment.recurrenceRule, 'FREQ=WEEKLY;COUNT=4;BYDAY=WE');
     expect(appointment.color.value, Colors.blueGrey.value);
+  });
+
+  test('ClaseDataSource normaliza reglas semanales antiguas sin BYDAY', () {
+    final source = ClaseDataSource([
+      clase(
+        id: 'clase-1',
+        materia: 'Programacion',
+        inicio: DateTime(2026, 5, 13, 8),
+        recurrenceRule: 'FREQ=WEEKLY;INTERVAL=1',
+      ),
+    ]);
+
+    final appointment = source.appointments!.single as Appointment;
+
+    expect(appointment.recurrenceRule, 'FREQ=WEEKLY;INTERVAL=1;BYDAY=WE');
   });
 }

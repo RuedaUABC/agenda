@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 // Importaciones de tu proyecto
 import 'package:agenda/core/theme/app_theme.dart';
@@ -9,8 +12,15 @@ void main() async {
   // 1. Asegura que los bindings de Flutter estén listos para código asíncrono
   WidgetsFlutterBinding.ensureInitialized();
 
+  if (!kIsWeb &&
+      (defaultTargetPlatform == TargetPlatform.windows ||
+          defaultTargetPlatform == TargetPlatform.linux)) {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
+
   // 2. Inicializa Firebase antes de lanzar la aplicación
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
 
   runApp(const MyApp());
 }
