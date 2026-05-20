@@ -1,99 +1,184 @@
 # Requerimientos No Funcionales
 
+Este documento define restricciones y atributos de calidad esperados para la
+aplicacion Agenda. Los RNF deben ser verificables mediante revision, pruebas o
+ejecucion de la aplicacion.
+
 ## Plataforma
 
-**RNF-001. Multiplataforma Flutter**  
-El sistema debe ejecutarse sobre Flutter en plataformas moviles, web y
-escritorio soportadas por el proyecto.
+**RNF-001. Aplicacion Flutter multiplataforma**  
+Prioridad: Alta.  
+El sistema debe mantenerse como una aplicacion Flutter compatible con las
+plataformas declaradas en el proyecto: Android, iOS, Web, Windows, Linux y
+macOS.
+
+Criterio de verificacion:
+
+- El proyecto conserva carpetas y configuracion de compilacion para las
+  plataformas soportadas.
 
 **RNF-002. Compatibilidad de SDK**  
+Prioridad: Alta.  
 El proyecto debe usar una version de Dart compatible con la restriccion
-`sdk: ^3.11.3` declarada en `pubspec.yaml`.
+declarada en `pubspec.yaml`.
 
-**RNF-003. Soporte de escritorio para SQLite**  
-En Windows y Linux, la app debe usar `sqflite_common_ffi` antes de abrir la base
-de datos.
+Criterio de verificacion:
+
+- `flutter pub get` debe resolver dependencias sin conflictos de SDK.
+
+**RNF-003. Soporte de SQLite en escritorio**  
+Prioridad: Alta.  
+En Windows y Linux, la aplicacion debe inicializar el soporte FFI de SQLite
+antes de abrir la base de datos.
 
 ## Arquitectura y Mantenibilidad
 
-**RNF-004. Organizacion feature-first**  
-El codigo debe mantenerse organizado por funcionalidades dentro de
-`lib/features/`.
+**RNF-004. Organizacion por funcionalidades**  
+Prioridad: Media.  
+El codigo de negocio debe organizarse principalmente por funcionalidad dentro
+de `lib/features/`.
 
 **RNF-005. Separacion por capas**  
-Las features deben separar modelos de dominio, acceso a datos, repositorios y
-presentacion cuando aplique.
+Prioridad: Media.  
+Cada funcionalidad debe separar, cuando aplique, modelos de dominio, acceso a
+datos, repositorios y presentacion.
 
 **RNF-006. Componentes compartidos en core**  
-Las utilidades, temas, widgets comunes y configuracion transversal deben vivir
-en `lib/core/`.
+Prioridad: Media.  
+Las utilidades, temas, widgets comunes, base de datos y configuracion
+transversal deben ubicarse en `lib/core/`.
 
-**RNF-007. Controllers testeables**  
-La logica de estado debe poder probarse con repositorios falsos, como ocurre en
-los tests de controllers.
+**RNF-007. Logica de estado testeable**  
+Prioridad: Alta.  
+La logica de estado debe poder probarse sin depender directamente de widgets,
+base de datos real ni servicios externos.
+
+Criterio de verificacion:
+
+- Los controllers permiten usar repositorios falsos o dobles de prueba.
+
+**RNF-008. Bajo acoplamiento entre UI y persistencia**  
+Prioridad: Media. Estado: Sugerido.  
+La interfaz no debe acceder directamente a DAOs o almacenamiento persistente;
+debe hacerlo por medio de controllers, repositorios o servicios definidos.
 
 ## Usabilidad
 
-**RNF-008. Diseno responsivo**  
-El sistema debe cambiar entre layout movil y escritorio segun el ancho
-disponible. El umbral actual es `800 px`.
+**RNF-009. Diseno responsivo**  
+Prioridad: Alta.  
+El sistema debe adaptar su interfaz a pantallas moviles y de escritorio.
 
-**RNF-009. Modo oscuro consistente**  
-La app debe usar el tema oscuro definido en `AppTheme.darkTheme` y forzar
-`ThemeMode.dark`.
+Criterio de verificacion:
 
-**RNF-010. Indicadores de carga**  
-Las pantallas principales deben mostrar un indicador mientras cargan sus
-dependencias y datos iniciales.
+- En anchos menores al umbral definido por la aplicacion se muestra layout
+  movil.
+- En anchos iguales o mayores al umbral definido por la aplicacion se muestra
+  layout de escritorio.
 
-**RNF-011. Estados vacios visibles**  
-Horario y calendario deben mostrar mensajes cuando no existan clases o eventos
-para la fecha seleccionada.
+**RNF-010. Tema visual consistente**  
+Prioridad: Media.  
+La aplicacion debe usar un tema visual consistente en todos los modulos.
+
+Criterio de verificacion:
+
+- Colores, tipografias, botones, tarjetas y estados de seleccion deben seguir
+  el tema definido por la aplicacion.
+
+**RNF-011. Indicadores de carga**  
+Prioridad: Media.  
+Las pantallas principales deben mostrar un indicador mientras cargan datos o
+dependencias iniciales.
+
+**RNF-012. Estados vacios visibles**  
+Prioridad: Media.  
+Las listas y calendarios deben mostrar un mensaje claro cuando no existan datos
+para presentar.
+
+**RNF-013. Mensajes de validacion comprensibles**  
+Prioridad: Alta. Estado: Sugerido.  
+Cuando el usuario capture datos invalidos, el sistema debe mostrar mensajes
+claros, cercanos al campo afectado y orientados a la accion.
+
+Ejemplos:
+
+- "Ingresa un titulo para la tarea."
+- "La hora de fin debe ser posterior a la hora de inicio."
+- "Selecciona una fecha antes de guardar."
 
 ## Datos
 
-**RNF-012. Persistencia offline**  
-Tareas, clases y eventos deben funcionar con almacenamiento local, sin depender
-de red para las operaciones principales observadas.
+**RNF-014. Persistencia offline**  
+Prioridad: Alta.  
+Las operaciones principales de tareas, clases, eventos y preferencias deben
+funcionar sin conexion de red.
 
-**RNF-013. Fechas en formato ISO**  
-Los modelos persistidos en SQLite deben guardar fechas con
-`toIso8601String()` y restaurarlas con `DateTime.parse`.
+**RNF-015. Formato de fechas persistidas**  
+Prioridad: Alta.  
+Los modelos persistidos deben guardar fechas en formato ISO 8601 y restaurarlas
+mediante parseo seguro.
 
-**RNF-014. Booleanos como enteros en SQLite**  
-Los campos booleanos de tareas deben persistirse como `0` o `1`.
+**RNF-016. Representacion de booleanos en SQLite**  
+Prioridad: Media.  
+Los campos booleanos almacenados en SQLite deben representarse como `0` o `1`.
+
+**RNF-017. Integridad de datos obligatorios**  
+Prioridad: Alta. Estado: Sugerido.  
+El sistema debe evitar persistir entidades incompletas o invalidas mediante
+validaciones en la interfaz y, cuando sea posible, en la capa de dominio o
+persistencia.
 
 ## Calidad
 
-**RNF-015. Cobertura por feature**  
-El proyecto debe mantener pruebas por modulo en `test/features/`.
+**RNF-018. Pruebas por funcionalidad**  
+Prioridad: Alta.  
+El proyecto debe mantener pruebas automatizadas organizadas por funcionalidad.
 
-**RNF-016. Pruebas de serializacion**  
+Criterio de verificacion:
+
+- Existen pruebas en `test/features/` para los modulos principales.
+
+**RNF-019. Pruebas de serializacion**  
+Prioridad: Media.  
 Los modelos persistidos deben contar con pruebas que validen conversion entre
 objeto y mapa.
 
-**RNF-017. Pruebas de widgets criticos**  
-Los formularios y widgets principales deben contar con pruebas para validar
-renderizado y acciones clave.
+**RNF-020. Pruebas de widgets criticos**  
+Prioridad: Media.  
+Los formularios y widgets principales deben contar con pruebas de renderizado,
+validacion y acciones clave.
 
-## Seguridad y Configuracion
+**RNF-021. Pruebas de reglas de negocio**  
+Prioridad: Alta. Estado: Sugerido.  
+Las reglas de clasificacion de tareas, validacion de horarios, recurrencia
+semanal y seleccion de eventos por fecha deben estar cubiertas por pruebas
+automatizadas.
 
-**RNF-018. Inicializacion explicita de Firebase**  
-Si se activa autenticacion o servicios Firebase, la inicializacion debe ocurrir
-antes de `runApp`.
+## Seguridad Local y Robustez
 
-**RNF-019. Manejo de errores de autenticacion**  
-Los errores conocidos de Firebase Auth deben transformarse en mensajes
-comprensibles para el usuario.
+**RNF-022. Confirmacion para acciones destructivas**  
+Prioridad: Alta. Estado: Sugerido.  
+El sistema debe solicitar confirmacion antes de ejecutar acciones destructivas
+como eliminar tareas, clases o eventos.
+
+**RNF-023. Manejo de errores de persistencia**  
+Prioridad: Alta. Estado: Sugerido.  
+Si ocurre un error al leer o guardar datos locales, el sistema debe informar al
+usuario y evitar dejar la interfaz en un estado inconsistente.
+
+**RNF-024. Datos sensibles en almacenamiento local**  
+Prioridad: Media. Estado: Sugerido.  
+La aplicacion no debe almacenar informacion sensible innecesaria en texto plano.
+Si en el futuro se guardan datos sensibles, debera usarse almacenamiento seguro
+de la plataforma.
 
 ## Notificaciones
 
-**RNF-020. Scheduler reemplazable**  
-El sistema de notificaciones debe mantenerse encapsulado en
-`NotificationScheduler` para permitir cambiar el mock actual por la
-implementacion real.
+**RNF-025. Scheduler reemplazable**  
+Prioridad: Media.  
+El sistema de notificaciones debe mantenerse encapsulado para permitir cambiar
+la implementacion sin modificar los modulos de tareas, horario o configuracion.
 
-**RNF-021. Estado parcial de notificaciones reales**  
-La implementacion actual no debe tratarse como notificacion nativa real, porque
-las llamadas a `flutter_local_notifications` estan comentadas y se usan
-mensajes por consola.
+**RNF-026. Estado de notificaciones nativas**  
+Prioridad: Media.  
+Mientras la implementacion real de notificaciones nativas no este integrada, el
+sistema no debe documentarlas como funcionalidad completa de usuario final.
