@@ -1,3 +1,5 @@
+import 'package:agenda/core/widgets/agenda_color_picker.dart';
+import 'package:agenda/core/widgets/agenda_date_time_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/clase.dart';
@@ -181,8 +183,22 @@ class _ClaseFormState extends State<ClaseForm> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Nueva clase', style: textTheme.headlineSmall),
-                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Nueva clase',
+                        style: textTheme.headlineSmall,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Cerrar formulario',
+                      onPressed: () => Navigator.maybePop(context),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _materiaController,
                   decoration: const InputDecoration(
@@ -202,74 +218,68 @@ class _ClaseFormState extends State<ClaseForm> {
                   textInputAction: TextInputAction.done,
                   validator: _validateAula,
                 ),
-                const SizedBox(height: 16),
-                OutlinedButton.icon(
-                  onPressed: _pickDate,
-                  icon: const Icon(Icons.calendar_today),
-                  label: Text('Dia: ${_date.day}/${_date.month}/${_date.year}'),
-                ),
                 const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _pickTime(isStart: true),
-                    icon: const Icon(Icons.schedule),
-                    label: Text('Inicio: ${_startTime.format(context)}'),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _pickTime(isStart: false),
-                    icon: const Icon(Icons.schedule_outlined),
-                    label: Text('Fin: ${_endTime.format(context)}'),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text('Color', style: textTheme.titleMedium),
+                Text('Fecha y hora', style: textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: _colors.map((color) {
-                    final isSelected =
-                        color.toARGB32() == _selectedColor.toARGB32();
-
-                    return Tooltip(
-                      message: 'Seleccionar color',
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(24),
-                        onTap: () => setState(() => _selectedColor = color),
-                        child: Container(
-                          width: 42,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected
-                                  ? Theme.of(context).colorScheme.onSurface
-                                  : Colors.transparent,
-                              width: 3,
-                            ),
-                          ),
-                          child: isSelected
-                              ? const Icon(Icons.check, color: Colors.white)
-                              : null,
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    AgendaDateTimeButton(
+                      onPressed: _pickDate,
+                      icon: Icons.calendar_today,
+                      label: 'Dia',
+                      value: '${_date.day}/${_date.month}/${_date.year}',
+                    ),
+                    AgendaDateTimeButton(
+                      onPressed: () => _pickTime(isStart: true),
+                      icon: Icons.schedule,
+                      label: 'Inicio',
+                      value: _startTime.format(context),
+                    ),
+                    AgendaDateTimeButton(
+                      onPressed: () => _pickTime(isStart: false),
+                      icon: Icons.schedule_outlined,
+                      label: 'Fin',
+                      value: _endTime.format(context),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: _save,
-                    icon: const Icon(Icons.save),
-                    label: const Text('Guardar clase semanal'),
+                const SizedBox(height: 8),
+                Text(
+                  'Se repetira cada semana este dia',
+                  style: textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
+                ),
+                const SizedBox(height: 12),
+                Text('Color', style: textTheme.titleMedium),
+                const SizedBox(height: 8),
+                AgendaColorPicker(
+                  colors: _colors,
+                  selectedColor: _selectedColor.toARGB32(),
+                  onChanged: (value) {
+                    setState(() => _selectedColor = Color(value));
+                  },
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.maybePop(context),
+                        child: const Text('Cancelar'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: _save,
+                        icon: const Icon(Icons.save),
+                        label: const Text('Guardar clase semanal'),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

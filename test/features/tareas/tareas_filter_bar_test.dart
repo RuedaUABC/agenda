@@ -49,17 +49,15 @@ void main() {
       ),
     );
 
-    await tester.enterText(find.byType(TextField), 'historia');
+    await tester.enterText(find.byType(EditableText).first, 'historia');
     await tester.pump();
 
     expect(controller.searchQuery, 'historia');
 
-    await tester.tap(find.byType(DropdownButton<TaskStatusFilter>).first);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Pendientes').last);
+    await tester.tap(find.text('Pendientes'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButton<TaskDateFilter>).first);
+    await tester.tap(find.byType(DropdownMenu<TaskDateFilter>).first);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Hoy').last);
     await tester.pumpAndSettle();

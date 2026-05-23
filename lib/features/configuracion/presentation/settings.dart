@@ -26,7 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _initController() async {
     final prefs = PreferencesHelper();
     await prefs.init();
-    
+
     controller = SettingsController(prefs: prefs);
     await controller.loadSettings();
 
@@ -44,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Configuración")),
       body: ResponsiveLayout(
-        mobile: MyMobileBody(controller: controller), 
+        mobile: MyMobileBody(controller: controller),
         desktop: MyDesktopBody(controller: controller),
       ),
     );

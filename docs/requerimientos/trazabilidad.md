@@ -7,7 +7,7 @@ pruebas y evidencia tecnica observada en el proyecto.
 
 | Requisito | Estado | Casos de uso | Reglas | Pruebas / evidencia |
 | --- | --- | --- | --- | --- |
-| RF-001 | Implementado | CU-001 | - | `lib/features/navegacion/presentation/navegacion.dart` |
+| RF-001 | Implementado | CU-001 | - | `lib/features/navegacion/presentation/navegacion.dart`, `test/features/diseno_material3/material3_navigation_test.dart` |
 | RF-002 | Implementado | CU-001 | - | `lib/features/navegacion/presentation/navegacion.dart` |
 | RF-003 | Implementado | CU-005 | RN-009 | `lib/features/tareas/data/tarea_dao.dart`, `lib/features/tareas/presentation/taskcontroller.dart` |
 | RF-004 | Implementado | CU-004 | RN-008 | `lib/features/tareas/data/tarea_dao.dart`, `lib/features/tareas/presentation/taskcontroller.dart` |
@@ -22,7 +22,7 @@ pruebas y evidencia tecnica observada en el proyecto.
 | RF-013 | Implementado | CU-005 | RN-017, RN-018 | `lib/features/tareas/presentation/taskcontroller.dart`, `test/features/tareas/taskcontroller_test.dart` |
 | RF-014 | Implementado | CU-005 | RN-019 | `lib/features/tareas/presentation/taskcontroller.dart`, `test/features/tareas/taskcontroller_test.dart` |
 | RF-015 | Implementado | CU-003 | - | `lib/features/tareas/presentation/widgets/lista_tareas_categoria.dart` |
-| RF-016 | Implementado | CU-005 | - | `lib/features/tareas/presentation/taskcontroller.dart`, `lib/features/tareas/presentation/widgets/tareas_filter_bar.dart`, `test/features/tareas/taskcontroller_test.dart`, `test/features/tareas/tareas_filter_bar_test.dart` |
+| RF-016 | Implementado | CU-005 | - | `lib/features/tareas/presentation/taskcontroller.dart`, `lib/features/tareas/presentation/widgets/tareas_filter_bar.dart`, `test/features/tareas/taskcontroller_test.dart`, `test/features/tareas/tareas_filter_bar_test.dart`, `test/features/diseno_material3/material3_tareas_test.dart` |
 | RF-017 | Implementado | CU-007 | - | `lib/features/horario/presentation/horario_controller.dart`, `lib/features/horario/data/clase_dao.dart` |
 | RF-018 | Implementado | CU-006 | RN-020, RN-021, RN-022, RN-023 | `lib/features/horario/presentation/widgets/clase_form.dart` |
 | RF-019 | Implementado | CU-006 | RN-020, RN-024, RN-026, RN-027, RN-028 | `lib/features/horario/presentation/widgets/clase_form.dart`, `test/features/horario/clase_form_test.dart` |
@@ -41,8 +41,8 @@ pruebas y evidencia tecnica observada en el proyecto.
 | RF-032 | Implementado | CU-009 | - | `lib/features/calendario/presentation/widgets/evento_list_item.dart`, `test/features/calendario/calendario_widgets_test.dart` |
 | RF-033 | Implementado | CU-009 | RN-046 | `lib/features/calendario/domain/evento_validator.dart`, `lib/features/calendario/presentation/widgets/evento_form.dart`, `test/features/calendario/evento_validator_test.dart`, `test/features/calendario/evento_form_test.dart` |
 | RF-034 | Implementado | CU-010 | RN-047, RN-048 | `lib/features/configuracion/preferences_helper.dart`, `lib/features/configuracion/presentation/settings_controller.dart` |
-| RF-035 | Implementado | CU-010 | RN-047, RN-049 | `lib/features/configuracion/presentation/notificacion_config_widget.dart` |
-| RF-036 | Implementado | CU-010 | RN-048, RN-049, RN-051 | `lib/features/configuracion/presentation/notificacion_config_widget.dart` |
+| RF-035 | Implementado | CU-010 | RN-047, RN-049 | `lib/features/configuracion/presentation/notificacion_config_widget.dart`, `test/features/diseno_material3/material3_forms_settings_test.dart` |
+| RF-036 | Implementado | CU-010 | RN-048, RN-049, RN-051 | `lib/features/configuracion/presentation/notificacion_config_widget.dart`, `test/features/diseno_material3/material3_forms_settings_test.dart` |
 | RF-037 | Implementado | CU-010 | RN-049, RN-050 | `lib/features/configuracion/preferences_helper.dart`, `lib/features/configuracion/presentation/settings_controller.dart`, `test/features/configuracion/settings_controller_test.dart` |
 | RF-038 | Implementado | CU-010 | - | `lib/features/configuracion/preferences_helper.dart` |
 | RF-039 | Implementado | CU-010 | RN-052 | `lib/features/configuracion/presentation/settings_controller.dart`, `test/features/configuracion/settings_controller_test.dart` |
@@ -62,8 +62,8 @@ pruebas y evidencia tecnica observada en el proyecto.
 | RNF-006 | `lib/core/` |
 | RNF-007 | `test/features/*/*controller_test.dart` |
 | RNF-008 | Revision arquitectonica sugerida |
-| RNF-009 | `lib/core/utils/responsive_layout.dart` |
-| RNF-010 | `lib/core/theme/app_theme.dart` |
+| RNF-009 | `lib/features/navegacion/presentation/navegacion.dart`, `test/features/diseno_material3/material3_navigation_test.dart` |
+| RNF-010 | `lib/core/theme/app_theme.dart`, `docs/diseno_material3.md`, `test/features/diseno_material3/material3_app_test.dart` |
 | RNF-011 | Pantallas principales de features |
 | RNF-012 | Horario, calendario y listas de tareas |
 | RNF-013 | Pendiente de revisar todos los formularios |

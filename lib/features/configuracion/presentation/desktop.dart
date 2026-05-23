@@ -25,10 +25,7 @@ class MyDesktopBody extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
-          flex: 3,
-          child: Container(),
-        ),
+        Expanded(flex: 3, child: Container()),
       ],
     );
   }

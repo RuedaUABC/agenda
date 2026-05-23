@@ -15,7 +15,9 @@ class ClaseListItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListTile(
         title: Text(clase.materia),
-        subtitle: Text('${clase.aula} • ${timeFormat.format(clase.inicio)} - ${timeFormat.format(clase.fin)}'),
+        subtitle: Text(
+          '${clase.aula} • ${timeFormat.format(clase.inicio)} - ${timeFormat.format(clase.fin)}',
+        ),
         leading: CircleAvatar(
           backgroundColor: Color(clase.color),
           child: const Icon(Icons.class_, color: Colors.white),

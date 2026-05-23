@@ -65,7 +65,7 @@ debe hacerlo por medio de controllers, repositorios o servicios definidos.
 ## Usabilidad
 
 **RNF-009. Diseno responsivo**  
-Prioridad: Alta.  
+Prioridad: Alta. Estado: Implementado.
 El sistema debe adaptar su interfaz a pantallas moviles y de escritorio.
 
 Criterio de verificacion:
@@ -74,15 +74,23 @@ Criterio de verificacion:
   movil.
 - En anchos iguales o mayores al umbral definido por la aplicacion se muestra
   layout de escritorio.
+- La navegacion debe adaptarse al ancho disponible: barra inferior en movil y
+  `NavigationRail` o sidebar en pantallas medianas y grandes.
 
-**RNF-010. Tema visual consistente**  
-Prioridad: Media.  
-La aplicacion debe usar un tema visual consistente en todos los modulos.
+**RNF-010. Tema visual Material 3 consistente**
+
+Prioridad: Alta. Estado: Implementado.
+
+La aplicacion debe usar Material 3 como sistema visual base en todos los
+modulos, siguiendo la guia [`docs/diseno_material3.md`](../diseno_material3.md).
 
 Criterio de verificacion:
 
 - Colores, tipografias, botones, tarjetas y estados de seleccion deben seguir
   el tema definido por la aplicacion.
+- El tema debe usar `useMaterial3: true`, `ColorScheme` semantico y componentes
+  Material 3 nativos cuando exista equivalente en Flutter.
+- La aplicacion debe soportar tema claro, oscuro y preferencia del sistema.
 
 **RNF-011. Indicadores de carga**  
 Prioridad: Media.  

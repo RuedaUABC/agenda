@@ -64,7 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '319882213230',
     projectId: 'agenda-3ee82',
     storageBucket: 'agenda-3ee82.firebasestorage.app',
-    iosClientId: '319882213230-1cd80qnarfi2qs1mruhnv732h57blm7s.apps.googleusercontent.com',
+    iosClientId:
+        '319882213230-1cd80qnarfi2qs1mruhnv732h57blm7s.apps.googleusercontent.com',
     iosBundleId: 'com.example.agenda',
   );
 
@@ -74,7 +75,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '319882213230',
     projectId: 'agenda-3ee82',
     storageBucket: 'agenda-3ee82.firebasestorage.app',
-    iosClientId: '319882213230-1cd80qnarfi2qs1mruhnv732h57blm7s.apps.googleusercontent.com',
+    iosClientId:
+        '319882213230-1cd80qnarfi2qs1mruhnv732h57blm7s.apps.googleusercontent.com',
     iosBundleId: 'com.example.agenda',
   );
 

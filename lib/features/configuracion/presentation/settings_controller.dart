@@ -8,10 +8,7 @@ class SettingsController {
   Duration globalClaseNotif = const Duration(minutes: 15);
   List<Duration> globalTareaNotifs = [const Duration(minutes: 60)];
 
-  SettingsController({
-    required this.prefs,
-    this.tareaRepo,
-  });
+  SettingsController({required this.prefs, this.tareaRepo});
 
   Future<void> loadSettings() async {
     globalClaseNotif = prefs.getGlobalClaseNotificacion();

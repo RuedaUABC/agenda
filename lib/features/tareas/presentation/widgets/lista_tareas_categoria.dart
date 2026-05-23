@@ -1,3 +1,5 @@
+import 'package:agenda/core/widgets/agenda_empty_state.dart';
+import 'package:agenda/core/widgets/agenda_section_header.dart';
 import 'package:flutter/material.dart';
 import '../../domain/tarea.dart';
 import '../taskcontroller.dart';
@@ -42,66 +44,81 @@ class ListaTareasCategoria extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (tareas.isEmpty) return const SizedBox.shrink();
+    if (tareas.isEmpty) {
+      return AgendaEmptyState(
+        icon: Icons.task_alt,
+        title: 'Sin tareas en $title',
+        description: 'Cuando haya elementos para esta seccion apareceran aqui.',
+      );
+    }
 
-    return ExpansionTile(
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      initiallyExpanded: true,
-      children: tareas.map((t) {
-        return Card(
-          elevation: 2,
-          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          child: ListTile(
-            onTap: () => _abrirDetalle(context, t),
-            title: Text(
-              t.titulo,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                decoration: isCompletedMode ? TextDecoration.lineThrough : null,
-                color: isCompletedMode ? Colors.grey : null,
-              ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (t.asignatura.isNotEmpty)
-                  Text("Asignatura: ${t.asignatura}"),
-                Text("Fecha: ${t.fecha.toLocal().toString().split(' ')[0]}"),
-              ],
-            ),
-            trailing: isTrashMode
-                ? null
-                : IconButton(
-                    tooltip: isCompletedMode
-                        ? "Marcar como pendiente"
-                        : "Marcar como completada",
-                    icon: Icon(
-                      isCompletedMode ? Icons.undo : Icons.check_circle_outline,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AgendaSectionHeader(title: title, count: tareas.length),
+        ...tareas.map((t) {
+          return Card(
+            child: ListTile(
+              onTap: () => _abrirDetalle(context, t),
+              leading: isTrashMode
+                  ? null
+                  : Tooltip(
+                      message: isCompletedMode
+                          ? "Marcar como pendiente"
+                          : "Marcar como completada",
+                      child: Checkbox(
+                        value: isCompletedMode,
+                        onChanged: (_) async {
+                          try {
+                            await controller.updateTarea(
+                              t.copyWith(completada: !isCompletedMode),
+                            );
+                          } catch (_) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    controller.lastError ??
+                                        'No se pudo completar la accion',
+                                  ),
+                                ),
+                              );
+                            }
+                            return;
+                          }
+                          onRefresh();
+                        },
+                      ),
                     ),
-                    onPressed: () async {
-                      try {
-                        await controller.updateTarea(
-                          t.copyWith(completada: !isCompletedMode),
-                        );
-                      } catch (_) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                controller.lastError ??
-                                    'No se pudo completar la accion',
-                              ),
-                            ),
-                          );
-                        }
-                        return;
-                      }
-                      onRefresh();
-                    },
-                  ),
-          ),
-        );
-      }).toList(),
+              title: Text(
+                t.titulo,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  decoration: isCompletedMode
+                      ? TextDecoration.lineThrough
+                      : null,
+                  color: isCompletedMode ? Colors.grey : null,
+                ),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (t.asignatura.isNotEmpty)
+                    Text("Asignatura: ${t.asignatura}"),
+                  Text("Fecha: ${t.fecha.toLocal().toString().split(' ')[0]}"),
+                ],
+              ),
+              trailing: isTrashMode
+                  ? null
+                  : IconButton(
+                      tooltip: 'Abrir detalle',
+                      icon: const Icon(Icons.chevron_right),
+                      onPressed: () => _abrirDetalle(context, t),
+                    ),
+            ),
+          );
+        }),
+      ],
     );
   }
 }

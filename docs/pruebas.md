@@ -91,6 +91,21 @@ Ubicacion principal:
 - El widget permite cambiar el primer aviso de tareas y dispara la
   reprogramacion de tareas pendientes.
 
+## Feature: Diseno Material 3
+
+Ubicacion principal: `test/features/diseno_material3/`.
+
+- `AppTheme` define temas claro y oscuro con Material 3.
+- `MyApp` usa `ThemeMode.system` y titulo `Agenda`.
+- `AgendaNavigation` usa `NavigationBar` en movil y `NavigationRail` en
+  pantallas medianas o grandes.
+- Los filtros de tareas usan `SearchBar`, `SegmentedButton` y `DropdownMenu`.
+- Las listas de tareas muestran contador, checkbox visible y estado vacio.
+- Los formularios de tareas, eventos y clases exponen cancelar/cerrar,
+  acciones Material 3 y botones de fecha/hora.
+- Los selectores de color de eventos y clases tienen objetivos de `48x48`.
+- La configuracion usa secciones `ListTile` y `DropdownMenu`.
+
 ## Feature: Modelos de dominio
 
 Ubicacion principal: `test/features/models_serialization_test.dart`.
@@ -111,5 +126,6 @@ Para revisar una feature concreta:
 flutter test test/features/calendario
 flutter test test/features/horario
 flutter test test/features/configuracion
+flutter test test/features/diseno_material3
 flutter test test/features/tareas
 ```

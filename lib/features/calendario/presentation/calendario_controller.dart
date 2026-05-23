@@ -8,7 +8,9 @@ class CalendarioController {
 
   List<Evento> eventos = [];
   bool isLoading = false;
-  final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(DateTime.now());
+  final ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(
+    DateTime.now(),
+  );
 
   CalendarioController({required this.repository});
 

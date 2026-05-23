@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:timezone/data/latest.dart' as tz;
 // import 'package:timezone/timezone.dart' as tz;
@@ -15,7 +17,7 @@ class NotificationScheduler {
     // const initSettings = InitializationSettings(android: androidSettings);
 
     // await _plugin.initialize(settings: initSettings);
-    print("NotificationScheduler: Initialized (Mock)");
+    debugPrint("NotificationScheduler: Initialized (Mock)");
   }
 
   Future<void> scheduleNotification({
@@ -42,11 +44,13 @@ class NotificationScheduler {
     //   notificationDetails: details,
     //   androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     // );
-    print("NotificationScheduler: Scheduled notification '$id' at $when: $title - $body");
+    debugPrint(
+      "NotificationScheduler: Scheduled notification '$id' at $when: $title - $body",
+    );
   }
 
   Future<void> cancelNotification(String id) async {
     // await _plugin.cancel(id: id.hashCode);
-    print("NotificationScheduler: Cancelled notification '$id'");
+    debugPrint("NotificationScheduler: Cancelled notification '$id'");
   }
 }

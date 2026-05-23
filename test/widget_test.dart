@@ -92,7 +92,7 @@ void main() {
     await tester.tap(find.text('Guardar'));
     await tester.pump();
 
-    expect(find.text('Nueva Tarea'), findsOneWidget);
+    expect(find.text('Nueva tarea'), findsOneWidget);
     expect(find.textContaining('requerido'), findsOneWidget);
   });
 
@@ -281,7 +281,7 @@ void main() {
     await tester.tap(find.widgetWithText(OutlinedButton, 'Editar'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Editar Tarea'), findsOneWidget);
+    expect(find.text('Editar tarea'), findsOneWidget);
     expect(find.widgetWithText(TextFormField, 'Ensayo'), findsOneWidget);
 
     await tester.enterText(

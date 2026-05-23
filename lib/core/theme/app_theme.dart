@@ -1,37 +1,82 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // Colores extraídos de tu configuración .dark (OKLCH)
-  static const Color _background = Color(0xFF000000); // oklch(0 0 0)
-  static const Color _foreground = Color(
-    0xFFE1E7EF,
-  ); // oklch(0.9328 0.0025 228.7857)
-  static const Color _primary = Color(
-    0xFF3B82F6,
-  ); // oklch(0.6692 0.1607 245.0110)
-  static const Color _card = Color(0xFF1E1E2E); // oklch(0.2097 0.0080 274.5332)
-  static const Color _mutedForeground = Color(0xFF8F9BB3);
+  static const Color seedColor = Color(0xFF3B82F6);
+
+  static ThemeData get lightTheme {
+    return _buildTheme(Brightness.light);
+  }
 
   static ThemeData get darkTheme {
+    return _buildTheme(Brightness.dark);
+  }
+
+  static ThemeData _buildTheme(Brightness brightness) {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: seedColor,
+      brightness: brightness,
+    );
+
     return ThemeData(
       useMaterial3: true,
-      brightness: Brightness.dark,
-
-      // Aplicamos tu paleta OKLCH
-      colorScheme: const ColorScheme.dark(
-        surface: _background,
-        onSurface: _foreground,
-        primary: _primary,
-        onPrimary: Colors.white,
-        secondary: _card,
-        onSecondary: _foreground,
-        error: Color(0xFFEF4444), // oklch(0.6188 0.2376 25.7658)
+      brightness: brightness,
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.surface,
+      fontFamily: 'Roboto',
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: colorScheme.surfaceContainerLow,
+        surfaceTintColor: Colors.transparent,
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-
-      scaffoldBackgroundColor: _background,
-
-      // Aplicamos la fuente sans-serif por defecto
-      fontFamily: 'Roboto', // Equivalente a ui-sans-serif
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colorScheme.surfaceContainerLow,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          minimumSize: const Size(48, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(48, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        showDragHandle: true,
+        backgroundColor: colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: colorScheme.surfaceContainerHigh,
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      ),
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: colorScheme.surfaceContainer,
+        indicatorColor: colorScheme.secondaryContainer,
+      ),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: colorScheme.surfaceContainer,
+        indicatorColor: colorScheme.secondaryContainer,
+      ),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: colorScheme.primaryContainer,
+        foregroundColor: colorScheme.onPrimaryContainer,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
     );
   }
 }

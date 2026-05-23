@@ -12,10 +12,14 @@ esta organizado el proyecto y como trabajar con el.
   funcionalidad usando el template formal de test case.
 - [`desarrollo.md`](desarrollo.md): requisitos, instalacion, ejecucion,
   comandos de mantenimiento y notas de Firebase.
+- [`diseno_material3.md`](diseno_material3.md): guia objetivo de interfaz
+  Material 3 inspirada en patrones de Google Calendar, Tasks, Keep y Gmail.
 - [`pruebas.md`](pruebas.md): resumen de cobertura y comandos para correr
   pruebas por modulo.
 - [`red_green_refactor_eventos.md`](red_green_refactor_eventos.md): evidencia
   TDD para creacion, edicion, eliminacion y validaciones de eventos.
+- [`red_green_refactor_diseno_material3.md`](red_green_refactor_diseno_material3.md):
+  evidencia TDD del rediseno Material 3.
 - [`red_green_refactor_validaciones.md`](red_green_refactor_validaciones.md):
   evidencia TDD para validaciones completas de tareas y clases.
 - [`red_green_refactor_tareas_configuracion_robustez.md`](red_green_refactor_tareas_configuracion_robustez.md):
@@ -40,3 +44,5 @@ Agenda permite administrar:
 - Actualizar `docs/arquitectura.md` si cambia la estructura de `lib/`.
 - Actualizar `docs/desarrollo.md` cuando cambien requisitos, comandos o pasos
   de configuracion.
+- Actualizar `docs/diseno_material3.md` cuando cambien lineamientos visuales,
+  componentes compartidos o patrones responsive.

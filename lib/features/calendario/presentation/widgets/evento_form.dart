@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:agenda/core/widgets/agenda_color_picker.dart';
+import 'package:agenda/core/widgets/agenda_date_time_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/evento.dart';
@@ -234,11 +236,22 @@ class _EventoFormState extends State<EventoForm> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  isEditing ? 'Editar evento' : 'Nuevo evento',
-                  style: textTheme.headlineSmall,
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        isEditing ? 'Editar evento' : 'Nuevo evento',
+                        style: textTheme.headlineSmall,
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Cerrar formulario',
+                      onPressed: () => Navigator.maybePop(context),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 TextFormField(
                   controller: _tituloController,
                   decoration: const InputDecoration(
@@ -258,30 +271,36 @@ class _EventoFormState extends State<EventoForm> {
                   maxLines: 3,
                   validator: EventoValidator.validateDescripcion,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
+                Text('Fecha y hora', style: textTheme.titleMedium),
+                const SizedBox(height: 8),
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
                   children: [
-                    OutlinedButton.icon(
+                    AgendaDateTimeButton(
                       onPressed: () => _pickDate(isStart: true),
-                      icon: const Icon(Icons.calendar_today),
-                      label: Text('Inicio: ${_formatDate(_startDate)}'),
+                      icon: Icons.calendar_today,
+                      label: 'Inicio',
+                      value: _formatDate(_startDate),
                     ),
-                    OutlinedButton.icon(
+                    AgendaDateTimeButton(
                       onPressed: () => _pickTime(isStart: true),
-                      icon: const Icon(Icons.schedule),
-                      label: Text(_startTime.format(context)),
+                      icon: Icons.schedule,
+                      label: 'Hora inicio',
+                      value: _startTime.format(context),
                     ),
-                    OutlinedButton.icon(
+                    AgendaDateTimeButton(
                       onPressed: () => _pickDate(isStart: false),
-                      icon: const Icon(Icons.event_available),
-                      label: Text('Fin: ${_formatDate(_endDate)}'),
+                      icon: Icons.event_available,
+                      label: 'Fin',
+                      value: _formatDate(_endDate),
                     ),
-                    OutlinedButton.icon(
+                    AgendaDateTimeButton(
                       onPressed: () => _pickTime(isStart: false),
-                      icon: const Icon(Icons.schedule_outlined),
-                      label: Text(_endTime.format(context)),
+                      icon: Icons.schedule_outlined,
+                      label: 'Hora fin',
+                      value: _endTime.format(context),
                     ),
                   ],
                 ),
@@ -294,54 +313,36 @@ class _EventoFormState extends State<EventoForm> {
                     ),
                   ),
                 ],
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 Text('Color', style: textTheme.titleMedium),
                 const SizedBox(height: 8),
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: colors.map((color) {
-                    final colorValue = color.toARGB32();
-                    final isSelected = colorValue == _selectedColor;
-
-                    return Tooltip(
-                      message: 'Seleccionar color',
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(24),
-                        onTap: () {
-                          setState(() => _selectedColor = colorValue);
-                        },
-                        child: Container(
-                          width: 42,
-                          height: 42,
-                          decoration: BoxDecoration(
-                            color: color,
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: isSelected
-                                  ? Theme.of(context).colorScheme.onSurface
-                                  : Colors.transparent,
-                              width: 3,
-                            ),
-                          ),
-                          child: isSelected
-                              ? const Icon(Icons.check, color: Colors.white)
-                              : null,
+                AgendaColorPicker(
+                  colors: colors,
+                  selectedColor: _selectedColor,
+                  onChanged: (value) {
+                    setState(() => _selectedColor = value);
+                  },
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.maybePop(context),
+                        child: const Text('Cancelar'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton.icon(
+                        onPressed: _isSaving ? null : _save,
+                        icon: const Icon(Icons.save),
+                        label: Text(
+                          isEditing ? 'Actualizar evento' : 'Guardar evento',
                         ),
                       ),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 24),
-                SizedBox(
-                  width: double.infinity,
-                  child: FilledButton.icon(
-                    onPressed: _isSaving ? null : _save,
-                    icon: const Icon(Icons.save),
-                    label: Text(
-                      isEditing ? 'Actualizar evento' : 'Guardar evento',
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),

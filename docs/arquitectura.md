@@ -35,6 +35,12 @@ en Windows y Linux, y monta `MyApp`.
 - `ThemeMode.dark` para forzar modo oscuro.
 - `nav` como widget raiz de navegacion.
 
+La guia objetivo de interfaz esta documentada en
+[`diseno_material3.md`](diseno_material3.md). El rediseno planificado migra el
+tema hacia Material 3 completo, con `ThemeMode.system`, tema claro/oscuro,
+`ColorScheme.fromSeed` y navegacion adaptativa con `NavigationBar` y
+`NavigationRail`.
+
 La inicializacion de Firebase esta presente como comentario. Esto significa que
 las opciones generadas existen en el repositorio, pero Firebase no se inicializa
 actualmente al arrancar la aplicacion.
@@ -48,6 +54,10 @@ actualmente al arrancar la aplicacion.
 - `core/utils/`: utilidades transversales, incluyendo layout responsivo y
   programacion de notificaciones.
 - `core/widgets/`: componentes reutilizables de interfaz.
+
+Los componentes visuales compartidos deben alinearse con Material 3 y, cuando
+se implementen, priorizar widgets nativos de Flutter antes que paquetes
+externos de apariencia.
 
 ## Persistencia Local
 
@@ -154,7 +164,8 @@ Piezas principales:
 
 Ruta principal: `lib/features/navegacion/`.
 
-`presentation/navegacion.dart` contiene el widget `nav`, que usa `GNav` e
+`presentation/navegacion.dart` contiene `AgendaNavigation`, que usa
+`NavigationBar` en movil, `NavigationRail` en pantallas medianas o grandes e
 `IndexedStack` para alternar entre:
 
 - Tareas

@@ -19,75 +19,66 @@ class TareasFilterBar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TextField(
-            decoration: const InputDecoration(
-              labelText: 'Buscar tareas',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
-            ),
+          SearchBar(
+            leading: const Icon(Icons.search),
+            hintText: 'Buscar tareas',
             onChanged: (value) {
               controller.updateSearchQuery(value);
               onChanged();
             },
           ),
           const SizedBox(height: 12),
-          Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: [
-              DropdownButton<TaskStatusFilter>(
-                value: controller.statusFilter,
-                items: const [
-                  DropdownMenuItem(
-                    value: TaskStatusFilter.todas,
-                    child: Text('Todas'),
-                  ),
-                  DropdownMenuItem(
-                    value: TaskStatusFilter.pendientes,
-                    child: Text('Pendientes'),
-                  ),
-                  DropdownMenuItem(
-                    value: TaskStatusFilter.completadas,
-                    child: Text('Completadas'),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value == null) return;
-                  controller.updateStatusFilter(value);
-                  onChanged();
-                },
+          SegmentedButton<TaskStatusFilter>(
+            showSelectedIcon: false,
+            segments: const [
+              ButtonSegment(
+                value: TaskStatusFilter.todas,
+                label: Text('Todas'),
               ),
-              DropdownButton<TaskDateFilter>(
-                value: controller.dateFilter,
-                items: const [
-                  DropdownMenuItem(
-                    value: TaskDateFilter.todas,
-                    child: Text('Cualquier fecha'),
-                  ),
-                  DropdownMenuItem(
-                    value: TaskDateFilter.vencidas,
-                    child: Text('Vencidas'),
-                  ),
-                  DropdownMenuItem(
-                    value: TaskDateFilter.hoy,
-                    child: Text('Hoy'),
-                  ),
-                  DropdownMenuItem(
-                    value: TaskDateFilter.semana,
-                    child: Text('Esta semana'),
-                  ),
-                  DropdownMenuItem(
-                    value: TaskDateFilter.futuras,
-                    child: Text('Futuras'),
-                  ),
-                ],
-                onChanged: (value) {
-                  if (value == null) return;
-                  controller.updateDateFilter(value);
-                  onChanged();
-                },
+              ButtonSegment(
+                value: TaskStatusFilter.pendientes,
+                label: Text('Pendientes'),
+              ),
+              ButtonSegment(
+                value: TaskStatusFilter.completadas,
+                label: Text('Completadas'),
               ),
             ],
+            selected: {controller.statusFilter},
+            onSelectionChanged: (selection) {
+              controller.updateStatusFilter(selection.single);
+              onChanged();
+            },
+          ),
+          const SizedBox(height: 12),
+          DropdownMenu<TaskDateFilter>(
+            initialSelection: controller.dateFilter,
+            expandedInsets: EdgeInsets.zero,
+            label: const Text('Fecha'),
+            dropdownMenuEntries: const [
+              DropdownMenuEntry(
+                value: TaskDateFilter.todas,
+                label: 'Cualquier fecha',
+              ),
+              DropdownMenuEntry(
+                value: TaskDateFilter.vencidas,
+                label: 'Vencidas',
+              ),
+              DropdownMenuEntry(value: TaskDateFilter.hoy, label: 'Hoy'),
+              DropdownMenuEntry(
+                value: TaskDateFilter.semana,
+                label: 'Esta semana',
+              ),
+              DropdownMenuEntry(
+                value: TaskDateFilter.futuras,
+                label: 'Futuras',
+              ),
+            ],
+            onSelected: (value) {
+              if (value == null) return;
+              controller.updateDateFilter(value);
+              onChanged();
+            },
           ),
         ],
       ),

@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const nav()),
+          MaterialPageRoute(builder: (context) => const AgendaNavigation()),
         );
       }
     } catch (e) {
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
             Text(
               "Organiza tu tiempo con estilo",
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colors.onSurface.withOpacity(0.6),
+                color: colors.onSurface.withValues(alpha: 0.6),
               ),
             ),
             const SizedBox(height: 60),
@@ -88,19 +88,15 @@ class _LoginPageState extends State<LoginPage> {
                 ? CircularProgressIndicator(color: colors.primary)
                 : ElevatedButton.icon(
                     onPressed: _handleGoogleSignIn,
-                    // CAMBIO: Usamos un icono nativo en lugar de una URL
                     icon: const Icon(Icons.account_circle_outlined, size: 24),
                     label: const Text("Continuar con Google"),
                     style: ElevatedButton.styleFrom(
-                      // Usamos colores de tu esquema OKLCH
                       backgroundColor: colors.surfaceContainerHighest,
                       foregroundColor: colors.onSurface,
                       minimumSize: const Size(double.infinity, 55),
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          12,
-                        ), // Basado en --radius
+                        borderRadius: BorderRadius.circular(12),
                         side: BorderSide(
                           color: colors.outlineVariant,
                           width: 1,

@@ -11,8 +11,8 @@ automatizada especifica.
 
 | Test Case ID | Test Case Title | Test Description | Pre-conditions | Test Steps | Test Data | Expected Result | Post Conditions | Actual Result | Status | Comments / Attachments | Associated Requirement ID | Priority |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| TC-NAV-001 | Navegacion principal entre modulos | Verifica que el usuario pueda cambiar entre Tareas, Horario, Calendario y Ajustes. | La aplicacion esta abierta en la pantalla principal. | 1. Abrir la app.<br>2. Tocar Tareas.<br>3. Tocar Horario.<br>4. Tocar Calendario.<br>5. Tocar Ajustes. | Modulos: Tareas, Horario, Calendario, Ajustes. | Cada modulo se muestra sin cerrar la app y la opcion activa queda identificada. | El usuario queda en el ultimo modulo seleccionado. | Implementado en `lib/features/navegacion/presentation/navegacion.dart`; sin test automatizado dedicado. | Not Executed | Recomendado agregar widget test de navegacion. | RF-001 | Alta |
-| TC-NAV-002 | Conservacion de estado entre modulos | Verifica que el estado de cada modulo no se reinicie al navegar. | Existen datos cargados y una fecha seleccionada en Horario o Calendario. | 1. Seleccionar una fecha en Calendario.<br>2. Ir a Tareas.<br>3. Volver a Calendario.<br>4. Revisar la fecha seleccionada. | Fecha seleccionada: 13/05/2026. | La fecha y listas cargadas se conservan al volver. | El estado del modulo permanece disponible. | Implementado mediante `IndexedStack`; sin test automatizado dedicado. | Not Executed | Recomendado agregar widget test de persistencia visual entre tabs. | RF-002 | Media |
+| TC-NAV-001 | Navegacion principal entre modulos | Verifica que el usuario pueda cambiar entre Tareas, Horario, Calendario y Ajustes. | La aplicacion esta abierta en la pantalla principal. | 1. Abrir la app.<br>2. Tocar Tareas.<br>3. Tocar Horario.<br>4. Tocar Calendario.<br>5. Tocar Ajustes. | Modulos: Tareas, Horario, Calendario, Ajustes. | Cada modulo se muestra sin cerrar la app y la opcion activa queda identificada. | El usuario queda en el ultimo modulo seleccionado. | Pass en `test/features/diseno_material3/material3_navigation_test.dart`. | Pass | Cubre barra inferior y rail Material 3. | RF-001 | Alta |
+| TC-NAV-002 | Conservacion de estado entre modulos | Verifica que el estado de cada modulo no se reinicie al navegar. | Existen datos cargados y una fecha seleccionada en Horario o Calendario. | 1. Seleccionar una fecha en Calendario.<br>2. Ir a Tareas.<br>3. Volver a Calendario.<br>4. Revisar la fecha seleccionada. | Fecha seleccionada: 13/05/2026. | La fecha y listas cargadas se conservan al volver. | El estado del modulo permanece disponible. | Pass en `test/features/diseno_material3/material3_navigation_test.dart`. | Pass | Cubre uso de `IndexedStack`. | RF-002 | Media |
 
 ## Tareas
 
@@ -79,6 +79,15 @@ automatizada especifica.
 | TC-CONF-005 | Validar opciones de notificacion | Verifica rechazo de opciones no permitidas. | Ajustes disponible con selector de avisos. | 1. Intentar guardar valor negativo.<br>2. Intentar guardar valor no soportado.<br>3. Cargar preferencias persistidas invalidas. | Valor negativo; 7 minutos; lista vacia. | El sistema rechaza el valor invalido o vuelve a valores por defecto. | Preferencia anterior se conserva. | Pass en `test/features/configuracion/settings_controller_test.dart`. | Pass | Cubre RF-037. | RF-037 | Media |
 | TC-CONF-006 | Reprogramacion sin repositorio | Verifica que actualizar avisos no falle sin repositorio inyectado. | Controller sin repositorio de tareas. | 1. Actualizar aviso de tareas.<br>2. Observar ejecucion. | Repositorio nulo. | La preferencia se actualiza sin excepciones. | No hay reprogramacion de tareas. | Pass en `test/features/configuracion/settings_controller_test.dart`. | Pass | Cubre robustez del controller. | RF-039 | Media |
 
+## Diseno Material 3
+
+| Test Case ID | Test Case Title | Test Description | Pre-conditions | Test Steps | Test Data | Expected Result | Post Conditions | Actual Result | Status | Comments / Attachments | Associated Requirement ID | Priority |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TC-M3-001 | Tema Material 3 claro/oscuro | Verifica temas claro y oscuro con Material 3 y modo del sistema. | La app compila. | 1. Instanciar `AppTheme`.<br>2. Revisar `MyApp`. | Seed `0xFF3B82F6`. | La app usa `ThemeMode.system`, titulo `Agenda` y temas Material 3. | Tema disponible para toda la app. | Pass en `test/features/diseno_material3/material3_app_test.dart`. | Pass | Cubre RNF-010. | RNF-010 | Alta |
+| TC-M3-002 | Navegacion adaptativa Material 3 | Verifica barra inferior, rail y rail extendido segun ancho. | La navegacion se renderiza con paginas de prueba. | 1. Probar 390px.<br>2. Probar 800px.<br>3. Probar 1200px. | Anchos: 390, 800, 1200. | Se usa `NavigationBar`, `NavigationRail` y rail extendido segun corresponda. | Estado interno se conserva con `IndexedStack`. | Pass en `test/features/diseno_material3/material3_navigation_test.dart`. | Pass | Cubre RNF-009. | RNF-009, RF-001, RF-002 | Alta |
+| TC-M3-003 | Tareas Material 3 | Verifica filtros, contador, checkbox y estado vacio. | Widget de tareas disponible. | 1. Renderizar filtros.<br>2. Renderizar lista con tarea.<br>3. Renderizar lista vacia. | Tarea `Ensayo`. | Hay `SearchBar`, `SegmentedButton`, checkbox visible y estado vacio. | UI mantiene callbacks existentes. | Pass en `test/features/diseno_material3/material3_tareas_test.dart`. | Pass | Cubre RF-016 y RNF-010. | RF-016, RNF-010 | Alta |
+| TC-M3-004 | Formularios y ajustes Material 3 | Verifica formularios de tarea/evento/clase y ajustes. | Formularios disponibles. | 1. Renderizar formularios.<br>2. Revisar cancelar/cerrar.<br>3. Revisar color picker.<br>4. Revisar ajustes. | Color azul `0xFF3B82F6`. | Formularios usan acciones Material 3, color picker `48x48` y ajustes usan `DropdownMenu`. | Validaciones y persistencia existentes se conservan. | Pass en `test/features/diseno_material3/material3_forms_settings_test.dart`. | Pass | Cubre alcance Base + UI clave. | RNF-010, RF-018, RF-029, RF-035, RF-036 | Alta |
+
 ## Persistencia y Modelos
 
 | Test Case ID | Test Case Title | Test Description | Pre-conditions | Test Steps | Test Data | Expected Result | Post Conditions | Actual Result | Status | Comments / Attachments | Associated Requirement ID | Priority |
@@ -104,7 +113,6 @@ flutter test test/features/configuracion
 
 | Area | Brecha | Caso relacionado |
 | --- | --- | --- |
-| Navegacion | Falta widget test de cambio entre modulos y conservacion de estado. | TC-NAV-001, TC-NAV-002 |
 | Horario | Falta test dedicado de confirmacion UI de eliminacion de clases. | TC-HOR-008 |
 | Configuracion | Falta validacion estricta de opciones invalidas de notificacion. | TC-CONF-005 |
 | Persistencia | Faltan tests automatizados de migracion SQLite y smoke test de escritorio. | TC-PER-004, TC-PER-005 |

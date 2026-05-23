@@ -26,96 +26,90 @@ class _NotificacionConfigWidgetState extends State<NotificacionConfigWidget> {
   Widget build(BuildContext context) {
     final controller = widget.controller;
 
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Notificaciones Globales",
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const Divider(),
-            const SizedBox(height: 8),
-            const Text("Clases", style: TextStyle(fontWeight: FontWeight.bold)),
-            DropdownButton<int>(
-              value: controller.globalClaseNotif.inMinutes,
-              isExpanded: true,
-              items: opcionesMinutos.map((min) {
-                return DropdownMenuItem<int>(
-                  value: min,
-                  child: Text(_formatDuration(min)),
-                );
-              }).toList(),
-              onChanged: (val) async {
-                if (val != null) {
-                  try {
-                    await controller.updateGlobalClaseNotif(
-                      Duration(minutes: val),
-                    );
-                  } catch (_) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Valor de notificacion no permitido'),
-                        ),
-                      );
-                    }
-                    return;
-                  }
-                  setState(() {});
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              "Tareas (Primer Aviso)",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            DropdownButton<int>(
-              value: controller.globalTareaNotifs.isNotEmpty
-                  ? controller.globalTareaNotifs.first.inMinutes
-                  : 60,
-              isExpanded: true,
-              items: opcionesMinutos.map((min) {
-                return DropdownMenuItem<int>(
-                  value: min,
-                  child: Text(_formatDuration(min)),
-                );
-              }).toList(),
-              onChanged: (val) async {
-                if (val != null) {
-                  // Mantiene el segundo aviso (si existe) pero actualiza el primero
-                  List<Duration> actual = [...controller.globalTareaNotifs];
-                  if (actual.isEmpty) {
-                    actual.add(Duration(minutes: val));
-                  } else {
-                    actual[0] = Duration(minutes: val);
-                  }
-                  try {
-                    await controller.updateGlobalTareaNotifs(actual);
-                  } catch (_) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Valor de notificacion no permitido'),
-                        ),
-                      );
-                    }
-                    return;
-                  }
-                  setState(() {});
-                }
-              },
-            ),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Notificaciones globales",
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
-      ),
+        const SizedBox(height: 12),
+        ListTile(
+          leading: const Icon(Icons.school_outlined),
+          title: const Text("Clases"),
+          subtitle: const Text("Anticipacion para recordatorios de horario"),
+          trailing: DropdownMenu<int>(
+            initialSelection: controller.globalClaseNotif.inMinutes,
+            dropdownMenuEntries: opcionesMinutos.map((min) {
+              return DropdownMenuEntry<int>(
+                value: min,
+                label: _formatDuration(min),
+              );
+            }).toList(),
+            onSelected: (val) async {
+              if (val != null) {
+                try {
+                  await controller.updateGlobalClaseNotif(
+                    Duration(minutes: val),
+                  );
+                } catch (_) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Valor de notificacion no permitido'),
+                      ),
+                    );
+                  }
+                  return;
+                }
+                setState(() {});
+              }
+            },
+          ),
+        ),
+        const Divider(height: 1),
+        ListTile(
+          leading: const Icon(Icons.task_alt),
+          title: const Text("Tareas (primer aviso)"),
+          subtitle: const Text("Anticipacion para el primer recordatorio"),
+          trailing: DropdownMenu<int>(
+            initialSelection: controller.globalTareaNotifs.isNotEmpty
+                ? controller.globalTareaNotifs.first.inMinutes
+                : 60,
+            dropdownMenuEntries: opcionesMinutos.map((min) {
+              return DropdownMenuEntry<int>(
+                value: min,
+                label: _formatDuration(min),
+              );
+            }).toList(),
+            onSelected: (val) async {
+              if (val != null) {
+                List<Duration> actual = [...controller.globalTareaNotifs];
+                if (actual.isEmpty) {
+                  actual.add(Duration(minutes: val));
+                } else {
+                  actual[0] = Duration(minutes: val);
+                }
+                try {
+                  await controller.updateGlobalTareaNotifs(actual);
+                } catch (_) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Valor de notificacion no permitido'),
+                      ),
+                    );
+                  }
+                  return;
+                }
+                setState(() {});
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 }

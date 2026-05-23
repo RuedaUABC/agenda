@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:agenda/core/widgets/agenda_date_time_button.dart';
 
 import '../../domain/tarea.dart';
 import '../taskcontroller.dart';
@@ -156,6 +157,10 @@ class _TareaFormState extends State<TareaForm> {
     }
   }
 
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
   void _guardar() async {
     if (!_formKey.currentState!.validate()) return;
     if (_fechaSeleccionada == null || _horaSeleccionada == null) return;
@@ -188,85 +193,109 @@ class _TareaFormState extends State<TareaForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom + 40,
-          left: 16,
-          right: 16,
-          top: 16,
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ElevatedButton(onPressed: _guardar, child: const Text("Guardar")),
-              Text(
-                widget.tarea == null ? "Nueva Tarea" : "Editar Tarea",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _tituloController,
-                decoration: const InputDecoration(
-                  labelText: "Titulo",
-                  border: OutlineInputBorder(),
-                ),
-                validator: _validateTitulo,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _asignaturaController,
-                decoration: const InputDecoration(
-                  labelText: "Asignatura",
-                  border: OutlineInputBorder(),
-                ),
-                validator: _validateAsignatura,
-              ),
-              const SizedBox(height: 12),
-              TextFormField(
-                controller: _descripcionController,
-                decoration: const InputDecoration(
-                  labelText: "Descripcion",
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-                validator: _validateDescripcion,
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _fechaSeleccionada == null
-                          ? "Seleccione Fecha"
-                          : "Fecha: ${_fechaSeleccionada!.toLocal().toString().split(' ')[0]}",
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+            left: 20,
+            right: 20,
+            top: 12,
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        widget.tarea == null ? "Nueva tarea" : "Editar tarea",
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: _selectDate,
-                    child: const Text("Cambiar"),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _horaSeleccionada == null
-                          ? "Seleccione Hora"
-                          : "Hora: ${_horaSeleccionada!.format(context)}",
+                    IconButton(
+                      tooltip: 'Cerrar formulario',
+                      onPressed: () => Navigator.maybePop(context),
+                      icon: const Icon(Icons.close),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _tituloController,
+                  decoration: const InputDecoration(
+                    labelText: "Titulo",
+                    prefixIcon: Icon(Icons.task_alt),
                   ),
-                  TextButton(
-                    onPressed: _selectTime,
-                    child: const Text("Cambiar"),
+                  validator: _validateTitulo,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _asignaturaController,
+                  decoration: const InputDecoration(
+                    labelText: "Asignatura",
+                    prefixIcon: Icon(Icons.school_outlined),
                   ),
-                ],
-              ),
-            ],
+                  validator: _validateAsignatura,
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _descripcionController,
+                  decoration: const InputDecoration(
+                    labelText: "Descripcion",
+                    prefixIcon: Icon(Icons.notes),
+                  ),
+                  maxLines: 3,
+                  validator: _validateDescripcion,
+                ),
+                const SizedBox(height: 16),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    AgendaDateTimeButton(
+                      key: const Key('task-date-button'),
+                      icon: Icons.calendar_today,
+                      label: 'Fecha',
+                      value: _fechaSeleccionada == null
+                          ? 'Seleccionar'
+                          : _formatDate(_fechaSeleccionada!),
+                      onPressed: _selectDate,
+                    ),
+                    AgendaDateTimeButton(
+                      key: const Key('task-time-button'),
+                      icon: Icons.schedule,
+                      label: 'Hora',
+                      value: _horaSeleccionada == null
+                          ? 'Seleccionar'
+                          : _horaSeleccionada!.format(context),
+                      onPressed: _selectTime,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () => Navigator.maybePop(context),
+                        child: const Text('Cancelar'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: _guardar,
+                        child: const Text("Guardar"),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

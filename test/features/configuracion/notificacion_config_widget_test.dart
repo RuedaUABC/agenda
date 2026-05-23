@@ -80,11 +80,11 @@ void main() {
       ),
     );
 
-    expect(find.text('Notificaciones Globales'), findsOneWidget);
+    expect(find.text('Notificaciones globales'), findsOneWidget);
     expect(find.text('Clases'), findsOneWidget);
-    expect(find.text('Tareas (Primer Aviso)'), findsOneWidget);
-    expect(find.text('30 minutos antes'), findsOneWidget);
-    expect(find.text('2 hora(s) antes'), findsOneWidget);
+    expect(find.text('Tareas (primer aviso)'), findsOneWidget);
+    expect(find.text('30 minutos antes'), findsWidgets);
+    expect(find.text('2 hora(s) antes'), findsWidgets);
   });
 
   testWidgets('NotificacionConfigWidget actualiza aviso global de clases', (
@@ -98,9 +98,9 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byType(DropdownButton<int>).first);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('30 minutos antes').last);
+    tester
+        .widget<DropdownMenu<int>>(find.byType(DropdownMenu<int>).first)
+        .onSelected!(30);
     await tester.pumpAndSettle();
 
     expect(controller.globalClaseNotif, const Duration(minutes: 30));
@@ -121,9 +121,9 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byType(DropdownButton<int>).at(1));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('10 minutos antes').last);
+    tester
+        .widget<DropdownMenu<int>>(find.byType(DropdownMenu<int>).at(1))
+        .onSelected!(10);
     await tester.pumpAndSettle();
 
     expect(controller.globalTareaNotifs.first, const Duration(minutes: 10));

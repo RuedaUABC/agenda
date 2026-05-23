@@ -25,6 +25,8 @@ Criterios de aceptacion:
 - El usuario puede cambiar de modulo sin cerrar la aplicacion.
 - El modulo seleccionado queda visualmente identificado.
 - La navegacion no debe eliminar los datos cargados en los otros modulos.
+- En pantallas moviles se usa barra inferior Material 3.
+- En pantallas medianas o grandes se usa `NavigationRail`.
 
 **RF-002. Conservacion de estado entre modulos**  
 Prioridad: Media. Estado: Implementado.  
@@ -66,6 +68,8 @@ Criterios de aceptacion:
 - Al guardar una tarea valida, esta queda persistida localmente.
 - La tarea creada aparece en la categoria que le corresponda.
 - El formulario no debe cerrarse si existen errores de validacion.
+- El formulario muestra titulo, accion de cancelar/cerrar y accion primaria de
+  guardado en controles Material 3.
 
 **RF-006. Validacion de datos de tarea**  
 Prioridad: Alta. Estado: Implementado.  
@@ -174,6 +178,12 @@ Prioridad: Baja. Estado: Implementado.
 El sistema deberia permitir buscar tareas por titulo, asignatura o descripcion,
 y filtrar por estado o rango de fechas.
 
+Criterios de aceptacion:
+
+- La busqueda se presenta mediante `SearchBar`.
+- El filtro de estado se presenta mediante un control segmentado Material 3.
+- El filtro de fecha no debe depender de `DropdownButton` legado.
+
 ## Horario
 
 **RF-017. Consulta de clases**  
@@ -189,6 +199,8 @@ Criterios de aceptacion:
 
 - Al guardar una clase valida, esta aparece en el horario semanal.
 - La clase se conserva al cerrar y abrir la aplicacion.
+- El formulario agrupa fecha y hora con botones Material 3 y selector de color
+  accesible.
 
 **RF-019. Validacion de datos de clase**  
 Prioridad: Alta. Estado: Implementado.  
@@ -258,6 +270,11 @@ eventos que empiezan antes y terminan despues de esa fecha.
 Prioridad: Media. Estado: Implementado.  
 El sistema debe mostrar titulo, descripcion y color asociado de cada evento.
 
+Criterios de aceptacion:
+
+- El selector de color de eventos debe ofrecer objetivos tactiles de al menos
+  `48x48`.
+
 **RF-030. Creacion de eventos desde la interfaz**  
 Prioridad: Alta. Estado: Implementado.  
 El usuario debe poder crear eventos desde el modulo Calendario.
@@ -299,10 +316,19 @@ tareas desde almacenamiento local.
 Prioridad: Media. Estado: Implementado.  
 El usuario debe poder seleccionar cuanto tiempo antes recibir avisos de clases.
 
+Criterios de aceptacion:
+
+- La seleccion se presenta con componentes Material 3 y texto descriptivo.
+
 **RF-036. Configuracion del primer aviso de tareas**  
 Prioridad: Media. Estado: Implementado.  
 El usuario debe poder seleccionar cuanto tiempo antes recibir el primer aviso de
 tareas.
+
+Criterios de aceptacion:
+
+- La seleccion se presenta con componentes Material 3 y conserva la
+  reprogramacion de tareas pendientes.
 
 **RF-037. Validacion de preferencias de notificacion**  
 Prioridad: Media. Estado: Implementado.  

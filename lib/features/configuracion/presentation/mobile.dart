@@ -11,9 +11,7 @@ class MyMobileBody extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        children: [
-          NotificacionConfigWidget(controller: controller),
-        ],
+        children: [NotificacionConfigWidget(controller: controller)],
       ),
     );
   }

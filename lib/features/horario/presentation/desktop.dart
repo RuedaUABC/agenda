@@ -32,14 +32,14 @@ class MyDesktopBody extends StatelessWidget {
                 headerStyle: CalendarHeaderStyle(
                   textAlign: TextAlign.center,
                   textStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
                 viewHeaderStyle: ViewHeaderStyle(
-                  dayTextStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  dayTextStyle: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.bold),
                   dateTextStyle: Theme.of(context).textTheme.labelSmall,
                 ),
                 timeSlotViewSettings: const TimeSlotViewSettings(
@@ -61,7 +61,6 @@ class MyDesktopBody extends StatelessWidget {
             child: ValueListenableBuilder<DateTime>(
               valueListenable: controller.selectedDate,
               builder: (context, date, _) {
-
                 final filteredClases = controller.clases.where((clase) {
                   // For simple day view, we check if it falls on the selected day
                   // For recurrent classes, it's trickier in a simple list, but let's show classes of that specific weekday.
