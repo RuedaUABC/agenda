@@ -117,7 +117,12 @@ Piezas principales:
 - `repository/horario_repository_impl.dart`: implementacion.
 - `presentation/horario_controller.dart`: estado y adaptador hacia
   `syncfusion_flutter_calendar`.
-- `presentation/widgets/`: formulario e items de lista.
+- `presentation/mobile.dart`: vista mobile con selector segmentado `Semana` /
+  `Dia`.
+- `presentation/desktop.dart`: vista desktop con calendario semanal y panel
+  lateral del dia seleccionado.
+- `presentation/widgets/`: formulario, tarjetas de clase y panel diario
+  reutilizable.
 
 ### Calendario
 
@@ -139,8 +144,12 @@ Piezas principales:
 - `repository/calendario_repository.dart`: contrato.
 - `repository/calendario_repository_impl.dart`: implementacion.
 - `presentation/calendario_controller.dart`: estado y `EventoDataSource`.
-- `presentation/calendario.dart`, `mobile.dart`, `desktop.dart`: UI.
-- `presentation/widgets/`: formulario e items de lista de eventos.
+- `presentation/mobile.dart`: vista mobile con selector segmentado `Mes` /
+  `Dia`.
+- `presentation/desktop.dart`: vista desktop con calendario mensual y panel
+  lateral del dia seleccionado.
+- `presentation/widgets/`: formulario, tarjetas de evento y panel diario
+  reutilizable.
 
 ### Configuracion
 

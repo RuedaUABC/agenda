@@ -227,10 +227,26 @@ dia seleccionado.
 Prioridad: Alta. Estado: Implementado.  
 El sistema debe mostrar las clases en una vista semanal de horario.
 
+Criterios de aceptacion:
+
+- En mobile, la vista semanal se alterna con la vista diaria mediante un
+  `SegmentedButton` Material 3.
+- En desktop, la vista semanal se muestra junto a un panel secundario del dia
+  seleccionado.
+- La accion `Hoy` permite volver rapidamente al dia actual sin perder el flujo
+  de consulta.
+
 **RF-022. Lista de clases por dia seleccionado**  
 Prioridad: Media. Estado: Implementado.  
 El sistema debe listar las clases correspondientes al dia seleccionado por el
 usuario.
+
+Criterios de aceptacion:
+
+- La lista diaria muestra encabezado con contador de clases.
+- El usuario puede cambiar de dia con chips de dias laborables.
+- Si no hay clases, se muestra un estado vacio Material 3.
+- Cada clase muestra materia, horario y aula con metadatos visuales claros.
 
 **RF-023. Edicion de clases**  
 Prioridad: Media. Estado: Implementado.  
@@ -256,6 +272,14 @@ El sistema debe cargar eventos guardados localmente.
 Prioridad: Alta. Estado: Implementado.  
 El sistema debe mostrar eventos en una vista mensual de calendario.
 
+Criterios de aceptacion:
+
+- En mobile, la vista mensual se alterna con la agenda diaria mediante un
+  `SegmentedButton` Material 3.
+- En desktop, el calendario mensual se muestra junto a un panel secundario del
+  dia seleccionado.
+- La accion `Hoy` permite volver rapidamente a la fecha actual.
+
 **RF-027. Seleccion de fecha en calendario**  
 Prioridad: Media. Estado: Implementado.  
 El sistema debe permitir seleccionar una fecha del calendario y conservar esa
@@ -266,6 +290,12 @@ Prioridad: Alta. Estado: Implementado.
 El sistema debe listar eventos que ocurran en el dia seleccionado, incluyendo
 eventos que empiezan antes y terminan despues de esa fecha.
 
+Criterios de aceptacion:
+
+- La lista diaria muestra encabezado con contador de eventos.
+- El usuario puede cambiar de fecha con chips Material 3.
+- Si no hay eventos, se muestra un estado vacio Material 3.
+
 **RF-029. Representacion visual de eventos**  
 Prioridad: Media. Estado: Implementado.  
 El sistema debe mostrar titulo, descripcion y color asociado de cada evento.
@@ -274,6 +304,8 @@ Criterios de aceptacion:
 
 - El selector de color de eventos debe ofrecer objetivos tactiles de al menos
   `48x48`.
+- Cada evento en la lista diaria muestra barra de color, icono, rango horario y
+  descripcion como metadatos legibles.
 
 **RF-030. Creacion de eventos desde la interfaz**  
 Prioridad: Alta. Estado: Implementado.  

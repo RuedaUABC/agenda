@@ -99,10 +99,10 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text('Eventos'));
+    await tester.tap(find.text('Dia'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Eventos del 13/5'), findsOneWidget);
+    expect(find.text('Eventos del dia (1)'), findsOneWidget);
     expect(find.text('Parcial'), findsOneWidget);
     expect(find.text('Aula 2'), findsOneWidget);
   });
@@ -118,10 +118,10 @@ void main() {
       ),
     );
 
-    await tester.tap(find.text('Eventos'));
+    await tester.tap(find.text('Dia'));
     await tester.pumpAndSettle();
 
-    expect(find.textContaining('No hay eventos'), findsOneWidget);
+    expect(find.text('No hay eventos este dia'), findsOneWidget);
   });
 
   testWidgets('Calendario desktop lista eventos que duran varios dias', (
@@ -143,8 +143,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Eventos'), findsOneWidget);
-    expect(find.text('13/5/2026'), findsOneWidget);
+    expect(find.text('Eventos del dia (1)'), findsOneWidget);
     expect(find.text('Congreso'), findsOneWidget);
     expect(find.text('Dia intermedio'), findsOneWidget);
   });
@@ -163,7 +162,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Sin eventos para hoy'), findsOneWidget);
+    expect(find.text('No hay eventos este dia'), findsOneWidget);
   });
 
   testWidgets('Calendario desktop permite editar evento con tap', (

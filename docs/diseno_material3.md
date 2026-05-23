@@ -141,6 +141,12 @@ Cambios concretos:
 - Al tocar un evento, abrir detalle en sheet con acciones editar/eliminar.
 - La accion destructiva debe usar `colorScheme.error`.
 - Agregar accion `Hoy` para volver rapidamente a la fecha actual.
+- En mobile, usar selector segmentado Material 3 para alternar `Mes` y `Dia`.
+- Mostrar contador de eventos y chips de fechas en la agenda diaria.
+
+Estado de esta iteracion: implementado en mobile y desktop con
+`SegmentedButton`, `ChoiceChip`, `AgendaSectionHeader`, `AgendaEmptyState` y
+tarjetas `Card.filled` para eventos.
 
 Cambios en formulario de eventos:
 
@@ -163,7 +169,14 @@ Cambios concretos:
 - Agregar accion `Hoy` o `Esta semana`.
 - Usar colores suaves por clase y alto contraste en texto.
 - Mostrar aula como metadato secundario con icono.
-- En movil, mantener tabs, pero asegurar que el estado seleccionado sea claro.
+- En movil, usar selector segmentado Material 3 para alternar `Semana` y
+  `Dia`.
+- Mostrar contador de clases, chips de dias laborables y estado vacio
+  consistente cuando no haya clases del dia seleccionado.
+
+Estado de esta iteracion: implementado en mobile y desktop con
+`SegmentedButton`, `ChoiceChip`, `AgendaSectionHeader`, `AgendaEmptyState` y
+tarjetas `Card.filled` para clases.
 
 Cambios en formulario de clases:
 

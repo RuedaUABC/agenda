@@ -3,9 +3,11 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../domain/evento.dart';
 import 'calendario_controller.dart';
-import 'widgets/evento_list_item.dart';
+import 'widgets/calendario_day_panel.dart';
 
-class MyMobileBody extends StatelessWidget {
+enum CalendarioMobileView { mes, dia }
+
+class MyMobileBody extends StatefulWidget {
   final CalendarioController controller;
   final VoidCallback onRefresh;
   final ValueChanged<Evento>? onEditEvento;
@@ -20,89 +22,107 @@ class MyMobileBody extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Calendario'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.calendar_month), text: 'Mes'),
-              Tab(icon: Icon(Icons.list), text: 'Eventos'),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            SfCalendar(
-              view: CalendarView.month,
-              dataSource: EventoDataSource(controller.eventos),
-              firstDayOfWeek: 1,
-              monthViewSettings: const MonthViewSettings(
-                showAgenda: true,
-                agendaViewHeight: 250,
-                appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
-              ),
-              onTap: (CalendarTapDetails details) {
-                if (details.date != null) {
-                  controller.selectedDate.value = details.date!;
-                }
-              },
-            ),
-            ValueListenableBuilder<DateTime>(
-              valueListenable: controller.selectedDate,
-              builder: (context, date, _) {
-                final filteredEventos = controller.eventos.where((evento) {
-                  final start = DateTime(
-                    evento.inicio.year,
-                    evento.inicio.month,
-                    evento.inicio.day,
-                  );
-                  final end = DateTime(
-                    evento.fin.year,
-                    evento.fin.month,
-                    evento.fin.day,
-                  );
-                  final target = DateTime(date.year, date.month, date.day);
-                  return target.isAtSameMomentAs(start) ||
-                      (target.isAfter(start) && target.isBefore(end)) ||
-                      target.isAtSameMomentAs(end);
-                }).toList();
+  State<MyMobileBody> createState() => _MyMobileBodyState();
+}
 
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Eventos del ${date.day}/${date.month}',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
+class _MyMobileBodyState extends State<MyMobileBody> {
+  CalendarioMobileView _view = CalendarioMobileView.mes;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Material(
+      color: colorScheme.surface,
+      child: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Calendario',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w700),
                     ),
-                    Expanded(
-                      child: filteredEventos.isEmpty
-                          ? const Center(
-                              child: Text('No hay eventos para este dia'),
-                            )
-                          : ListView.builder(
-                              itemCount: filteredEventos.length,
-                              itemBuilder: (context, index) {
-                                final evento = filteredEventos[index];
-                                return EventoListItem(
-                                  evento: evento,
-                                  onTap: onEditEvento == null
-                                      ? null
-                                      : () => onEditEvento!(evento),
-                                  onDelete: onDeleteEvento == null
-                                      ? null
-                                      : () => onDeleteEvento!(evento),
-                                );
-                              },
-                            ),
+                  ),
+                  TextButton.icon(
+                    onPressed: () {
+                      widget.controller.selectedDate.value = DateTime.now();
+                      widget.onRefresh();
+                    },
+                    icon: const Icon(Icons.today_outlined),
+                    label: const Text('Hoy'),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SegmentedButton<CalendarioMobileView>(
+                  segments: const [
+                    ButtonSegment(
+                      value: CalendarioMobileView.mes,
+                      icon: Icon(Icons.calendar_month_outlined),
+                      label: Text('Mes'),
+                    ),
+                    ButtonSegment(
+                      value: CalendarioMobileView.dia,
+                      icon: Icon(Icons.view_day_outlined),
+                      label: Text('Dia'),
                     ),
                   ],
-                );
-              },
+                  selected: {_view},
+                  onSelectionChanged: (selection) {
+                    setState(() => _view = selection.first);
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              child: IndexedStack(
+                index: _view.index,
+                children: [
+                  DecoratedBox(
+                    decoration: BoxDecoration(color: colorScheme.surface),
+                    child: SfCalendar(
+                      view: CalendarView.month,
+                      dataSource: EventoDataSource(widget.controller.eventos),
+                      firstDayOfWeek: 1,
+                      todayHighlightColor: colorScheme.primary,
+                      selectionDecoration: BoxDecoration(
+                        border: Border.all(
+                          color: colorScheme.primary,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      monthViewSettings: const MonthViewSettings(
+                        showAgenda: true,
+                        agendaViewHeight: 220,
+                        appointmentDisplayMode:
+                            MonthAppointmentDisplayMode.indicator,
+                      ),
+                      onTap: (CalendarTapDetails details) {
+                        if (details.date != null) {
+                          widget.controller.selectedDate.value = details.date!;
+                          widget.onRefresh();
+                        }
+                      },
+                    ),
+                  ),
+                  CalendarioDayPanel(
+                    controller: widget.controller,
+                    onRefresh: widget.onRefresh,
+                    onEditEvento: widget.onEditEvento,
+                    onDeleteEvento: widget.onDeleteEvento,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

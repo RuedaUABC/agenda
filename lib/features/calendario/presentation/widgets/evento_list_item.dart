@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../domain/evento.dart';
 
@@ -49,32 +50,120 @@ class EventoListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final eventColor = Color(evento.color);
     final description = evento.descripcion.trim();
+    final timeFormat = DateFormat.Hm();
+    final timeRange =
+        '${timeFormat.format(evento.inicio)} - ${timeFormat.format(evento.fin)}';
 
-    return Card(
+    return Card.filled(
       margin: margin,
-      child: ListTile(
-        leading: Container(
-          width: 4,
-          decoration: BoxDecoration(
-            color: Color(evento.color),
-            borderRadius: BorderRadius.circular(2),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              Container(
+                width: 6,
+                decoration: BoxDecoration(
+                  color: eventColor,
+                  borderRadius: const BorderRadius.horizontal(
+                    left: Radius.circular(12),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: eventColor.withValues(alpha: 0.14),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.event_outlined,
+                              color: eventColor,
+                              semanticLabel: 'Evento',
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              evento.titulo,
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                          if (onDelete != null)
+                            IconButton(
+                              tooltip: 'Eliminar evento ${evento.titulo}',
+                              onPressed: () => _confirmDelete(context),
+                              icon: const Icon(Icons.delete_outline),
+                              color: colorScheme.error,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      _MetadataLine(
+                        icon: Icons.schedule_outlined,
+                        label: timeRange,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      if (description.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        _MetadataLine(
+                          icon: Icons.notes_outlined,
+                          label: description,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        title: Text(
-          evento.titulo,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: description.isEmpty ? null : Text(description),
-        trailing: onDelete == null
-            ? null
-            : IconButton(
-                tooltip: 'Eliminar evento ${evento.titulo}',
-                onPressed: () => _confirmDelete(context),
-                icon: const Icon(Icons.delete_outline),
-              ),
-        onTap: onTap,
       ),
+    );
+  }
+}
+
+class _MetadataLine extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+
+  const _MetadataLine({
+    required this.icon,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            label,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: color),
+          ),
+        ),
+      ],
     );
   }
 }

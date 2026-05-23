@@ -20,6 +20,10 @@ esta organizado el proyecto y como trabajar con el.
   TDD para creacion, edicion, eliminacion y validaciones de eventos.
 - [`red_green_refactor_diseno_material3.md`](red_green_refactor_diseno_material3.md):
   evidencia TDD del rediseno Material 3.
+- [`red_green_refactor_horario_material3.md`](red_green_refactor_horario_material3.md):
+  evidencia TDD del refinamiento Material 3 de la pantalla Horario.
+- [`red_green_refactor_calendario_material3.md`](red_green_refactor_calendario_material3.md):
+  evidencia TDD del refinamiento Material 3 del calendario de eventos.
 - [`red_green_refactor_validaciones.md`](red_green_refactor_validaciones.md):
   evidencia TDD para validaciones completas de tareas y clases.
 - [`red_green_refactor_tareas_configuracion_robustez.md`](red_green_refactor_tareas_configuracion_robustez.md):

@@ -25,6 +25,8 @@ void main() {
     expect(find.text('Programacion'), findsOneWidget);
     expect(find.textContaining('Lab 3'), findsOneWidget);
     expect(find.textContaining('08:00 - 10:30'), findsOneWidget);
-    expect(find.byIcon(Icons.class_), findsOneWidget);
+    expect(find.byIcon(Icons.school_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.schedule_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.meeting_room_outlined), findsOneWidget);
   });
 }

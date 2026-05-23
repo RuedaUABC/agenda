@@ -63,9 +63,9 @@ pruebas y evidencia tecnica observada en el proyecto.
 | RNF-007 | `test/features/*/*controller_test.dart` |
 | RNF-008 | Revision arquitectonica sugerida |
 | RNF-009 | `lib/features/navegacion/presentation/navegacion.dart`, `test/features/diseno_material3/material3_navigation_test.dart` |
-| RNF-010 | `lib/core/theme/app_theme.dart`, `docs/diseno_material3.md`, `test/features/diseno_material3/material3_app_test.dart` |
+| RNF-010 | `lib/core/theme/app_theme.dart`, `docs/diseno_material3.md`, `test/features/diseno_material3/material3_app_test.dart`, `test/features/diseno_material3/material3_horario_test.dart`, `test/features/diseno_material3/material3_calendario_test.dart` |
 | RNF-011 | Pantallas principales de features |
-| RNF-012 | Horario, calendario y listas de tareas |
+| RNF-012 | Horario, calendario y listas de tareas; `test/features/diseno_material3/material3_horario_test.dart`, `test/features/diseno_material3/material3_calendario_test.dart` |
 | RNF-013 | Pendiente de revisar todos los formularios |
 | RNF-014 | `lib/core/db/database_helper.dart`, `shared_preferences` |
 | RNF-015 | Modelos de dominio y pruebas de serializacion |

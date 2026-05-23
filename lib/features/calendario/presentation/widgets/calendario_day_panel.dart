@@ -1,0 +1,157 @@
+import 'package:flutter/material.dart';
+
+import '../../../../core/widgets/agenda_empty_state.dart';
+import '../../../../core/widgets/agenda_section_header.dart';
+import '../../domain/evento.dart';
+import '../calendario_controller.dart';
+import 'evento_list_item.dart';
+
+class CalendarioDayPanel extends StatelessWidget {
+  final CalendarioController controller;
+  final VoidCallback onRefresh;
+  final ValueChanged<Evento>? onEditEvento;
+  final Future<void> Function(Evento evento)? onDeleteEvento;
+
+  const CalendarioDayPanel({
+    super.key,
+    required this.controller,
+    required this.onRefresh,
+    this.onEditEvento,
+    this.onDeleteEvento,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<DateTime>(
+      valueListenable: controller.selectedDate,
+      builder: (context, date, _) {
+        final eventos = _eventsFor(date);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            AgendaSectionHeader(
+              title: 'Eventos del dia',
+              count: eventos.length,
+              trailing: TextButton.icon(
+                onPressed: () {
+                  controller.selectedDate.value = DateTime.now();
+                  onRefresh();
+                },
+                icon: const Icon(Icons.today_outlined),
+                label: const Text('Hoy'),
+              ),
+            ),
+            _DateSelector(
+              selectedDate: date,
+              onSelected: (selectedDate) {
+                controller.selectedDate.value = selectedDate;
+                onRefresh();
+              },
+            ),
+            Expanded(
+              child: eventos.isEmpty
+                  ? const Center(
+                      child: AgendaEmptyState(
+                        icon: Icons.event_busy_outlined,
+                        title: 'No hay eventos este dia',
+                        description: 'Selecciona otra fecha o crea un evento.',
+                      ),
+                    )
+                  : ListView.separated(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                      itemCount: eventos.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      itemBuilder: (context, index) {
+                        final evento = eventos[index];
+                        return EventoListItem(
+                          evento: evento,
+                          margin: EdgeInsets.zero,
+                          onTap: onEditEvento == null
+                              ? null
+                              : () => onEditEvento!(evento),
+                          onDelete: onDeleteEvento == null
+                              ? null
+                              : () => onDeleteEvento!(evento),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  List<Evento> _eventsFor(DateTime date) {
+    final target = _dateOnly(date);
+    final filtered = controller.eventos.where((evento) {
+      final start = _dateOnly(evento.inicio);
+      final end = _dateOnly(evento.fin);
+      return target.isAtSameMomentAs(start) ||
+          target.isAtSameMomentAs(end) ||
+          (target.isAfter(start) && target.isBefore(end));
+    }).toList();
+    filtered.sort((a, b) => a.inicio.compareTo(b.inicio));
+    return filtered;
+  }
+
+  DateTime _dateOnly(DateTime value) {
+    return DateTime(value.year, value.month, value.day);
+  }
+}
+
+class _DateSelector extends StatelessWidget {
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> onSelected;
+
+  const _DateSelector({required this.selectedDate, required this.onSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    final start = selectedDate.subtract(const Duration(days: 3));
+    final days = List.generate(7, (index) => start.add(Duration(days: index)));
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          for (final day in days) ...[
+            ChoiceChip(
+              label: Text('${_weekdayLabel(day.weekday)} ${day.day}'),
+              selected: _sameDay(day, selectedDate),
+              onSelected: (_) => onSelected(day),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ],
+      ),
+    );
+  }
+
+  bool _sameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  String _weekdayLabel(int weekday) {
+    switch (weekday) {
+      case DateTime.monday:
+        return 'Lun';
+      case DateTime.tuesday:
+        return 'Mar';
+      case DateTime.wednesday:
+        return 'Mie';
+      case DateTime.thursday:
+        return 'Jue';
+      case DateTime.friday:
+        return 'Vie';
+      case DateTime.saturday:
+        return 'Sab';
+      case DateTime.sunday:
+        return 'Dom';
+      default:
+        return 'Dia';
+    }
+  }
+}

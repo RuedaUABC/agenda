@@ -51,6 +51,8 @@ y `test/features/calendario/calendario_widgets_test.dart`.
 - El widget desktop lista eventos de varios dias y muestra estado vacio.
 - El widget desktop permite editar al tocar un evento y confirma eliminacion
   desde una accion visible.
+- La pantalla Calendario usa selector segmentado en mobile, panel secundario
+  Material 3 en desktop, chips de fechas y estado vacio consistente.
 
 ## Feature: Horario
 
@@ -70,7 +72,9 @@ Ubicacion principal: `test/features/horario/horario_controller_test.dart`,
 - Valida que `ClaseForm` requiera materia y cree clases semanales validas.
 - Aplica longitudes maximas para materia y aula.
 - Impide guardar clases que se cruzan con otra clase del mismo dia y horario.
-- `ClaseListItem` renderiza materia, aula, rango horario e icono.
+- `ClaseListItem` renderiza materia, aula, rango horario e iconos Material 3.
+- La pantalla Horario usa selector segmentado en mobile, panel secundario
+  Material 3 en desktop, chips de dias y estado vacio consistente.
 
 ## Feature: Configuracion
 
@@ -105,6 +109,10 @@ Ubicacion principal: `test/features/diseno_material3/`.
   acciones Material 3 y botones de fecha/hora.
 - Los selectores de color de eventos y clases tienen objetivos de `48x48`.
 - La configuracion usa secciones `ListTile` y `DropdownMenu`.
+- Horario usa `SegmentedButton`, `ChoiceChip`, `AgendaSectionHeader`,
+  `AgendaEmptyState` y tarjetas `Card.filled` para clases.
+- Calendario usa `SegmentedButton`, `ChoiceChip`, `AgendaSectionHeader`,
+  `AgendaEmptyState` y tarjetas `Card.filled` para eventos.
 
 ## Feature: Modelos de dominio
 
