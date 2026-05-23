@@ -6,6 +6,7 @@ abstract class TareaRepository {
   Future<void> addTarea(Tarea tarea);
   Future<void> updateTarea(Tarea tarea);
   Future<void> deleteTarea(String id);
+  Future<void> deleteTareaDefinitiva(String id);
   Future<void> restoreTarea(String id);
   Future<void> programarNotificacionesTarea(String tareaId);
 }

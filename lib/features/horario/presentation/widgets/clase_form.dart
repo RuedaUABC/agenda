@@ -6,14 +6,23 @@ import '../horario_controller.dart';
 class ClaseForm extends StatefulWidget {
   final DateTime initialDate;
   final ValueChanged<Clase>? onSave;
+  final List<Clase> clases;
 
-  const ClaseForm({super.key, required this.initialDate, this.onSave});
+  const ClaseForm({
+    super.key,
+    required this.initialDate,
+    this.onSave,
+    this.clases = const [],
+  });
 
   @override
   State<ClaseForm> createState() => _ClaseFormState();
 }
 
 class _ClaseFormState extends State<ClaseForm> {
+  static const int maxMateriaLength = 120;
+  static const int maxAulaLength = 80;
+
   static const List<Color> _colors = [
     Color(0xFF3B82F6),
     Color(0xFF22C55E),
@@ -46,6 +55,37 @@ class _ClaseFormState extends State<ClaseForm> {
 
   DateTime _combine(DateTime date, TimeOfDay time) {
     return DateTime(date.year, date.month, date.day, time.hour, time.minute);
+  }
+
+  String? _validateMateria(String? value) {
+    final materia = value?.trim() ?? '';
+    if (materia.isEmpty) {
+      return 'Ingresa la materia';
+    }
+    if (materia.length > maxMateriaLength) {
+      return 'La materia no puede superar $maxMateriaLength caracteres';
+    }
+    return null;
+  }
+
+  String? _validateAula(String? value) {
+    final aula = value?.trim() ?? '';
+    if (aula.length > maxAulaLength) {
+      return 'El aula no puede superar $maxAulaLength caracteres';
+    }
+    return null;
+  }
+
+  bool _hasConflict(DateTime start, DateTime end) {
+    final startMinutes = start.hour * 60 + start.minute;
+    final endMinutes = end.hour * 60 + end.minute;
+
+    return widget.clases.any((clase) {
+      if (clase.inicio.weekday != start.weekday) return false;
+      final classStartMinutes = clase.inicio.hour * 60 + clase.inicio.minute;
+      final classEndMinutes = clase.fin.hour * 60 + clase.fin.minute;
+      return startMinutes < classEndMinutes && endMinutes > classStartMinutes;
+    });
   }
 
   Future<void> _pickDate() async {
@@ -99,6 +139,15 @@ class _ClaseFormState extends State<ClaseForm> {
       return;
     }
 
+    if (_hasConflict(start, end)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('La clase se cruza con otra clase del mismo dia'),
+        ),
+      );
+      return;
+    }
+
     final clase = Clase(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       materia: _materiaController.text.trim(),
@@ -141,12 +190,7 @@ class _ClaseFormState extends State<ClaseForm> {
                     prefixIcon: Icon(Icons.class_),
                   ),
                   textInputAction: TextInputAction.next,
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Ingresa la materia';
-                    }
-                    return null;
-                  },
+                  validator: _validateMateria,
                 ),
                 const SizedBox(height: 12),
                 TextFormField(
@@ -156,6 +200,7 @@ class _ClaseFormState extends State<ClaseForm> {
                     prefixIcon: Icon(Icons.room_outlined),
                   ),
                   textInputAction: TextInputAction.done,
+                  validator: _validateAula,
                 ),
                 const SizedBox(height: 16),
                 OutlinedButton.icon(

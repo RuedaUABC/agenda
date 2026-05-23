@@ -50,6 +50,12 @@ class TareaRepositoryImpl implements TareaRepository {
   }
 
   @override
+  Future<void> deleteTareaDefinitiva(String id) async {
+    await tareaDao.deleteTareaDefinitiva(id);
+    await scheduler.cancelNotification(id);
+  }
+
+  @override
   Future<void> restoreTarea(String id) async {
     await tareaDao.restoreTarea(id);
     await programarNotificacionesTarea(id);

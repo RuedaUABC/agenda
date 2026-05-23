@@ -25,6 +25,11 @@ class FakeTareaRepository implements TareaRepository {
   }
 
   @override
+  Future<void> deleteTareaDefinitiva(String id) async {
+    stored.removeWhere((tarea) => tarea.id == id);
+  }
+
+  @override
   Future<List<Tarea>> fetchTareas() async {
     return stored.where((tarea) => !tarea.eliminada).toList();
   }
@@ -141,23 +146,23 @@ void main() {
       ]);
     });
 
-    test(
-      'guarda lista vacia de avisos de tareas y la mantiene en memoria',
-      () async {
-        SharedPreferences.setMockInitialValues({});
-        final prefs = PreferencesHelper();
-        await prefs.init();
-        final controller = SettingsController(prefs: prefs);
+    test('rechaza lista vacia de avisos de tareas', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = PreferencesHelper();
+      await prefs.init();
+      final controller = SettingsController(prefs: prefs);
 
-        await controller.updateGlobalTareaNotifs([]);
+      await expectLater(
+        controller.updateGlobalTareaNotifs([]),
+        throwsA(isA<ArgumentError>()),
+      );
 
-        expect(controller.globalTareaNotifs, isEmpty);
-        expect(prefs.getGlobalTareaNotificaciones(), [
-          const Duration(minutes: 60),
-          const Duration(days: 1),
-        ]);
-      },
-    );
+      expect(controller.globalTareaNotifs, [const Duration(minutes: 60)]);
+      expect(prefs.getGlobalTareaNotificaciones(), [
+        const Duration(minutes: 60),
+        const Duration(days: 1),
+      ]);
+    });
 
     test('no reprograma tareas cuando no se inyecta repositorio', () async {
       SharedPreferences.setMockInitialValues({});
@@ -169,5 +174,54 @@ void main() {
 
       expect(controller.globalTareaNotifs, [const Duration(minutes: 15)]);
     });
+
+    test('rechaza preferencias de clase no permitidas', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = PreferencesHelper();
+      await prefs.init();
+      final controller = SettingsController(prefs: prefs);
+
+      await expectLater(
+        controller.updateGlobalClaseNotif(const Duration(minutes: -5)),
+        throwsA(isA<ArgumentError>()),
+      );
+
+      expect(controller.globalClaseNotif, const Duration(minutes: 15));
+    });
+
+    test('rechaza avisos de tareas no permitidos', () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = PreferencesHelper();
+      await prefs.init();
+      final controller = SettingsController(prefs: prefs);
+
+      await expectLater(
+        controller.updateGlobalTareaNotifs([const Duration(minutes: 7)]),
+        throwsA(isA<ArgumentError>()),
+      );
+
+      expect(controller.globalTareaNotifs, [const Duration(minutes: 60)]);
+    });
+
+    test(
+      'carga valores por defecto si preferencias guardadas son invalidas',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          'clase_notificacion_minutes': -1,
+          'tarea_notificaciones_minutes': ['7', '-5'],
+        });
+        final prefs = PreferencesHelper();
+        await prefs.init();
+        final controller = SettingsController(prefs: prefs);
+
+        await controller.loadSettings();
+
+        expect(controller.globalClaseNotif, const Duration(minutes: 15));
+        expect(controller.globalTareaNotifs, [
+          const Duration(minutes: 60),
+          const Duration(days: 1),
+        ]);
+      },
+    );
   });
 }

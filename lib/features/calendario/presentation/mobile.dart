@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+
+import '../domain/evento.dart';
 import 'calendario_controller.dart';
+import 'widgets/evento_list_item.dart';
 
 class MyMobileBody extends StatelessWidget {
   final CalendarioController controller;
   final VoidCallback onRefresh;
+  final ValueChanged<Evento>? onEditEvento;
+  final Future<void> Function(Evento evento)? onDeleteEvento;
 
   const MyMobileBody({
     super.key,
     required this.controller,
     required this.onRefresh,
+    this.onEditEvento,
+    this.onDeleteEvento,
   });
 
   @override
@@ -28,11 +35,10 @@ class MyMobileBody extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            // Vista Mensual
             SfCalendar(
               view: CalendarView.month,
               dataSource: EventoDataSource(controller.eventos),
-              firstDayOfWeek: 1, // Lunes
+              firstDayOfWeek: 1,
               monthViewSettings: const MonthViewSettings(
                 showAgenda: true,
                 agendaViewHeight: 250,
@@ -44,17 +50,24 @@ class MyMobileBody extends StatelessWidget {
                 }
               },
             ),
-            // Vista de Lista (Día seleccionado)
             ValueListenableBuilder<DateTime>(
               valueListenable: controller.selectedDate,
               builder: (context, date, _) {
                 final filteredEventos = controller.eventos.where((evento) {
-                  final start = DateTime(evento.inicio.year, evento.inicio.month, evento.inicio.day);
-                  final end = DateTime(evento.fin.year, evento.fin.month, evento.fin.day);
+                  final start = DateTime(
+                    evento.inicio.year,
+                    evento.inicio.month,
+                    evento.inicio.day,
+                  );
+                  final end = DateTime(
+                    evento.fin.year,
+                    evento.fin.month,
+                    evento.fin.day,
+                  );
                   final target = DateTime(date.year, date.month, date.day);
-                  return target.isAtSameMomentAs(start) || 
-                         (target.isAfter(start) && target.isBefore(end)) ||
-                         target.isAtSameMomentAs(end);
+                  return target.isAtSameMomentAs(start) ||
+                      (target.isAfter(start) && target.isBefore(end)) ||
+                      target.isAtSameMomentAs(end);
                 }).toList();
 
                 return Column(
@@ -69,25 +82,20 @@ class MyMobileBody extends StatelessWidget {
                     Expanded(
                       child: filteredEventos.isEmpty
                           ? const Center(
-                              child: Text('No hay eventos para este día'),
+                              child: Text('No hay eventos para este dia'),
                             )
                           : ListView.builder(
                               itemCount: filteredEventos.length,
                               itemBuilder: (context, index) {
                                 final evento = filteredEventos[index];
-                                return Card(
-                                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  child: ListTile(
-                                    leading: Container(
-                                      width: 4,
-                                      decoration: BoxDecoration(
-                                        color: Color(evento.color),
-                                        borderRadius: BorderRadius.circular(2),
-                                      ),
-                                    ),
-                                    title: Text(evento.titulo),
-                                    subtitle: Text(evento.descripcion),
-                                  ),
+                                return EventoListItem(
+                                  evento: evento,
+                                  onTap: onEditEvento == null
+                                      ? null
+                                      : () => onEditEvento!(evento),
+                                  onDelete: onDeleteEvento == null
+                                      ? null
+                                      : () => onDeleteEvento!(evento),
                                 );
                               },
                             ),

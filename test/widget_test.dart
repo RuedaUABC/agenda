@@ -23,6 +23,11 @@ class _FakeTareaRepository implements TareaRepository {
   }
 
   @override
+  Future<void> deleteTareaDefinitiva(String id) async {
+    tareas.removeWhere((tarea) => tarea.id == id);
+  }
+
+  @override
   Future<List<Tarea>> fetchTareas() async {
     return tareas.where((tarea) => !tarea.eliminada).toList();
   }
@@ -66,7 +71,7 @@ Tarea _tarea({
     titulo: titulo,
     asignatura: 'Literatura',
     descripcion: descripcion,
-    fecha: DateTime(2026, 5, 13),
+    fecha: DateTime(2026, 6, 13),
     completada: completada,
     eliminada: eliminada,
   );
@@ -172,6 +177,81 @@ void main() {
     expect(refreshCount, 1);
   });
 
+  testWidgets('ListaTareasCategoria elimina definitivamente desde papelera', (
+    tester,
+  ) async {
+    final repo = _FakeTareaRepository()
+      ..tareas.add(_tarea(titulo: 'Ensayo', eliminada: true));
+    final controller = TasksController(repository: repo);
+    await controller.loadTareas();
+    var refreshCount = 0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ListaTareasCategoria(
+            controller: controller,
+            onRefresh: () => refreshCount++,
+            title: 'Papelera',
+            tareas: controller.papelera,
+            isTrashMode: true,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Ensayo'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Eliminar definitivo'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Eliminar definitivamente'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Eliminar'));
+    await tester.pumpAndSettle();
+
+    expect(controller.papelera, isEmpty);
+    expect(repo.tareas, isEmpty);
+    expect(refreshCount, 1);
+  });
+
+  testWidgets(
+    'ListaTareasCategoria muestra error visible al fallar persistencia',
+    (tester) async {
+      final controller = TasksController(repository: _FailingDeleteRepository())
+        ..papelera = [_tarea(titulo: 'Ensayo', eliminada: true)];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ListaTareasCategoria(
+              controller: controller,
+              onRefresh: () {},
+              title: 'Papelera',
+              tareas: controller.papelera,
+              isTrashMode: true,
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Ensayo'));
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.widgetWithText(FilledButton, 'Eliminar definitivo'),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(FilledButton, 'Eliminar'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text('No se pudo eliminar definitivamente la tarea'),
+        findsOneWidget,
+      );
+    },
+  );
+
   testWidgets('ListaTareasCategoria permite editar una tarea existente', (
     tester,
   ) async {
@@ -274,4 +354,32 @@ void main() {
       expect(refreshCount, 1);
     },
   );
+}
+
+class _FailingDeleteRepository implements TareaRepository {
+  @override
+  Future<void> addTarea(Tarea tarea) async {}
+
+  @override
+  Future<void> deleteTarea(String id) async {}
+
+  @override
+  Future<void> deleteTareaDefinitiva(String id) async {
+    throw Exception('db down');
+  }
+
+  @override
+  Future<List<Tarea>> fetchTareas() async => [];
+
+  @override
+  Future<List<Tarea>> fetchTareasEliminadas() async => [];
+
+  @override
+  Future<void> programarNotificacionesTarea(String tareaId) async {}
+
+  @override
+  Future<void> restoreTarea(String id) async {}
+
+  @override
+  Future<void> updateTarea(Tarea tarea) async {}
 }

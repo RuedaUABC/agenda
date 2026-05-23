@@ -161,7 +161,7 @@ El sistema debe solicitar confirmacion antes de ejecutar acciones destructivas
 como eliminar tareas, clases o eventos.
 
 **RNF-023. Manejo de errores de persistencia**  
-Prioridad: Alta. Estado: Sugerido.  
+Prioridad: Alta. Estado: Implementado.  
 Si ocurre un error al leer o guardar datos locales, el sistema debe informar al
 usuario y evitar dejar la interfaz en un estado inconsistente.
 

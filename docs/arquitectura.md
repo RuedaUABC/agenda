@@ -118,15 +118,19 @@ Responsabilidades:
 - Administrar eventos.
 - Mantener fecha seleccionada.
 - Convertir eventos del dominio a `Appointment` de Syncfusion.
+- Validar creacion y edicion de eventos antes de persistir.
+- Confirmar eliminaciones destructivas desde la interfaz.
 
 Piezas principales:
 
 - `domain/evento.dart`: modelo de evento.
+- `domain/evento_validator.dart`: reglas de validacion y normalizacion.
 - `data/evento_dao.dart`: acceso SQLite.
 - `repository/calendario_repository.dart`: contrato.
 - `repository/calendario_repository_impl.dart`: implementacion.
 - `presentation/calendario_controller.dart`: estado y `EventoDataSource`.
 - `presentation/calendario.dart`, `mobile.dart`, `desktop.dart`: UI.
+- `presentation/widgets/`: formulario e items de lista de eventos.
 
 ### Configuracion
 

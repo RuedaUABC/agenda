@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../preferences_helper.dart';
 import 'settings_controller.dart';
 
 class NotificacionConfigWidget extends StatefulWidget {
@@ -12,7 +13,8 @@ class NotificacionConfigWidget extends StatefulWidget {
 }
 
 class _NotificacionConfigWidgetState extends State<NotificacionConfigWidget> {
-  final List<int> opcionesMinutos = [5, 10, 15, 30, 60, 120, 1440];
+  final List<int> opcionesMinutos =
+      PreferencesHelper.allowedNotificationMinutes;
 
   String _formatDuration(int minutes) {
     if (minutes >= 1440) return '${minutes ~/ 1440} día(s) antes';
@@ -34,16 +36,13 @@ class _NotificacionConfigWidgetState extends State<NotificacionConfigWidget> {
           children: [
             Text(
               "Notificaciones Globales",
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const Divider(),
             const SizedBox(height: 8),
-            const Text(
-              "Clases",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            const Text("Clases", style: TextStyle(fontWeight: FontWeight.bold)),
             DropdownButton<int>(
               value: controller.globalClaseNotif.inMinutes,
               isExpanded: true,
@@ -55,8 +54,20 @@ class _NotificacionConfigWidgetState extends State<NotificacionConfigWidget> {
               }).toList(),
               onChanged: (val) async {
                 if (val != null) {
-                  await controller
-                      .updateGlobalClaseNotif(Duration(minutes: val));
+                  try {
+                    await controller.updateGlobalClaseNotif(
+                      Duration(minutes: val),
+                    );
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Valor de notificacion no permitido'),
+                        ),
+                      );
+                    }
+                    return;
+                  }
                   setState(() {});
                 }
               },
@@ -86,7 +97,18 @@ class _NotificacionConfigWidgetState extends State<NotificacionConfigWidget> {
                   } else {
                     actual[0] = Duration(minutes: val);
                   }
-                  await controller.updateGlobalTareaNotifs(actual);
+                  try {
+                    await controller.updateGlobalTareaNotifs(actual);
+                  } catch (_) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Valor de notificacion no permitido'),
+                        ),
+                      );
+                    }
+                    return;
+                  }
                   setState(() {});
                 }
               },

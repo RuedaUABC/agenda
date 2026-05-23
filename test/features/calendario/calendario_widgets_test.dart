@@ -1,4 +1,5 @@
 import 'package:agenda/features/calendario/domain/evento.dart';
+import 'package:agenda/features/calendario/presentation/calendario.dart';
 import 'package:agenda/features/calendario/presentation/calendario_controller.dart';
 import 'package:agenda/features/calendario/presentation/desktop.dart'
     as desktop;
@@ -8,17 +9,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _FakeCalendarioRepository implements CalendarioRepository {
-  @override
-  Future<void> addEvento(Evento evento) async {}
+  final List<Evento> stored;
+
+  _FakeCalendarioRepository([List<Evento>? initial]) : stored = initial ?? [];
 
   @override
-  Future<void> deleteEvento(String id) async {}
+  Future<void> addEvento(Evento evento) async {
+    stored.add(evento);
+  }
 
   @override
-  Future<List<Evento>> fetchEventos() async => [];
+  Future<void> deleteEvento(String id) async {
+    stored.removeWhere((evento) => evento.id == id);
+  }
 
   @override
-  Future<void> updateEvento(Evento evento) async {}
+  Future<List<Evento>> fetchEventos() async => List<Evento>.from(stored);
+
+  @override
+  Future<void> updateEvento(Evento evento) async {
+    final index = stored.indexWhere((item) => item.id == evento.id);
+    if (index == -1) {
+      stored.add(evento);
+    } else {
+      stored[index] = evento;
+    }
+  }
 }
 
 Evento _evento({
@@ -45,6 +61,31 @@ CalendarioController _controller(List<Evento> eventos, DateTime selectedDate) {
 }
 
 void main() {
+  testWidgets(
+    'CalendarioPage abre formulario desde boton agregar y crea evento',
+    (tester) async {
+      final repo = _FakeCalendarioRepository();
+      final controller = CalendarioController(repository: repo)
+        ..selectedDate.value = DateTime(2026, 5, 13);
+
+      await tester.pumpWidget(
+        MaterialApp(home: CalendarioPage(controller: controller)),
+      );
+
+      await tester.tap(find.byType(FloatingActionButton));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Nuevo evento'), findsOneWidget);
+
+      await tester.enterText(find.byType(TextFormField).at(0), 'Tutoria');
+      await tester.tap(find.text('Guardar evento'));
+      await tester.pumpAndSettle();
+
+      expect(repo.stored.single.titulo, 'Tutoria');
+      expect(repo.stored.single.inicio, DateTime(2026, 5, 13, 8));
+    },
+  );
+
   testWidgets('Calendario mobile muestra eventos del dia seleccionado', (
     tester,
   ) async {
@@ -123,5 +164,58 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Sin eventos para hoy'), findsOneWidget);
+  });
+
+  testWidgets('Calendario desktop permite editar evento con tap', (
+    tester,
+  ) async {
+    Evento? selectedEvento;
+    final evento = _evento(titulo: 'Parcial', descripcion: 'Aula 2');
+    final controller = _controller([evento], DateTime(2026, 5, 13));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: desktop.MyDesktopBody(
+          controller: controller,
+          onRefresh: () {},
+          onEditEvento: (evento) => selectedEvento = evento,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Parcial'));
+    await tester.pump();
+
+    expect(selectedEvento, evento);
+  });
+
+  testWidgets('Calendario desktop confirma eliminacion desde accion visible', (
+    tester,
+  ) async {
+    Evento? deletedEvento;
+    final evento = _evento(titulo: 'Parcial', descripcion: 'Aula 2');
+    final controller = _controller([evento], DateTime(2026, 5, 13));
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: desktop.MyDesktopBody(
+          controller: controller,
+          onRefresh: () {},
+          onDeleteEvento: (evento) async => deletedEvento = evento,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Eliminar evento Parcial'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Eliminar evento'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(TextButton, 'Eliminar'));
+    await tester.pumpAndSettle();
+
+    expect(deletedEvento, evento);
   });
 }

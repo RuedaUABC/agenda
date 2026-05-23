@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'calendario_controller.dart';
+
 import '../../../core/theme/calendar_config.dart';
+import '../domain/evento.dart';
+import 'calendario_controller.dart';
+import 'widgets/evento_list_item.dart';
 
 class MyDesktopBody extends StatelessWidget {
   final CalendarioController controller;
   final VoidCallback onRefresh;
+  final ValueChanged<Evento>? onEditEvento;
+  final Future<void> Function(Evento evento)? onDeleteEvento;
 
   const MyDesktopBody({
     super.key,
     required this.controller,
     required this.onRefresh,
+    this.onEditEvento,
+    this.onDeleteEvento,
   });
 
   @override
@@ -18,7 +25,6 @@ class MyDesktopBody extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          // Vista Principal de Calendario
           Expanded(
             flex: CalendarConfig.desktopCalendarFlex.toInt(),
             child: Container(
@@ -27,7 +33,7 @@ class MyDesktopBody extends StatelessWidget {
               child: SfCalendar(
                 view: CalendarView.month,
                 dataSource: EventoDataSource(controller.eventos),
-                firstDayOfWeek: 1, // Lunes
+                firstDayOfWeek: 1,
                 monthViewSettings: const MonthViewSettings(
                   showAgenda: true,
                   agendaViewHeight: 200,
@@ -43,7 +49,6 @@ class MyDesktopBody extends StatelessWidget {
               ),
             ),
           ),
-          // Panel Lateral de Eventos del día seleccionado
           Expanded(
             flex: CalendarConfig.desktopListFlex.toInt(),
             child: Container(
@@ -59,12 +64,20 @@ class MyDesktopBody extends StatelessWidget {
                 valueListenable: controller.selectedDate,
                 builder: (context, date, _) {
                   final filteredEventos = controller.eventos.where((evento) {
-                    final start = DateTime(evento.inicio.year, evento.inicio.month, evento.inicio.day);
-                    final end = DateTime(evento.fin.year, evento.fin.month, evento.fin.day);
+                    final start = DateTime(
+                      evento.inicio.year,
+                      evento.inicio.month,
+                      evento.inicio.day,
+                    );
+                    final end = DateTime(
+                      evento.fin.year,
+                      evento.fin.month,
+                      evento.fin.day,
+                    );
                     final target = DateTime(date.year, date.month, date.day);
-                    return target.isAtSameMomentAs(start) || 
-                           (target.isAfter(start) && target.isBefore(end)) ||
-                           target.isAtSameMomentAs(end);
+                    return target.isAtSameMomentAs(start) ||
+                        (target.isAfter(start) && target.isBefore(end)) ||
+                        target.isAtSameMomentAs(end);
                   }).toList();
 
                   return Column(
@@ -76,14 +89,16 @@ class MyDesktopBody extends StatelessWidget {
                           children: [
                             Text(
                               'Eventos',
-                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             Text(
                               '${date.day}/${date.month}/${date.year}',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: Theme.of(context).colorScheme.primary,
+                              style: Theme.of(context).textTheme.bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                   ),
                             ),
                           ],
@@ -104,8 +119,13 @@ class MyDesktopBody extends StatelessWidget {
                                     const SizedBox(height: 16),
                                     Text(
                                       'Sin eventos para hoy',
-                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                            color: Theme.of(context).disabledColor,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.copyWith(
+                                            color: Theme.of(
+                                              context,
+                                            ).disabledColor,
                                           ),
                                     ),
                                   ],
@@ -116,25 +136,15 @@ class MyDesktopBody extends StatelessWidget {
                                 itemCount: filteredEventos.length,
                                 itemBuilder: (context, index) {
                                   final evento = filteredEventos[index];
-                                  return Card(
+                                  return EventoListItem(
+                                    evento: evento,
                                     margin: const EdgeInsets.only(bottom: 12.0),
-                                    child: ListTile(
-                                      leading: Container(
-                                        width: 4,
-                                        decoration: BoxDecoration(
-                                          color: Color(evento.color),
-                                          borderRadius: BorderRadius.circular(2),
-                                        ),
-                                      ),
-                                      title: Text(
-                                        evento.titulo,
-                                        style: const TextStyle(fontWeight: FontWeight.bold),
-                                      ),
-                                      subtitle: Text(evento.descripcion),
-                                      onTap: () {
-                                        // TODO: Implementar edición
-                                      },
-                                    ),
+                                    onTap: onEditEvento == null
+                                        ? null
+                                        : () => onEditEvento!(evento),
+                                    onDelete: onDeleteEvento == null
+                                        ? null
+                                        : () => onDeleteEvento!(evento),
                                   );
                                 },
                               ),

@@ -54,6 +54,11 @@ class TareaDao {
     );
   }
 
+  Future<int> deleteTareaDefinitiva(String id) async {
+    final db = await dbHelper.initDB();
+    return await db.delete("tareas", where: "id = ?", whereArgs: [id]);
+  }
+
   Future<int> restoreTarea(String id) async {
     final db = await dbHelper.initDB();
     return await db.update(

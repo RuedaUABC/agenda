@@ -68,7 +68,7 @@ Criterios de aceptacion:
 - El formulario no debe cerrarse si existen errores de validacion.
 
 **RF-006. Validacion de datos de tarea**  
-Prioridad: Alta. Estado: Parcial.  
+Prioridad: Alta. Estado: Implementado.  
 El sistema debe validar los datos capturados antes de guardar una tarea.
 
 Validaciones requeridas:
@@ -123,7 +123,7 @@ Criterios de aceptacion:
 - La tarea restaurada conserva sus datos originales.
 
 **RF-011. Eliminacion definitiva de tareas**  
-Prioridad: Baja. Estado: Sugerido.  
+Prioridad: Baja. Estado: Implementado.  
 El sistema deberia permitir eliminar definitivamente una tarea desde papelera,
 previa confirmacion explicita del usuario.
 
@@ -170,7 +170,7 @@ El usuario debe poder abrir el detalle de una tarea y consultar titulo,
 asignatura, descripcion, fecha, hora y estado.
 
 **RF-016. Busqueda y filtrado de tareas**  
-Prioridad: Baja. Estado: Sugerido.  
+Prioridad: Baja. Estado: Implementado.  
 El sistema deberia permitir buscar tareas por titulo, asignatura o descripcion,
 y filtrar por estado o rango de fechas.
 
@@ -191,7 +191,7 @@ Criterios de aceptacion:
 - La clase se conserva al cerrar y abrir la aplicacion.
 
 **RF-019. Validacion de datos de clase**  
-Prioridad: Alta. Estado: Parcial.  
+Prioridad: Alta. Estado: Implementado.  
 El sistema debe validar los datos antes de guardar una clase.
 
 Validaciones requeridas:
@@ -203,8 +203,8 @@ Validaciones requeridas:
 - La hora de fin es obligatoria.
 - La hora de fin debe ser posterior a la hora de inicio.
 - El aula debe tener una longitud maxima definida por el sistema.
-- Si existe otra clase en el mismo dia y rango horario, el sistema debe advertir
-  el conflicto o impedir el guardado segun la politica definida.
+- Si existe otra clase en el mismo dia y rango horario, el sistema impide el
+  guardado y muestra el conflicto al usuario.
 
 **RF-020. Recurrencia semanal de clases**  
 Prioridad: Alta. Estado: Implementado.  
@@ -259,7 +259,7 @@ Prioridad: Media. Estado: Implementado.
 El sistema debe mostrar titulo, descripcion y color asociado de cada evento.
 
 **RF-030. Creacion de eventos desde la interfaz**  
-Prioridad: Alta. Estado: Pendiente.  
+Prioridad: Alta. Estado: Implementado.  
 El usuario debe poder crear eventos desde el modulo Calendario.
 
 Validaciones requeridas:
@@ -274,18 +274,19 @@ Validaciones requeridas:
   valido reconocido por el sistema.
 
 **RF-031. Edicion de eventos desde la interfaz**  
-Prioridad: Alta. Estado: Pendiente.  
+Prioridad: Alta. Estado: Implementado.  
 El usuario debe poder editar eventos existentes desde el modulo Calendario.
 
 **RF-032. Eliminacion de eventos desde la interfaz**  
-Prioridad: Media. Estado: Pendiente.  
+Prioridad: Media. Estado: Implementado.  
 El usuario debe poder eliminar eventos existentes desde el modulo Calendario,
 previa confirmacion.
 
-**RF-033. Deteccion de eventos superpuestos**  
-Prioridad: Baja. Estado: Sugerido.  
-El sistema deberia advertir al usuario cuando un evento nuevo o editado se
-superpone con otro evento existente.
+**RF-033. Advertencia de eventos superpuestos**  
+Prioridad: Baja. Estado: Implementado.  
+El sistema debe advertir al usuario cuando un evento nuevo o editado se
+superpone con otro evento existente y permitir cancelar o guardar de todos
+modos.
 
 ## Configuracion
 
@@ -304,7 +305,7 @@ El usuario debe poder seleccionar cuanto tiempo antes recibir el primer aviso de
 tareas.
 
 **RF-037. Validacion de preferencias de notificacion**  
-Prioridad: Media. Estado: Sugerido.  
+Prioridad: Media. Estado: Implementado.  
 El sistema debe aceptar solo valores de anticipacion definidos por la aplicacion
 y rechazar valores nulos, negativos o no soportados.
 

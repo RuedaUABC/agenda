@@ -68,14 +68,26 @@ class _HorarioPageState extends State<HorarioPage> {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return ClaseForm(initialDate: controller.selectedDate.value);
+        return ClaseForm(
+          initialDate: controller.selectedDate.value,
+          clases: controller.clases,
+        );
       },
     );
 
     if (clase == null) return;
 
     controller.selectedDate.value = clase.inicio;
-    await controller.addClase(clase);
+    try {
+      await controller.addClase(clase);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo guardar la clase')),
+        );
+      }
+      return;
+    }
 
     if (mounted) {
       setState(() {});

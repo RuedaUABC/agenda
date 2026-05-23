@@ -7,15 +7,24 @@ documentacion ejecutable.
 ## Feature: Tareas
 
 Ubicacion principal: `test/features/tareas/taskcontroller_test.dart` y
-`test/widget_test.dart`.
+`test/widget_test.dart`. Las validaciones del formulario tambien se cubren en
+`test/features/tareas/tarea_form_test.dart`.
 
 - Carga tareas activas y papelera desde el repositorio.
 - Crea, actualiza y envia tareas a papelera recargando el estado.
 - Restaura tareas eliminadas desde papelera.
+- Elimina definitivamente tareas desde papelera previa confirmacion.
+- Muestra un error visible cuando falla una operacion de persistencia de tarea.
 - Clasifica tareas vencidas, pendientes de la semana, proximas y completadas.
+- Busca tareas por titulo, asignatura o descripcion.
+- Filtra tareas por estado y rango de fecha desde controller y UI.
 - Calcula estadisticas semanales ignorando tareas completadas.
 - Calcula progreso diario.
 - Valida el formulario cuando falta el titulo.
+- Rechaza titulos compuestos solo por espacios.
+- Normaliza titulo, asignatura y descripcion antes de guardar.
+- Aplica longitudes maximas para titulo, asignatura y descripcion.
+- Solicita confirmacion cuando la fecha y hora de la tarea estan en el pasado.
 - Permite completar, devolver a pendiente, editar, eliminar y recuperar tareas
   desde widgets.
 
@@ -31,8 +40,17 @@ y `test/features/calendario/calendario_widgets_test.dart`.
 - Ignora eliminaciones de ids inexistentes sin romper el estado.
 - Transforma eventos a `Appointment` de Syncfusion conservando titulo,
   descripcion, color, inicio y fin.
+- Valida eventos con titulo obligatorio, longitudes maximas, rango de fechas,
+  evento puntual permitido, color por defecto y deteccion de superposiciones.
+- `EventoForm` valida el titulo, normaliza titulo y descripcion, crea eventos
+  con horario por defecto, edita conservando el id y advierte superposiciones
+  antes de permitir guardar.
+- `CalendarioPage` abre el formulario desde el boton agregar y crea el evento
+  mediante el controller.
 - El widget mobile lista eventos del dia seleccionado y muestra estado vacio.
 - El widget desktop lista eventos de varios dias y muestra estado vacio.
+- El widget desktop permite editar al tocar un evento y confirma eliminacion
+  desde una accion visible.
 
 ## Feature: Horario
 
@@ -50,6 +68,8 @@ Ubicacion principal: `test/features/horario/horario_controller_test.dart`,
 - Conserva reglas nulas, vacias o no semanales.
 - Mapea todos los dias de semana a codigos RRULE y rechaza dias invalidos.
 - Valida que `ClaseForm` requiera materia y cree clases semanales validas.
+- Aplica longitudes maximas para materia y aula.
+- Impide guardar clases que se cruzan con otra clase del mismo dia y horario.
 - `ClaseListItem` renderiza materia, aula, rango horario e icono.
 
 ## Feature: Configuracion
@@ -60,6 +80,8 @@ Ubicacion principal:
 
 - Carga valores por defecto desde preferencias vacias.
 - Guarda preferencias globales de clases y tareas.
+- Rechaza preferencias de notificacion vacias, negativas o no soportadas.
+- Recupera valores por defecto cuando hay preferencias persistidas invalidas.
 - Carga preferencias previamente persistidas.
 - Reprograma solo tareas pendientes cuando cambian avisos de tareas.
 - Mantiene en memoria listas vacias de avisos de tareas.

@@ -1,4 +1,6 @@
 class Evento {
+  static const int defaultColor = 0xFFF44336;
+
   final String id;
   final String titulo;
   final DateTime inicio;
@@ -12,7 +14,7 @@ class Evento {
     required this.inicio,
     required this.fin,
     this.descripcion = "",
-    this.color = 0xFFF44336, // Default red for events
+    this.color = defaultColor,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,7 +35,7 @@ class Evento {
       inicio: DateTime.parse(map["inicio"]),
       fin: DateTime.parse(map["fin"]),
       descripcion: map["descripcion"] ?? "",
-      color: map["color"] ?? 0xFFF44336,
+      color: map["color"] ?? defaultColor,
     );
   }
 }

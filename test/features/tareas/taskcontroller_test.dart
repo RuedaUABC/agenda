@@ -23,6 +23,11 @@ class FakeTareaRepository implements TareaRepository {
   }
 
   @override
+  Future<void> deleteTareaDefinitiva(String id) async {
+    stored.removeWhere((tarea) => tarea.id == id);
+  }
+
+  @override
   Future<List<Tarea>> fetchTareas() async {
     return stored.where((tarea) => !tarea.eliminada).toList();
   }
@@ -131,6 +136,23 @@ void main() {
       expect(controller.tareas.single.eliminada, isFalse);
     });
 
+    test('elimina definitivamente una tarea desde la papelera', () async {
+      final repo = FakeTareaRepository([
+        tarea(
+          id: '1',
+          fecha: DateTime.now(),
+          titulo: 'Ensayo',
+        ).copyWith(eliminada: true),
+      ]);
+      final controller = TasksController(repository: repo);
+
+      await controller.loadTareas();
+      await controller.deleteTareaDefinitiva('1');
+
+      expect(controller.papelera, isEmpty);
+      expect(repo.stored, isEmpty);
+    });
+
     test(
       'clasifica vencidas, pendientes de semana, proximas y completadas',
       () {
@@ -192,5 +214,88 @@ void main() {
 
       expect(controller.getTodayProgress(), 0.5);
     });
+
+    test('busca tareas por titulo, asignatura y descripcion', () {
+      final controller = TasksController(repository: FakeTareaRepository())
+        ..tareas = [
+          tarea(id: '1', fecha: DateTime.now(), titulo: 'Leer fuentes'),
+          Tarea(
+            id: '2',
+            titulo: 'Resolver ejercicios',
+            asignatura: 'Historia',
+            descripcion: 'Preparar exposicion',
+            fecha: DateTime.now(),
+            completada: false,
+          ),
+        ]
+        ..searchQuery = 'historia';
+
+      final result = controller.filtrarTareas(controller.tareas);
+
+      expect(result.map((tarea) => tarea.id), ['2']);
+    });
+
+    test('filtra tareas por estado y rango de fecha', () {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final controller = TasksController(repository: FakeTareaRepository())
+        ..tareas = [
+          tarea(id: 'pendiente-hoy', fecha: today, completada: false),
+          tarea(id: 'completa-hoy', fecha: today, completada: true),
+          tarea(
+            id: 'pendiente-futura',
+            fecha: today.add(const Duration(days: 10)),
+            completada: false,
+          ),
+        ]
+        ..statusFilter = TaskStatusFilter.pendientes
+        ..dateFilter = TaskDateFilter.hoy;
+
+      final result = controller.filtrarTareas(controller.tareas);
+
+      expect(result.map((tarea) => tarea.id), ['pendiente-hoy']);
+    });
+
+    test('expone error cuando falla la persistencia', () async {
+      final controller = TasksController(repository: _FailingTareaRepository());
+
+      await expectLater(
+        controller.deleteTareaDefinitiva('1'),
+        throwsA(isA<Exception>()),
+      );
+
+      expect(
+        controller.lastError,
+        'No se pudo eliminar definitivamente la tarea',
+      );
+    });
   });
+}
+
+class _FailingTareaRepository implements TareaRepository {
+  @override
+  Future<void> addTarea(Tarea tarea) async {}
+
+  @override
+  Future<void> deleteTarea(String id) async {}
+
+  @override
+  Future<void> deleteTareaDefinitiva(String id) async {
+    throw Exception('db down');
+  }
+
+  @override
+  Future<List<Tarea>> fetchTareas() async => [];
+
+  @override
+  Future<List<Tarea>> fetchTareasEliminadas() async => [];
+
+  @override
+  Future<void> programarNotificacionesTarea(String tareaId) async {}
+
+  @override
+  Future<void> restoreTarea(String id) async {}
+
+  @override
+  Future<void> updateTarea(Tarea tarea) async {}
 }

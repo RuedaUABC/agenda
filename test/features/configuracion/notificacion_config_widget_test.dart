@@ -20,6 +20,9 @@ class _FakeTareaRepository implements TareaRepository {
   Future<void> deleteTarea(String id) async {}
 
   @override
+  Future<void> deleteTareaDefinitiva(String id) async {}
+
+  @override
   Future<List<Tarea>> fetchTareas() async => tareas;
 
   @override

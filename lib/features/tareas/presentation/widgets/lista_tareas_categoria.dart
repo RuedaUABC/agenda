@@ -79,9 +79,23 @@ class ListaTareasCategoria extends StatelessWidget {
                       isCompletedMode ? Icons.undo : Icons.check_circle_outline,
                     ),
                     onPressed: () async {
-                      await controller.updateTarea(
-                        t.copyWith(completada: !isCompletedMode),
-                      );
+                      try {
+                        await controller.updateTarea(
+                          t.copyWith(completada: !isCompletedMode),
+                        );
+                      } catch (_) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                controller.lastError ??
+                                    'No se pudo completar la accion',
+                              ),
+                            ),
+                          );
+                        }
+                        return;
+                      }
                       onRefresh();
                     },
                   ),
@@ -127,7 +141,55 @@ class _TareaDetalle extends StatelessWidget {
     );
 
     if (confirmar == true) {
-      await controller.deleteTarea(tarea.id);
+      try {
+        await controller.deleteTarea(tarea.id);
+      } catch (_) {
+        if (context.mounted) {
+          _showError(context);
+        }
+        return;
+      }
+      if (context.mounted) {
+        Navigator.pop(context, true);
+      }
+    }
+  }
+
+  Future<void> _confirmarEliminacionDefinitiva(
+    BuildContext context,
+    Tarea tarea,
+  ) async {
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text("Eliminar definitivamente"),
+          content: Text(
+            "Esta accion no se puede deshacer. ¿Eliminar ${tarea.titulo}?",
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text("Cancelar"),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text("Eliminar"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmar == true) {
+      try {
+        await controller.deleteTareaDefinitiva(tarea.id);
+      } catch (_) {
+        if (context.mounted) {
+          _showError(context);
+        }
+        return;
+      }
       if (context.mounted) {
         Navigator.pop(context, true);
       }
@@ -148,6 +210,14 @@ class _TareaDetalle extends StatelessWidget {
         Navigator.pop(context, true);
       }
     }
+  }
+
+  void _showError(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(controller.lastError ?? 'No se pudo completar la accion'),
+      ),
+    );
   }
 
   @override
@@ -211,11 +281,27 @@ class _TareaDetalle extends StatelessWidget {
                         icon: const Icon(Icons.restore),
                         label: const Text("Recuperar"),
                         onPressed: () async {
-                          await controller.restoreTarea(tarea.id);
+                          try {
+                            await controller.restoreTarea(tarea.id);
+                          } catch (_) {
+                            if (context.mounted) {
+                              _showError(context);
+                            }
+                            return;
+                          }
                           if (context.mounted) {
                             Navigator.pop(context, true);
                           }
                         },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton.icon(
+                        icon: const Icon(Icons.delete_forever_outlined),
+                        label: const Text("Eliminar definitivo"),
+                        onPressed: () =>
+                            _confirmarEliminacionDefinitiva(context, tarea),
                       ),
                     ),
                   ],
@@ -234,9 +320,16 @@ class _TareaDetalle extends StatelessWidget {
                           isCompletedMode ? "Pendiente" : "Completar",
                         ),
                         onPressed: () async {
-                          await controller.updateTarea(
-                            tarea.copyWith(completada: !isCompletedMode),
-                          );
+                          try {
+                            await controller.updateTarea(
+                              tarea.copyWith(completada: !isCompletedMode),
+                            );
+                          } catch (_) {
+                            if (context.mounted) {
+                              _showError(context);
+                            }
+                            return;
+                          }
                           if (context.mounted) {
                             Navigator.pop(context, true);
                           }

@@ -8,10 +8,19 @@ esta organizado el proyecto y como trabajar con el.
 
 - [`arquitectura.md`](arquitectura.md): estructura del codigo, capas por
   feature, dependencias internas y flujo de datos.
+- [`casos_prueba.md`](casos_prueba.md): casos de prueba completos por
+  funcionalidad usando el template formal de test case.
 - [`desarrollo.md`](desarrollo.md): requisitos, instalacion, ejecucion,
   comandos de mantenimiento y notas de Firebase.
 - [`pruebas.md`](pruebas.md): resumen de cobertura y comandos para correr
   pruebas por modulo.
+- [`red_green_refactor_eventos.md`](red_green_refactor_eventos.md): evidencia
+  TDD para creacion, edicion, eliminacion y validaciones de eventos.
+- [`red_green_refactor_validaciones.md`](red_green_refactor_validaciones.md):
+  evidencia TDD para validaciones completas de tareas y clases.
+- [`red_green_refactor_tareas_configuracion_robustez.md`](red_green_refactor_tareas_configuracion_robustez.md):
+  evidencia TDD para borrado definitivo, busqueda/filtros, preferencias,
+  superposiciones y errores visibles.
 
 ## Resumen Funcional
 

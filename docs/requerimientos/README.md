@@ -5,7 +5,7 @@ pantallas, los controllers, repositorios, modelos y pruebas automatizadas del
 proyecto Agenda.
 
 Fecha de extraccion inicial: 2026-05-14.  
-Ultima revision de requerimientos: 2026-05-19.
+Ultima revision de requerimientos: 2026-05-23.
 
 ## Fuentes Revisadas
 
@@ -50,15 +50,15 @@ El alcance funcional documentado se concentra en:
 ## Estado de Implementacion Detectado
 
 - Implementado: gestion de tareas, papelera, clasificacion, progreso, horario,
-  calendario de lectura, configuracion de preferencias y persistencia local.
+  calendario de lectura y escritura, configuracion de preferencias y
+  persistencia local.
 - Parcial: notificaciones, porque el scheduler actual funciona como mock o
   implementacion reemplazable y no debe considerarse notificacion nativa real
   completa.
-- Parcial: validaciones, porque existen validaciones basicas pero faltan reglas
-  recomendadas como trim de espacios, longitudes maximas, confirmaciones y
-  conflictos de horario.
-- Pendiente: creacion, edicion y eliminacion de eventos desde la interfaz de
-  calendario.
+- Implementado: validaciones principales de tareas, clases y eventos. Tareas
+  cubre normalizacion, longitudes y confirmacion de fechas pasadas; clases
+  cubre longitudes, rango horario y bloqueo de conflictos; eventos cubre
+  normalizacion, longitudes, rango, color por defecto y superposiciones.
 
 ## Convencion Recomendada
 

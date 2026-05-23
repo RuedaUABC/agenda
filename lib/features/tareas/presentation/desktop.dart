@@ -3,17 +3,20 @@ import 'taskcontroller.dart';
 import '../domain/tarea.dart';
 import 'widgets/panel_progreso.dart';
 import 'widgets/lista_tareas_categoria.dart';
+import 'widgets/tareas_filter_bar.dart';
 
 class MyDesktopBody extends StatelessWidget {
   final TasksController controller;
   final VoidCallback onRefresh;
   final Map<String, List<Tarea>> clasificacion;
+  final List<Tarea> papelera;
 
   const MyDesktopBody({
     super.key,
     required this.controller,
     required this.onRefresh,
     required this.clasificacion,
+    this.papelera = const [],
   });
 
   @override
@@ -27,6 +30,7 @@ class MyDesktopBody extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             children: [
+              TareasFilterBar(controller: controller, onChanged: onRefresh),
               PanelProgreso(controller: controller),
               const SizedBox(height: 16),
               ListaTareasCategoria(
@@ -68,7 +72,7 @@ class MyDesktopBody extends StatelessWidget {
                   controller: controller,
                   onRefresh: onRefresh,
                   title: "Papelera",
-                  tareas: controller.papelera,
+                  tareas: papelera,
                   isTrashMode: true,
                 ),
               ],

@@ -74,7 +74,9 @@ class _TasksPageState extends State<TasksPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final clasificacion = controller.clasificarTareas();
+    final tareasFiltradas = controller.filtrarTareas(controller.tareas);
+    final papeleraFiltrada = controller.buscarTareas(controller.papelera);
+    final clasificacion = controller.clasificarTareas(tareasFiltradas);
 
     return Scaffold(
       body: ResponsiveLayout(
@@ -82,11 +84,13 @@ class _TasksPageState extends State<TasksPage> {
           controller: controller,
           onRefresh: () => setState(() {}),
           clasificacion: clasificacion,
+          papelera: papeleraFiltrada,
         ),
         desktop: MyDesktopBody(
           controller: controller,
           onRefresh: () => setState(() {}),
           clasificacion: clasificacion,
+          papelera: papeleraFiltrada,
         ),
       ),
       floatingActionButton: FloatingActionButton(
