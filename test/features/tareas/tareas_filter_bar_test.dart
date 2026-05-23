@@ -32,7 +32,7 @@ class _FakeTareaRepository implements TareaRepository {
 }
 
 void main() {
-  testWidgets('TareasFilterBar actualiza busqueda y filtros visibles', (
+  testWidgets('TareasFilterBar muestra solo filtros de estado Material 3', (
     tester,
   ) async {
     final controller = TasksController(repository: _FakeTareaRepository());
@@ -49,21 +49,16 @@ void main() {
       ),
     );
 
-    await tester.enterText(find.byType(EditableText).first, 'historia');
-    await tester.pump();
-
-    expect(controller.searchQuery, 'historia');
+    expect(find.byType(SearchBar), findsNothing);
+    expect(find.byType(DropdownMenu<TaskDateFilter>), findsNothing);
+    expect(find.byType(SegmentedButton<TaskStatusFilter>), findsOneWidget);
 
     await tester.tap(find.text('Pendientes'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownMenu<TaskDateFilter>).first);
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Hoy').last);
-    await tester.pumpAndSettle();
-
     expect(controller.statusFilter, TaskStatusFilter.pendientes);
-    expect(controller.dateFilter, TaskDateFilter.hoy);
-    expect(refreshCount, 3);
+    expect(controller.searchQuery, isEmpty);
+    expect(controller.dateFilter, TaskDateFilter.todas);
+    expect(refreshCount, 1);
   });
 }

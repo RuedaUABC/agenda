@@ -92,5 +92,5 @@ pruebas y evidencia tecnica observada en el proyecto.
 | Validaciones completas de clases | Implementado | `ClaseForm` aplica longitudes maximas, conserva rango horario valido e impide conflictos del mismo dia y horario. |
 | Validaciones completas de eventos | Implementado | `EventoValidator` cubre obligatoriedad, normalizacion, longitudes, rango, color por defecto y superposiciones. |
 | Confirmaciones destructivas | Sugerido | Conviene confirmar eliminaciones de tareas, clases y eventos. |
-| Busqueda y filtrado de tareas | Implementado | `TareasFilterBar` permite buscar por texto y filtrar por estado y rango de fechas. |
+| Filtrado de tareas | Implementado | `TareasFilterBar` expone solo filtro de estado Material 3; `TasksController` conserva busqueda y rango para reglas internas. |
 | Notificaciones nativas reales | Parcial | La implementacion actual no debe tratarse como notificacion nativa completa. |

@@ -30,8 +30,8 @@ comportamiento ausente:
   `Agenda`.
 - `material3_navigation_test.dart`: `NavigationBar` movil, `NavigationRail`
   tablet/escritorio e `IndexedStack`.
-- `material3_tareas_test.dart`: `SearchBar`, `SegmentedButton`, contador,
-  checkbox visible y estado vacio.
+- `material3_tareas_test.dart`: `SegmentedButton` de estado, ausencia de
+  `SearchBar`/selector de fecha, contador, checkbox visible y estado vacio.
 - `material3_forms_settings_test.dart`: cierre/cancelacion en formularios,
   color picker `48x48`, seccion de fecha/hora y ajustes con `DropdownMenu`.
 
@@ -59,8 +59,9 @@ Cambios minimos para pasar las pruebas:
 - `AgendaNavigation` reemplaza `GNav` con `NavigationBar` y `NavigationRail`.
 - Se agregaron `AgendaEmptyState`, `AgendaSectionHeader`,
   `AgendaDateTimeButton` y `AgendaColorPicker`.
-- Tareas migro a `SearchBar`, `SegmentedButton`, `DropdownMenu`, checkbox
-  visible y estado vacio.
+- Tareas migro a un filtro visible unico con `SegmentedButton`, checkbox
+  visible y estado vacio. La barra de busqueda y el selector de fecha se
+  retiraron de la interfaz para mejorar coherencia visual.
 - Formularios de tarea, evento y clase exponen cierre/cancelacion, fecha/hora
   como botones y selector de color accesible.
 - Ajustes migro de `Card` + `DropdownButton` a `ListTile` + `DropdownMenu`.

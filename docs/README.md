@@ -27,7 +27,7 @@ esta organizado el proyecto y como trabajar con el.
 - [`red_green_refactor_validaciones.md`](red_green_refactor_validaciones.md):
   evidencia TDD para validaciones completas de tareas y clases.
 - [`red_green_refactor_tareas_configuracion_robustez.md`](red_green_refactor_tareas_configuracion_robustez.md):
-  evidencia TDD para borrado definitivo, busqueda/filtros, preferencias,
+  evidencia TDD para borrado definitivo, filtros, preferencias,
   superposiciones y errores visibles.
 
 ## Resumen Funcional

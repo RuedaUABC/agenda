@@ -108,8 +108,9 @@ Cambios concretos:
 - Usar color semantico para vencidas, no solo ubicacion en una seccion.
 - Mantener categorias, pero mostrar encabezados compactos con contador:
   `Vencidas (3)`, `Hoy (2)`, `Esta semana (5)`.
-- Cambiar filtros `DropdownButton` por `SearchBar` + `FilterChip` o
-  `SegmentedButton`.
+- Mantener un unico filtro visible mediante `SegmentedButton` de estado.
+- No mostrar `SearchBar` ni selector de fecha en esta pantalla para evitar una
+  cabecera de filtros inconexa.
 - Agregar estado vacio cuando no haya tareas filtradas.
 - Agregar snackbar con accion `Deshacer` al completar, eliminar o restaurar.
 - En desktop, usar panel principal de tareas y panel derecho de detalle o
@@ -255,7 +256,7 @@ estado de permisos de notificaciones nativas.
 
 ### Fase 3: Tareas
 
-- Redisenar filtros con `SearchBar`, chips o `SegmentedButton`.
+- Redisenar filtros con un unico `SegmentedButton` de estado.
 - Redisenar items con checkbox, fecha y acciones secundarias.
 - Agregar estados vacios.
 - Agregar undo en snackbars para acciones reversibles.

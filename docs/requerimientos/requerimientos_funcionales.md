@@ -173,16 +173,17 @@ Prioridad: Media. Estado: Implementado.
 El usuario debe poder abrir el detalle de una tarea y consultar titulo,
 asignatura, descripcion, fecha, hora y estado.
 
-**RF-016. Busqueda y filtrado de tareas**  
+**RF-016. Filtrado de tareas**
 Prioridad: Baja. Estado: Implementado.  
-El sistema deberia permitir buscar tareas por titulo, asignatura o descripcion,
-y filtrar por estado o rango de fechas.
+El sistema debe permitir filtrar tareas por estado desde la interfaz.
 
 Criterios de aceptacion:
 
-- La busqueda se presenta mediante `SearchBar`.
 - El filtro de estado se presenta mediante un control segmentado Material 3.
-- El filtro de fecha no debe depender de `DropdownButton` legado.
+- La interfaz de tareas no muestra barra de busqueda ni selector de fecha para
+  conservar una jerarquia visual simple.
+- La logica interna de busqueda y fecha puede conservarse en el controller para
+  compatibilidad y pruebas de dominio, pero no se expone como control visible.
 
 ## Horario
 

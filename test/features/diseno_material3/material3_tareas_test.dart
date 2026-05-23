@@ -56,7 +56,9 @@ Tarea _tarea({bool completada = false}) {
 }
 
 void main() {
-  testWidgets('TareasFilterBar usa controles Material 3', (tester) async {
+  testWidgets('TareasFilterBar usa solo selector de estado Material 3', (
+    tester,
+  ) async {
     final controller = TasksController(repository: _FakeTareaRepository());
 
     await tester.pumpWidget(
@@ -67,8 +69,9 @@ void main() {
       ),
     );
 
-    expect(find.byType(SearchBar), findsOneWidget);
+    expect(find.byType(SearchBar), findsNothing);
     expect(find.byType(SegmentedButton<TaskStatusFilter>), findsOneWidget);
+    expect(find.byType(DropdownMenu<TaskDateFilter>), findsNothing);
     expect(find.byType(DropdownButton<TaskStatusFilter>), findsNothing);
     expect(find.byType(DropdownButton<TaskDateFilter>), findsNothing);
   });

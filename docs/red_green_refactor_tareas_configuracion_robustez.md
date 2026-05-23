@@ -7,7 +7,7 @@ Fecha: 2026-05-23.
 Este ciclo cubre:
 
 - RF-011: eliminacion definitiva de tareas desde papelera.
-- RF-016: busqueda y filtrado de tareas.
+- RF-016: filtrado de tareas y reglas internas de busqueda.
 - RF-033: advertencia por eventos superpuestos.
 - RF-037: validacion fuerte de preferencias de notificacion.
 - RNF-023: manejo visible de errores de persistencia.
@@ -25,7 +25,7 @@ Se agregaron pruebas antes de implementar:
   - confirma eliminacion definitiva desde papelera.
   - muestra snackbar cuando falla el borrado definitivo.
 - `test/features/tareas/tareas_filter_bar_test.dart`
-  - actualiza busqueda y filtros desde controles visibles.
+  - actualiza el filtro visible de estado desde controles Material 3.
 - `test/features/calendario/evento_form_test.dart`
   - advierte por superposicion y permite guardar de todos modos.
 - `test/features/configuracion/settings_controller_test.dart`
@@ -58,7 +58,8 @@ Se implemento el comportamiento minimo para pasar las pruebas:
   - solicita confirmacion destructiva.
   - muestra snackbar si falla persistencia.
 - `TareasFilterBar`
-  - agrega controles visibles de busqueda, estado y rango de fecha.
+  - expone solo el filtro visible de estado; busqueda y rango de fecha quedan
+    en el controller para compatibilidad de reglas internas.
 - `EventoForm`
   - cambia la superposicion a advertencia con "Cancelar" o "Guardar de todos
     modos".
@@ -82,7 +83,7 @@ Resultado: suite completa en verde.
 - El borrado definitivo quedo como una operacion explicita distinta de la
   eliminacion logica.
 - La busqueda/filtro vive en `TasksController` para poder probar reglas sin UI,
-  y `TareasFilterBar` solo traduce controles visibles a estado.
+  y `TareasFilterBar` solo traduce el control visible de estado.
 - La validacion de preferencias quedo en `PreferencesHelper`, que es la frontera
   con almacenamiento local.
 - El manejo visible de errores usa `lastError` en controller y snackbars en UI,

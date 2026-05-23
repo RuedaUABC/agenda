@@ -17,7 +17,8 @@ Ubicacion principal: `test/features/tareas/taskcontroller_test.dart` y
 - Muestra un error visible cuando falla una operacion de persistencia de tarea.
 - Clasifica tareas vencidas, pendientes de la semana, proximas y completadas.
 - Busca tareas por titulo, asignatura o descripcion.
-- Filtra tareas por estado y rango de fecha desde controller y UI.
+- Filtra tareas por estado desde la UI y conserva busqueda/rango de fecha en
+  pruebas de controller.
 - Calcula estadisticas semanales ignorando tareas completadas.
 - Calcula progreso diario.
 - Valida el formulario cuando falta el titulo.
@@ -103,7 +104,8 @@ Ubicacion principal: `test/features/diseno_material3/`.
 - `MyApp` usa `ThemeMode.system` y titulo `Agenda`.
 - `AgendaNavigation` usa `NavigationBar` en movil y `NavigationRail` en
   pantallas medianas o grandes.
-- Los filtros de tareas usan `SearchBar`, `SegmentedButton` y `DropdownMenu`.
+- Los filtros de tareas usan solo `SegmentedButton` visible para estado; la UI
+  no muestra `SearchBar` ni selector de fecha.
 - Las listas de tareas muestran contador, checkbox visible y estado vacio.
 - Los formularios de tareas, eventos y clases exponen cancelar/cerrar,
   acciones Material 3 y botones de fecha/hora.
