@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../configuracion/preferences_helper.dart';
 import '../domain/evento.dart';
 import 'calendario_controller.dart';
 import 'widgets/calendario_day_panel.dart';
@@ -12,6 +13,9 @@ class MyMobileBody extends StatefulWidget {
   final VoidCallback onRefresh;
   final ValueChanged<Evento>? onEditEvento;
   final Future<void> Function(Evento evento)? onDeleteEvento;
+  final WeekStartPreference weekStart;
+  final VisualDensity visualDensity;
+  final bool confirmDestructiveActions;
 
   const MyMobileBody({
     super.key,
@@ -19,6 +23,9 @@ class MyMobileBody extends StatefulWidget {
     required this.onRefresh,
     this.onEditEvento,
     this.onDeleteEvento,
+    this.weekStart = WeekStartPreference.lunes,
+    this.visualDensity = VisualDensity.standard,
+    this.confirmDestructiveActions = true,
   });
 
   @override
@@ -92,7 +99,7 @@ class _MyMobileBodyState extends State<MyMobileBody> {
                     child: SfCalendar(
                       view: CalendarView.month,
                       dataSource: EventoDataSource(widget.controller.eventos),
-                      firstDayOfWeek: 1,
+                      firstDayOfWeek: _firstDayOfWeek(widget.weekStart),
                       todayHighlightColor: colorScheme.primary,
                       selectionDecoration: BoxDecoration(
                         border: Border.all(
@@ -120,6 +127,9 @@ class _MyMobileBodyState extends State<MyMobileBody> {
                     onRefresh: widget.onRefresh,
                     onEditEvento: widget.onEditEvento,
                     onDeleteEvento: widget.onDeleteEvento,
+                    weekStart: widget.weekStart,
+                    visualDensity: widget.visualDensity,
+                    confirmDestructiveActions: widget.confirmDestructiveActions,
                   ),
                 ],
               ),
@@ -128,5 +138,14 @@ class _MyMobileBodyState extends State<MyMobileBody> {
         ),
       ),
     );
+  }
+
+  int _firstDayOfWeek(WeekStartPreference value) {
+    switch (value) {
+      case WeekStartPreference.lunes:
+        return DateTime.monday;
+      case WeekStartPreference.domingo:
+        return DateTime.sunday;
+    }
   }
 }

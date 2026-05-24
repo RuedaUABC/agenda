@@ -49,6 +49,14 @@ pruebas y evidencia tecnica observada en el proyecto.
 | RF-040 | Implementado | CU-002, CU-006, CU-008, CU-010 | RN-054, RN-055, RN-056 | `lib/core/db/database_helper.dart`, DAOs de tareas, clases y eventos |
 | RF-041 | Implementado | - | RN-058, RN-059 | `lib/core/db/database_helper.dart` |
 | RF-042 | Implementado | - | - | `lib/main.dart` |
+| RF-043 | Implementado parcial | CU-010 | RN-047, RN-049, RN-050 | `lib/features/configuracion/preferences_helper.dart`, `lib/features/configuracion/presentation/notificacion_config_widget.dart`, `test/features/configuracion/settings_advanced_test.dart`, `test/features/configuracion/settings_effects_test.dart`, `test/features/diseno_material3/material3_settings_advanced_test.dart`; pendiente scheduler nativo de eventos |
+| RF-044 | Implementado | CU-010 | - | `lib/main.dart`, `lib/features/configuracion/presentation/advanced_settings_widget.dart`, `test/features/configuracion/settings_advanced_test.dart`, `test/features/configuracion/settings_effects_test.dart`, `test/features/diseno_material3/material3_settings_advanced_test.dart` |
+| RF-045 | Implementado | CU-001, CU-010 | - | `lib/features/navegacion/presentation/navegacion.dart`, `lib/main.dart`, `lib/features/configuracion/presentation/advanced_settings_widget.dart`, `test/features/configuracion/settings_advanced_test.dart`, `test/features/configuracion/settings_effects_test.dart` |
+| RF-046 | Implementado | CU-010 | RNF-010, RNF-012 | `lib/features/tareas/presentation/tareas.dart`, `lib/features/configuracion/preferences_helper.dart`, `lib/features/tareas/presentation/widgets/lista_tareas_categoria.dart`, `lib/features/horario/presentation/widgets/clase_list_item.dart`, `lib/features/calendario/presentation/widgets/evento_list_item.dart`, `test/features/configuracion/settings_effects_test.dart` |
+| RF-047 | Implementado | CU-007, CU-008, CU-010 | - | `lib/features/horario/presentation/horario.dart`, `lib/features/calendario/presentation/calendario.dart`, `lib/features/horario/presentation/mobile.dart`, `lib/features/horario/presentation/desktop.dart`, `lib/features/calendario/presentation/mobile.dart`, `lib/features/calendario/presentation/desktop.dart`, `test/features/configuracion/settings_effects_test.dart` |
+| RF-048 | Implementado parcial | CU-003, CU-006, CU-009, CU-010 | RNF-022 | `lib/features/tareas/presentation/widgets/lista_tareas_categoria.dart`, `lib/features/calendario/presentation/widgets/evento_list_item.dart`, `lib/features/configuracion/presentation/advanced_settings_widget.dart`, `test/features/configuracion/settings_effects_test.dart`; pendiente eliminacion de clases cuando exista accion visible |
+| RF-049 | Implementado parcial | CU-010 | RNF-014, RNF-015 | `lib/features/configuracion/presentation/settings_controller.dart`, DAOs de tareas/clases/eventos, `lib/features/configuracion/presentation/advanced_settings_widget.dart`, `test/features/configuracion/settings_effects_test.dart`; emite refresco tras importar/borrar; pendiente selector/escritura de archivo nativo |
+| RF-050 | Implementado | CU-010 | RNF-026 | `lib/features/configuracion/presentation/settings_controller.dart`, `lib/features/configuracion/presentation/advanced_settings_widget.dart`, `test/features/configuracion/settings_advanced_test.dart` |
 
 ## Requerimientos No Funcionales
 
@@ -75,7 +83,7 @@ pruebas y evidencia tecnica observada en el proyecto.
 | RNF-019 | `test/features/models_serialization_test.dart` |
 | RNF-020 | Pruebas de formularios y widgets |
 | RNF-021 | Pendiente de ampliar cobertura |
-| RNF-022 | Pendiente de revisar confirmaciones en UI |
+| RNF-022 | Preferencia global de confirmaciones aplicada a tareas/eventos y borrado total reforzado; pendiente clases cuando exista accion visible |
 | RNF-023 | Snackbars visibles en formularios y acciones criticas de tareas, clases, eventos y configuracion; `test/widget_test.dart`, `test/features/tareas/taskcontroller_test.dart` |
 | RNF-024 | Politica sugerida |
 | RNF-025 | `lib/core/utils/notification_scheduler.dart` |
@@ -94,3 +102,4 @@ pruebas y evidencia tecnica observada en el proyecto.
 | Confirmaciones destructivas | Sugerido | Conviene confirmar eliminaciones de tareas, clases y eventos. |
 | Filtrado de tareas | Implementado | `TareasFilterBar` expone solo filtro de estado Material 3; `TasksController` conserva busqueda y rango para reglas internas. |
 | Notificaciones nativas reales | Parcial | La implementacion actual no debe tratarse como notificacion nativa completa. |
+| Ajustes avanzados | Parcial | Tema, vista inicial, densidad, inicio de semana e informacion de app implementados; confirmaciones y gestion de datos funcionan con pendientes acotados de clases y archivo nativo. |

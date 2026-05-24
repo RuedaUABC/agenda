@@ -1,20 +1,29 @@
 import 'package:agenda/features/calendario/presentation/calendario.dart';
 import 'package:agenda/features/configuracion/presentation/settings.dart';
+import 'package:agenda/features/configuracion/presentation/settings_controller.dart';
 import 'package:agenda/features/horario/presentation/horario.dart';
 import 'package:agenda/features/tareas/presentation/tareas.dart';
 import 'package:flutter/material.dart';
 
 class AgendaNavigation extends StatefulWidget {
   final List<Widget>? pages;
+  final SettingsController? settingsController;
+  final int? initialIndex;
 
-  const AgendaNavigation({super.key, this.pages});
+  const AgendaNavigation({
+    super.key,
+    this.pages,
+    this.settingsController,
+    this.initialIndex,
+  });
 
   @override
   State<AgendaNavigation> createState() => _AgendaNavigationState();
 }
 
 class _AgendaNavigationState extends State<AgendaNavigation> {
-  int _currentIndex = 0;
+  late int _currentIndex = widget.initialIndex ?? 0;
+  bool _hasUserSelected = false;
 
   static const _destinations = [
     NavigationDestination(icon: Icon(Icons.task_alt), label: 'Tareas'),
@@ -28,7 +37,23 @@ class _AgendaNavigationState extends State<AgendaNavigation> {
 
   List<Widget> get _pages {
     return widget.pages ??
-        const [TasksPage(), HorarioPage(), CalendarioPage(), SettingsPage()];
+        [
+          TasksPage(settingsController: widget.settingsController),
+          HorarioPage(settingsController: widget.settingsController),
+          CalendarioPage(settingsController: widget.settingsController),
+          SettingsPage(controller: widget.settingsController),
+        ];
+  }
+
+  @override
+  void didUpdateWidget(covariant AgendaNavigation oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final nextIndex = widget.initialIndex;
+    if (!_hasUserSelected &&
+        nextIndex != null &&
+        nextIndex != oldWidget.initialIndex) {
+      _currentIndex = nextIndex;
+    }
   }
 
   @override
@@ -46,7 +71,10 @@ class _AgendaNavigationState extends State<AgendaNavigation> {
         bottomNavigationBar: NavigationBar(
           selectedIndex: _currentIndex,
           onDestinationSelected: (index) {
-            setState(() => _currentIndex = index);
+            setState(() {
+              _hasUserSelected = true;
+              _currentIndex = index;
+            });
           },
           destinations: _destinations,
         ),
@@ -61,7 +89,10 @@ class _AgendaNavigationState extends State<AgendaNavigation> {
               extended: extendedRail,
               selectedIndex: _currentIndex,
               onDestinationSelected: (index) {
-                setState(() => _currentIndex = index);
+                setState(() {
+                  _hasUserSelected = true;
+                  _currentIndex = index;
+                });
               },
               destinations: _destinations
                   .map(

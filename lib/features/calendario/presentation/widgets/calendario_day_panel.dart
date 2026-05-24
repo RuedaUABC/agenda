@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/agenda_empty_state.dart';
 import '../../../../core/widgets/agenda_section_header.dart';
+import '../../../configuracion/preferences_helper.dart';
 import '../../domain/evento.dart';
 import '../calendario_controller.dart';
 import 'evento_list_item.dart';
@@ -11,6 +12,9 @@ class CalendarioDayPanel extends StatelessWidget {
   final VoidCallback onRefresh;
   final ValueChanged<Evento>? onEditEvento;
   final Future<void> Function(Evento evento)? onDeleteEvento;
+  final WeekStartPreference weekStart;
+  final VisualDensity visualDensity;
+  final bool confirmDestructiveActions;
 
   const CalendarioDayPanel({
     super.key,
@@ -18,6 +22,9 @@ class CalendarioDayPanel extends StatelessWidget {
     required this.onRefresh,
     this.onEditEvento,
     this.onDeleteEvento,
+    this.weekStart = WeekStartPreference.lunes,
+    this.visualDensity = VisualDensity.standard,
+    this.confirmDestructiveActions = true,
   });
 
   @override
@@ -44,6 +51,7 @@ class CalendarioDayPanel extends StatelessWidget {
             ),
             _DateSelector(
               selectedDate: date,
+              weekStart: weekStart,
               onSelected: (selectedDate) {
                 controller.selectedDate.value = selectedDate;
                 onRefresh();
@@ -61,12 +69,16 @@ class CalendarioDayPanel extends StatelessWidget {
                   : ListView.separated(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                       itemCount: eventos.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      separatorBuilder: (_, _) => SizedBox(
+                        height: visualDensity == VisualDensity.compact ? 4 : 8,
+                      ),
                       itemBuilder: (context, index) {
                         final evento = eventos[index];
                         return EventoListItem(
                           evento: evento,
                           margin: EdgeInsets.zero,
+                          visualDensity: visualDensity,
+                          confirmBeforeDelete: confirmDestructiveActions,
                           onTap: onEditEvento == null
                               ? null
                               : () => onEditEvento!(evento),
@@ -104,12 +116,19 @@ class CalendarioDayPanel extends StatelessWidget {
 class _DateSelector extends StatelessWidget {
   final DateTime selectedDate;
   final ValueChanged<DateTime> onSelected;
+  final WeekStartPreference weekStart;
 
-  const _DateSelector({required this.selectedDate, required this.onSelected});
+  const _DateSelector({
+    required this.selectedDate,
+    required this.onSelected,
+    required this.weekStart,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final start = selectedDate.subtract(const Duration(days: 3));
+    final start = selectedDate.subtract(
+      Duration(days: _daysFromWeekStart(selectedDate.weekday)),
+    );
     final days = List.generate(7, (index) => start.add(Duration(days: index)));
 
     return SingleChildScrollView(
@@ -132,6 +151,13 @@ class _DateSelector extends StatelessWidget {
 
   bool _sameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
+  int _daysFromWeekStart(int weekday) {
+    final start = weekStart == WeekStartPreference.domingo
+        ? DateTime.sunday
+        : DateTime.monday;
+    return (weekday - start) % DateTime.daysPerWeek;
   }
 
   String _weekdayLabel(int weekday) {

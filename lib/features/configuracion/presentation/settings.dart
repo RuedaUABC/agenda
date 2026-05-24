@@ -1,13 +1,15 @@
-import 'package:agenda/features/configuracion/presentation/mobile.dart';
-import 'package:agenda/features/configuracion/presentation/desktop.dart';
 import 'package:agenda/core/utils/responsive_layout.dart';
+import 'package:agenda/features/configuracion/presentation/desktop.dart';
+import 'package:agenda/features/configuracion/presentation/mobile.dart';
 import 'package:flutter/material.dart';
 
 import '../preferences_helper.dart';
 import 'settings_controller.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  final SettingsController? controller;
+
+  const SettingsPage({super.key, this.controller});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -24,15 +26,21 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _initController() async {
+    if (widget.controller != null) {
+      controller = widget.controller!;
+      setState(() => isLoading = false);
+      return;
+    }
+
     final prefs = PreferencesHelper();
     await prefs.init();
 
     controller = SettingsController(prefs: prefs);
     await controller.loadSettings();
 
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
   }
 
   @override
@@ -42,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Configuración")),
+      appBar: AppBar(title: const Text('Configuracion')),
       body: ResponsiveLayout(
         mobile: MyMobileBody(controller: controller),
         desktop: MyDesktopBody(controller: controller),

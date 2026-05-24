@@ -34,4 +34,9 @@ class EventoDao {
     final db = await dbHelper.initDB();
     return await db.delete("eventos", where: "id = ?", whereArgs: [id]);
   }
+
+  Future<int> deleteAllEventos() async {
+    final db = await dbHelper.initDB();
+    return await db.delete("eventos");
+  }
 }

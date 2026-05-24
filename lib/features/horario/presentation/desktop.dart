@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../../core/theme/calendar_config.dart';
+import '../../configuracion/preferences_helper.dart';
 import 'horario_controller.dart';
 import 'widgets/horario_day_panel.dart';
 
 class MyDesktopBody extends StatelessWidget {
   final HorarioController controller;
   final VoidCallback onRefresh;
+  final WeekStartPreference weekStart;
+  final VisualDensity visualDensity;
 
   const MyDesktopBody({
     super.key,
     required this.controller,
     required this.onRefresh,
+    this.weekStart = WeekStartPreference.lunes,
+    this.visualDensity = VisualDensity.standard,
   });
 
   @override
@@ -32,7 +37,7 @@ class MyDesktopBody extends StatelessWidget {
                 child: SfCalendar(
                   view: CalendarView.week,
                   dataSource: ClaseDataSource(controller.clases),
-                  firstDayOfWeek: 1,
+                  firstDayOfWeek: _firstDayOfWeek(weekStart),
                   headerHeight: 60,
                   todayHighlightColor: colorScheme.primary,
                   selectionDecoration: BoxDecoration(
@@ -73,6 +78,8 @@ class MyDesktopBody extends StatelessWidget {
                 child: HorarioDayPanel(
                   controller: controller,
                   onRefresh: onRefresh,
+                  weekStart: weekStart,
+                  visualDensity: visualDensity,
                 ),
               ),
             ),
@@ -80,5 +87,14 @@ class MyDesktopBody extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  int _firstDayOfWeek(WeekStartPreference value) {
+    switch (value) {
+      case WeekStartPreference.lunes:
+        return DateTime.monday;
+      case WeekStartPreference.domingo:
+        return DateTime.sunday;
+    }
   }
 }

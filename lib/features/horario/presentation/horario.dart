@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive_layout.dart';
+import '../../configuracion/preferences_helper.dart';
+import '../../configuracion/presentation/settings_controller.dart';
 import '../data/clase_dao.dart';
 import '../domain/clase.dart';
 import '../repository/horario_repository_impl.dart';
@@ -10,7 +12,10 @@ import 'mobile.dart';
 import 'widgets/clase_form.dart';
 
 class HorarioPage extends StatefulWidget {
-  const HorarioPage({super.key});
+  final SettingsController? settingsController;
+  final HorarioController? controller;
+
+  const HorarioPage({super.key, this.settingsController, this.controller});
 
   @override
   State<HorarioPage> createState() => _HorarioPageState();
@@ -23,7 +28,12 @@ class _HorarioPageState extends State<HorarioPage> {
   @override
   void initState() {
     super.initState();
-    _initDependencies();
+    if (widget.controller != null) {
+      controller = widget.controller!;
+      isLoading = false;
+    } else {
+      _initDependencies();
+    }
   }
 
   Future<void> _initDependencies() async {
@@ -45,15 +55,36 @@ class _HorarioPageState extends State<HorarioPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final settingsController = widget.settingsController;
+    if (settingsController != null) {
+      return ListenableBuilder(
+        listenable: settingsController,
+        builder: (context, _) => _buildScaffold(),
+      );
+    }
+
+    return _buildScaffold();
+  }
+
+  Widget _buildScaffold() {
+    final settings = widget.settingsController;
+    final weekStart = settings?.weekStart ?? WeekStartPreference.lunes;
+    final visualDensity =
+        settings?.materialVisualDensity ?? VisualDensity.standard;
+
     return Scaffold(
       body: ResponsiveLayout(
         mobile: MyMobileBody(
           controller: controller,
           onRefresh: () => setState(() {}),
+          weekStart: weekStart,
+          visualDensity: visualDensity,
         ),
         desktop: MyDesktopBody(
           controller: controller,
           onRefresh: () => setState(() {}),
+          weekStart: weekStart,
+          visualDensity: visualDensity,
         ),
       ),
       floatingActionButton: FloatingActionButton(

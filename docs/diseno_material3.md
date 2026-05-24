@@ -195,6 +195,16 @@ Cambios concretos:
 - Reemplazar card unica por una lista de secciones.
 - Usar `ListTile` con icono, titulo, descripcion y trailing control.
 - Reemplazar `DropdownButton` por `DropdownMenu` o selector en dialog/sheet.
+- Agregar selector de tema con `SegmentedButton` para Sistema, Claro y Oscuro.
+- Agregar preferencia de vista inicial con `DropdownMenu`.
+- Agregar preferencias de densidad visual e inicio de semana con
+  `SegmentedButton` y aplicarlas en listas, calendario y horario.
+- Agregar switch de confirmaciones destructivas y mantener confirmacion
+  reforzada obligatoria para borrado masivo.
+- Agregar seccion de gestion de datos con exportacion/importacion validada y
+  borrado total protegido sobre datos locales reales.
+- Agregar seccion de informacion solo lectura con version, almacenamiento y
+  estado de notificaciones.
 - En desktop, usar el espacio derecho para una descripcion de la opcion
   seleccionada o vista previa de recordatorios.
 - Agregar estado de permisos de notificacion cuando existan notificaciones
@@ -273,6 +283,9 @@ estado de permisos de notificaciones nativas.
 
 - Redisenar ajustes como lista de secciones.
 - Revisar textos, acentos y consistencia de etiquetas.
+- Implementar ajustes avanzados base: tema, vista inicial, aviso de eventos,
+  densidad, inicio de semana, confirmaciones, gestion de datos e informacion de
+  app.
 - Probar light/dark, movil, tablet y desktop.
 - Ejecutar `flutter analyze` y pruebas de widgets criticos.
 

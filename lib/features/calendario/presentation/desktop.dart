@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../../core/theme/calendar_config.dart';
+import '../../configuracion/preferences_helper.dart';
 import '../domain/evento.dart';
 import 'calendario_controller.dart';
 import 'widgets/calendario_day_panel.dart';
@@ -11,6 +12,9 @@ class MyDesktopBody extends StatelessWidget {
   final VoidCallback onRefresh;
   final ValueChanged<Evento>? onEditEvento;
   final Future<void> Function(Evento evento)? onDeleteEvento;
+  final WeekStartPreference weekStart;
+  final VisualDensity visualDensity;
+  final bool confirmDestructiveActions;
 
   const MyDesktopBody({
     super.key,
@@ -18,6 +22,9 @@ class MyDesktopBody extends StatelessWidget {
     required this.onRefresh,
     this.onEditEvento,
     this.onDeleteEvento,
+    this.weekStart = WeekStartPreference.lunes,
+    this.visualDensity = VisualDensity.standard,
+    this.confirmDestructiveActions = true,
   });
 
   @override
@@ -37,7 +44,7 @@ class MyDesktopBody extends StatelessWidget {
                 child: SfCalendar(
                   view: CalendarView.month,
                   dataSource: EventoDataSource(controller.eventos),
-                  firstDayOfWeek: 1,
+                  firstDayOfWeek: _firstDayOfWeek(weekStart),
                   headerHeight: 60,
                   todayHighlightColor: colorScheme.primary,
                   selectionDecoration: BoxDecoration(
@@ -77,6 +84,9 @@ class MyDesktopBody extends StatelessWidget {
                   onRefresh: onRefresh,
                   onEditEvento: onEditEvento,
                   onDeleteEvento: onDeleteEvento,
+                  weekStart: weekStart,
+                  visualDensity: visualDensity,
+                  confirmDestructiveActions: confirmDestructiveActions,
                 ),
               ),
             ),
@@ -84,5 +94,14 @@ class MyDesktopBody extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  int _firstDayOfWeek(WeekStartPreference value) {
+    switch (value) {
+      case WeekStartPreference.lunes:
+        return DateTime.monday;
+      case WeekStartPreference.domingo:
+        return DateTime.sunday;
+    }
   }
 }

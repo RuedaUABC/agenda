@@ -82,6 +82,9 @@ Ubicacion principal: `test/features/horario/horario_controller_test.dart`,
 Ubicacion principal:
 `test/features/configuracion/settings_controller_test.dart` y
 `test/features/configuracion/notificacion_config_widget_test.dart`.
+Cobertura avanzada:
+`test/features/configuracion/settings_advanced_test.dart` y
+`test/features/configuracion/settings_effects_test.dart`.
 
 - Carga valores por defecto desde preferencias vacias.
 - Guarda preferencias globales de clases y tareas.
@@ -95,6 +98,34 @@ Ubicacion principal:
 - El widget permite cambiar aviso global de clases.
 - El widget permite cambiar el primer aviso de tareas y dispara la
   reprogramacion de tareas pendientes.
+- El widget incluye aviso global de eventos y persiste su valor.
+- El controller persiste tema visual, vista inicial, densidad visual, inicio de
+  semana y confirmaciones.
+- El controller mapea tema a `ThemeMode` e indice inicial de navegacion.
+- El controller genera respaldo JSON local y valida version/formato antes de
+  importar preferencias.
+- El controller expone informacion de version, almacenamiento local y estado de
+  notificaciones.
+- El inicio de semana afecta `SfCalendar` en calendario y horario.
+- La densidad compacta se aplica a listas de tareas.
+- Las confirmaciones desactivadas omiten dialogos en eliminaciones comunes de
+  tareas y eventos.
+- La gestion de datos usa un store real para exportar, importar y borrar datos.
+- Las pantallas de Tareas, Horario y Calendario escuchan cambios del
+  `SettingsController` y aplican preferencias en tiempo real.
+- `MyApp` escucha cambios de tema y actualiza `ThemeMode` durante la sesion.
+- `NotificacionConfigWidget` escucha cambios externos del controller y
+  sincroniza sus `DropdownMenu`.
+- La vista inicial informa que se aplicara al abrir Agenda y no fuerza
+  navegacion inmediata.
+- El borrado de datos locales emite notificacion para refrescar consumidores
+  activos.
+
+Cobertura parcial pendiente:
+
+- Integrar confirmaciones configurables en eliminacion de clases cuando exista
+  accion visible equivalente.
+- Conectar gestion de datos locales con selector/escritura de archivo nativo.
 
 ## Feature: Diseno Material 3
 
@@ -111,6 +142,8 @@ Ubicacion principal: `test/features/diseno_material3/`.
   acciones Material 3 y botones de fecha/hora.
 - Los selectores de color de eventos y clases tienen objetivos de `48x48`.
 - La configuracion usa secciones `ListTile` y `DropdownMenu`.
+- Los ajustes avanzados usan `SegmentedButton`, `DropdownMenu`,
+  `SwitchListTile` y secciones Material 3.
 - Horario usa `SegmentedButton`, `ChoiceChip`, `AgendaSectionHeader`,
   `AgendaEmptyState` y tarjetas `Card.filled` para clases.
 - Calendario usa `SegmentedButton`, `ChoiceChip`, `AgendaSectionHeader`,

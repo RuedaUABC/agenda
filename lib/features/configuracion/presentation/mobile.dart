@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'advanced_settings_widget.dart';
 import 'settings_controller.dart';
 import 'notificacion_config_widget.dart';
 
@@ -11,7 +12,12 @@ class MyMobileBody extends StatelessWidget {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        children: [NotificacionConfigWidget(controller: controller)],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          NotificacionConfigWidget(controller: controller),
+          const SizedBox(height: 32),
+          AdvancedSettingsWidget(controller: controller),
+        ],
       ),
     );
   }

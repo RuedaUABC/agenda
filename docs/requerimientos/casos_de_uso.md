@@ -227,4 +227,35 @@ Flujos alternativos:
 
 Resultado: Las preferencias quedan persistidas localmente.
 
-Requisitos relacionados: RF-034, RF-035, RF-036, RF-037, RF-038, RF-039.
+Requisitos relacionados: RF-034, RF-035, RF-036, RF-037, RF-038, RF-039,
+RF-043, RF-044, RF-045, RF-046, RF-047, RF-048, RF-049, RF-050.
+
+## CU-011. Personalizar preferencias avanzadas
+
+Actor principal: Usuario.
+
+Precondicion: El usuario esta en Ajustes.
+
+Flujo principal:
+
+1. El sistema muestra secciones de preferencias avanzadas.
+2. El usuario modifica tema, vista inicial, densidad, inicio de semana o
+   confirmaciones.
+3. El sistema valida que la opcion seleccionada este permitida.
+4. El sistema persiste la preferencia.
+5. El sistema aplica el cambio en la interfaz correspondiente.
+
+Flujos alternos:
+
+- Si una preferencia persistida es invalida, el sistema vuelve al valor por
+  defecto.
+- Si el usuario solicita una accion de datos locales, el sistema solicita la
+  confirmacion requerida antes de modificar datos.
+- Si la accion de importacion/exportacion falla, el sistema informa el error y
+  conserva los datos existentes.
+
+Resultado: Las preferencias avanzadas quedan guardadas y la app refleja el
+comportamiento configurado.
+
+Requisitos relacionados: RF-044, RF-045, RF-046, RF-047, RF-048, RF-049,
+RF-050.

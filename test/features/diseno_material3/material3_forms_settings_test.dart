@@ -70,8 +70,8 @@ void main() {
     );
 
     expect(find.byType(Card), findsNothing);
-    expect(find.byType(ListTile), findsNWidgets(2));
-    expect(find.byType(DropdownMenu<int>), findsNWidgets(2));
+    expect(find.byType(ListTile), findsNWidgets(3));
+    expect(find.byType(DropdownMenu<int>), findsNWidgets(3));
     expect(find.byType(DropdownButton<int>), findsNothing);
   });
 

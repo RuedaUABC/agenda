@@ -24,6 +24,8 @@ esta organizado el proyecto y como trabajar con el.
   evidencia TDD del refinamiento Material 3 de la pantalla Horario.
 - [`red_green_refactor_calendario_material3.md`](red_green_refactor_calendario_material3.md):
   evidencia TDD del refinamiento Material 3 del calendario de eventos.
+- [`red_green_refactor_ajustes_avanzados.md`](red_green_refactor_ajustes_avanzados.md):
+  evidencia TDD para ajustes avanzados Material 3.
 - [`red_green_refactor_validaciones.md`](red_green_refactor_validaciones.md):
   evidencia TDD para validaciones completas de tareas y clases.
 - [`red_green_refactor_tareas_configuracion_robustez.md`](red_green_refactor_tareas_configuracion_robustez.md):

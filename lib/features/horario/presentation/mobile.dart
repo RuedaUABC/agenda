@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../configuracion/preferences_helper.dart';
 import 'horario_controller.dart';
 import 'widgets/horario_day_panel.dart';
 
@@ -9,11 +10,15 @@ enum HorarioMobileView { semana, dia }
 class MyMobileBody extends StatefulWidget {
   final HorarioController controller;
   final VoidCallback onRefresh;
+  final WeekStartPreference weekStart;
+  final VisualDensity visualDensity;
 
   const MyMobileBody({
     super.key,
     required this.controller,
     required this.onRefresh,
+    this.weekStart = WeekStartPreference.lunes,
+    this.visualDensity = VisualDensity.standard,
   });
 
   @override
@@ -86,7 +91,7 @@ class _MyMobileBodyState extends State<MyMobileBody> {
                   child: SfCalendar(
                     view: CalendarView.week,
                     dataSource: ClaseDataSource(widget.controller.clases),
-                    firstDayOfWeek: 1,
+                    firstDayOfWeek: _firstDayOfWeek(widget.weekStart),
                     headerHeight: 52,
                     todayHighlightColor: colorScheme.primary,
                     selectionDecoration: BoxDecoration(
@@ -108,6 +113,8 @@ class _MyMobileBodyState extends State<MyMobileBody> {
                 HorarioDayPanel(
                   controller: widget.controller,
                   onRefresh: widget.onRefresh,
+                  weekStart: widget.weekStart,
+                  visualDensity: widget.visualDensity,
                 ),
               ],
             ),
@@ -115,5 +122,14 @@ class _MyMobileBodyState extends State<MyMobileBody> {
         ],
       ),
     );
+  }
+
+  int _firstDayOfWeek(WeekStartPreference value) {
+    switch (value) {
+      case WeekStartPreference.lunes:
+        return DateTime.monday;
+      case WeekStartPreference.domingo:
+        return DateTime.sunday;
+    }
   }
 }

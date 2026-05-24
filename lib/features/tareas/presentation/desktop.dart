@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'taskcontroller.dart';
+
+import '../../configuracion/preferences_helper.dart';
 import '../domain/tarea.dart';
-import 'widgets/panel_progreso.dart';
+import 'taskcontroller.dart';
 import 'widgets/lista_tareas_categoria.dart';
+import 'widgets/panel_progreso.dart';
 import 'widgets/tareas_filter_bar.dart';
 
 class MyDesktopBody extends StatelessWidget {
@@ -10,6 +12,8 @@ class MyDesktopBody extends StatelessWidget {
   final VoidCallback onRefresh;
   final Map<String, List<Tarea>> clasificacion;
   final List<Tarea> papelera;
+  final VisualDensityPreference visualDensityPreference;
+  final bool confirmDestructiveActions;
 
   const MyDesktopBody({
     super.key,
@@ -17,6 +21,8 @@ class MyDesktopBody extends StatelessWidget {
     required this.onRefresh,
     required this.clasificacion,
     this.papelera = const [],
+    this.visualDensityPreference = VisualDensityPreference.comoda,
+    this.confirmDestructiveActions = true,
   });
 
   @override
@@ -24,7 +30,6 @@ class MyDesktopBody extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Columna izquierda: Listado de tareas activas
         Expanded(
           flex: 13,
           child: ListView(
@@ -33,53 +38,50 @@ class MyDesktopBody extends StatelessWidget {
               TareasFilterBar(controller: controller, onChanged: onRefresh),
               PanelProgreso(controller: controller),
               const SizedBox(height: 16),
-              ListaTareasCategoria(
-                controller: controller,
-                onRefresh: onRefresh,
-                title: "Vencidas",
-                tareas: clasificacion["vencidas"] ?? [],
+              _category('Vencidas', clasificacion['vencidas'] ?? []),
+              _category(
+                'Pendientes esta semana',
+                clasificacion['pendientesSemana'] ?? [],
               ),
-              ListaTareasCategoria(
-                controller: controller,
-                onRefresh: onRefresh,
-                title: "Pendientes esta semana",
-                tareas: clasificacion["pendientesSemana"] ?? [],
-              ),
-              ListaTareasCategoria(
-                controller: controller,
-                onRefresh: onRefresh,
-                title: "Próximas",
-                tareas: clasificacion["proximas"] ?? [],
-              ),
+              _category('Proximas', clasificacion['proximas'] ?? []),
             ],
           ),
         ),
-        // Columna derecha: Estadísticas, vencidas y completadas
         Expanded(
           flex: 8,
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                ListaTareasCategoria(
-                  controller: controller,
-                  onRefresh: onRefresh,
-                  title: "Completadas",
-                  tareas: clasificacion["completadas"] ?? [],
+                _category(
+                  'Completadas',
+                  clasificacion['completadas'] ?? [],
                   isCompletedMode: true,
                 ),
-                ListaTareasCategoria(
-                  controller: controller,
-                  onRefresh: onRefresh,
-                  title: "Papelera",
-                  tareas: papelera,
-                  isTrashMode: true,
-                ),
+                _category('Papelera', papelera, isTrashMode: true),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _category(
+    String title,
+    List<Tarea> tareas, {
+    bool isCompletedMode = false,
+    bool isTrashMode = false,
+  }) {
+    return ListaTareasCategoria(
+      controller: controller,
+      onRefresh: onRefresh,
+      title: title,
+      tareas: tareas,
+      isCompletedMode: isCompletedMode,
+      isTrashMode: isTrashMode,
+      visualDensityPreference: visualDensityPreference,
+      confirmDestructiveActions: confirmDestructiveActions,
     );
   }
 }

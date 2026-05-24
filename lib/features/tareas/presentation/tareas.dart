@@ -9,11 +9,15 @@ import '../data/tarea_dao.dart';
 import '../data/notificacion_dao.dart';
 import '../data/tarea_service.dart';
 import '../../configuracion/preferences_helper.dart';
+import '../../configuracion/presentation/settings_controller.dart';
 import '../../../core/utils/notification_scheduler.dart';
 import 'widgets/tarea_form.dart';
 
 class TasksPage extends StatefulWidget {
-  const TasksPage({super.key});
+  final SettingsController? settingsController;
+  final TasksController? controller;
+
+  const TasksPage({super.key, this.settingsController, this.controller});
 
   @override
   State<TasksPage> createState() => _TasksPageState();
@@ -26,7 +30,12 @@ class _TasksPageState extends State<TasksPage> {
   @override
   void initState() {
     super.initState();
-    _initDependencies();
+    if (widget.controller != null) {
+      controller = widget.controller!;
+      isLoading = false;
+    } else {
+      _initDependencies();
+    }
   }
 
   Future<void> _initDependencies() async {
@@ -74,9 +83,26 @@ class _TasksPageState extends State<TasksPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final settingsController = widget.settingsController;
+    if (settingsController != null) {
+      return ListenableBuilder(
+        listenable: settingsController,
+        builder: (context, _) => _buildScaffold(),
+      );
+    }
+
+    return _buildScaffold();
+  }
+
+  Widget _buildScaffold() {
     final tareasFiltradas = controller.filtrarTareas(controller.tareas);
     final papeleraFiltrada = controller.buscarTareas(controller.papelera);
     final clasificacion = controller.clasificarTareas(tareasFiltradas);
+    final settings = widget.settingsController;
+    final visualDensity =
+        settings?.visualDensity ?? VisualDensityPreference.comoda;
+    final confirmDestructiveActions =
+        settings?.confirmDestructiveActions ?? true;
 
     return Scaffold(
       body: ResponsiveLayout(
@@ -85,12 +111,16 @@ class _TasksPageState extends State<TasksPage> {
           onRefresh: () => setState(() {}),
           clasificacion: clasificacion,
           papelera: papeleraFiltrada,
+          visualDensityPreference: visualDensity,
+          confirmDestructiveActions: confirmDestructiveActions,
         ),
         desktop: MyDesktopBody(
           controller: controller,
           onRefresh: () => setState(() {}),
           clasificacion: clasificacion,
           papelera: papeleraFiltrada,
+          visualDensityPreference: visualDensity,
+          confirmDestructiveActions: confirmDestructiveActions,
         ),
       ),
       floatingActionButton: FloatingActionButton(

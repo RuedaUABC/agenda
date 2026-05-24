@@ -15,8 +15,8 @@ Estados usados:
 
 ## Navegacion
 
-**RF-001. Navegacion principal por modulos**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-001. Navegacion principal por modulos**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe permitir navegar entre los modulos Tareas, Horario, Calendario
 y Ajustes desde una navegacion principal siempre disponible.
 
@@ -28,8 +28,8 @@ Criterios de aceptacion:
 - En pantallas moviles se usa barra inferior Material 3.
 - En pantallas medianas o grandes se usa `NavigationRail`.
 
-**RF-002. Conservacion de estado entre modulos**  
-Prioridad: Media. Estado: Implementado.  
+**RF-002. Conservacion de estado entre modulos**
+Prioridad: Media. Estado: Implementado.
 El sistema debe conservar el estado de cada modulo cuando el usuario cambia a
 otro modulo y regresa.
 
@@ -40,8 +40,8 @@ Criterios de aceptacion:
 
 ## Tareas
 
-**RF-003. Consulta de tareas activas**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-003. Consulta de tareas activas**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe mostrar al usuario las tareas activas almacenadas localmente.
 
 Criterios de aceptacion:
@@ -49,8 +49,8 @@ Criterios de aceptacion:
 - Solo se muestran tareas no enviadas a papelera.
 - Si no existen tareas activas, se muestra un estado vacio comprensible.
 
-**RF-004. Consulta de papelera**  
-Prioridad: Media. Estado: Implementado.  
+**RF-004. Consulta de papelera**
+Prioridad: Media. Estado: Implementado.
 El sistema debe permitir consultar las tareas enviadas a papelera.
 
 Criterios de aceptacion:
@@ -58,8 +58,8 @@ Criterios de aceptacion:
 - La papelera muestra solo tareas eliminadas logicamente.
 - Si la papelera esta vacia, el sistema informa que no hay tareas eliminadas.
 
-**RF-005. Creacion de tareas**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-005. Creacion de tareas**
+Prioridad: Alta. Estado: Implementado.
 El usuario debe poder crear una tarea con titulo, asignatura, descripcion,
 fecha y hora.
 
@@ -71,8 +71,8 @@ Criterios de aceptacion:
 - El formulario muestra titulo, accion de cancelar/cerrar y accion primaria de
   guardado en controles Material 3.
 
-**RF-006. Validacion de datos de tarea**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-006. Validacion de datos de tarea**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe validar los datos capturados antes de guardar una tarea.
 
 Validaciones requeridas:
@@ -86,8 +86,8 @@ Validaciones requeridas:
 - Si la tarea se programa en una fecha pasada, el sistema debe advertir al
   usuario o solicitar confirmacion.
 
-**RF-007. Edicion de tareas**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-007. Edicion de tareas**
+Prioridad: Alta. Estado: Implementado.
 El usuario debe poder editar los datos de una tarea existente.
 
 Criterios de aceptacion:
@@ -96,8 +96,8 @@ Criterios de aceptacion:
 - Al guardar cambios validos, la tarea se actualiza localmente.
 - Las mismas validaciones de creacion aplican para la edicion.
 
-**RF-008. Cambio de estado de tarea**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-008. Cambio de estado de tarea**
+Prioridad: Alta. Estado: Implementado.
 El usuario debe poder marcar una tarea como completada y devolver una tarea
 completada al estado pendiente.
 
@@ -106,8 +106,8 @@ Criterios de aceptacion:
 - El cambio de estado se refleja en la lista correspondiente.
 - El cambio de estado se conserva al cerrar y abrir la aplicacion.
 
-**RF-009. Eliminacion logica de tareas**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-009. Eliminacion logica de tareas**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe enviar las tareas eliminadas a papelera en lugar de borrarlas
 definitivamente.
 
@@ -117,8 +117,8 @@ Criterios de aceptacion:
 - La tarea eliminada aparece en papelera.
 - El sistema debe pedir confirmacion antes de enviar una tarea a papelera.
 
-**RF-010. Restauracion de tareas**  
-Prioridad: Media. Estado: Implementado.  
+**RF-010. Restauracion de tareas**
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder restaurar una tarea desde papelera.
 
 Criterios de aceptacion:
@@ -126,8 +126,8 @@ Criterios de aceptacion:
 - La tarea restaurada vuelve a tareas activas.
 - La tarea restaurada conserva sus datos originales.
 
-**RF-011. Eliminacion definitiva de tareas**  
-Prioridad: Baja. Estado: Implementado.  
+**RF-011. Eliminacion definitiva de tareas**
+Prioridad: Baja. Estado: Implementado.
 El sistema deberia permitir eliminar definitivamente una tarea desde papelera,
 previa confirmacion explicita del usuario.
 
@@ -136,8 +136,8 @@ Criterios de aceptacion:
 - El sistema solicita confirmacion antes de eliminar definitivamente.
 - Una tarea eliminada definitivamente ya no puede restaurarse.
 
-**RF-012. Clasificacion de tareas**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-012. Clasificacion de tareas**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe clasificar tareas activas en vencidas, pendientes de la semana,
 proximas y completadas.
 
@@ -148,8 +148,8 @@ Criterios de aceptacion:
 - La clasificacion se actualiza al crear, editar, eliminar, restaurar o
   completar una tarea.
 
-**RF-013. Progreso diario**  
-Prioridad: Media. Estado: Implementado.  
+**RF-013. Progreso diario**
+Prioridad: Media. Estado: Implementado.
 El sistema debe calcular el progreso del dia con base en las tareas de hoy
 completadas frente al total de tareas de hoy.
 
@@ -158,8 +158,8 @@ Criterios de aceptacion:
 - Si no hay tareas para hoy, el progreso es 0%.
 - El progreso se actualiza al completar o devolver a pendiente una tarea de hoy.
 
-**RF-014. Estadisticas semanales**  
-Prioridad: Media. Estado: Implementado.  
+**RF-014. Estadisticas semanales**
+Prioridad: Media. Estado: Implementado.
 El sistema debe calcular la cantidad de tareas pendientes por dia para los
 proximos siete dias.
 
@@ -168,13 +168,13 @@ Criterios de aceptacion:
 - Las tareas completadas no se cuentan como pendientes.
 - La estadistica cubre siete dias contados desde la fecha actual.
 
-**RF-015. Detalle de tarea**  
-Prioridad: Media. Estado: Implementado.  
+**RF-015. Detalle de tarea**
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder abrir el detalle de una tarea y consultar titulo,
 asignatura, descripcion, fecha, hora y estado.
 
 **RF-016. Filtrado de tareas**
-Prioridad: Baja. Estado: Implementado.  
+Prioridad: Baja. Estado: Implementado.
 El sistema debe permitir filtrar tareas por estado desde la interfaz.
 
 Criterios de aceptacion:
@@ -187,12 +187,12 @@ Criterios de aceptacion:
 
 ## Horario
 
-**RF-017. Consulta de clases**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-017. Consulta de clases**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe cargar y mostrar las clases guardadas localmente.
 
-**RF-018. Creacion de clases semanales**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-018. Creacion de clases semanales**
+Prioridad: Alta. Estado: Implementado.
 El usuario debe poder crear una clase con materia, aula, fecha, hora de inicio,
 hora de fin y color.
 
@@ -203,8 +203,8 @@ Criterios de aceptacion:
 - El formulario agrupa fecha y hora con botones Material 3 y selector de color
   accesible.
 
-**RF-019. Validacion de datos de clase**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-019. Validacion de datos de clase**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe validar los datos antes de guardar una clase.
 
 Validaciones requeridas:
@@ -219,13 +219,13 @@ Validaciones requeridas:
 - Si existe otra clase en el mismo dia y rango horario, el sistema impide el
   guardado y muestra el conflicto al usuario.
 
-**RF-020. Recurrencia semanal de clases**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-020. Recurrencia semanal de clases**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe registrar las clases como eventos recurrentes semanales para el
 dia seleccionado.
 
-**RF-021. Visualizacion semanal de horario**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-021. Visualizacion semanal de horario**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe mostrar las clases en una vista semanal de horario.
 
 Criterios de aceptacion:
@@ -237,8 +237,8 @@ Criterios de aceptacion:
 - La accion `Hoy` permite volver rapidamente al dia actual sin perder el flujo
   de consulta.
 
-**RF-022. Lista de clases por dia seleccionado**  
-Prioridad: Media. Estado: Implementado.  
+**RF-022. Lista de clases por dia seleccionado**
+Prioridad: Media. Estado: Implementado.
 El sistema debe listar las clases correspondientes al dia seleccionado por el
 usuario.
 
@@ -249,13 +249,13 @@ Criterios de aceptacion:
 - Si no hay clases, se muestra un estado vacio Material 3.
 - Cada clase muestra materia, horario y aula con metadatos visuales claros.
 
-**RF-023. Edicion de clases**  
-Prioridad: Media. Estado: Implementado.  
+**RF-023. Edicion de clases**
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder modificar los datos de una clase existente aplicando las
 mismas validaciones de creacion.
 
-**RF-024. Eliminacion de clases**  
-Prioridad: Media. Estado: Implementado.  
+**RF-024. Eliminacion de clases**
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder eliminar una clase existente.
 
 Criterios de aceptacion:
@@ -265,12 +265,12 @@ Criterios de aceptacion:
 
 ## Calendario
 
-**RF-025. Consulta de eventos**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-025. Consulta de eventos**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe cargar eventos guardados localmente.
 
-**RF-026. Visualizacion mensual de eventos**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-026. Visualizacion mensual de eventos**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe mostrar eventos en una vista mensual de calendario.
 
 Criterios de aceptacion:
@@ -281,13 +281,13 @@ Criterios de aceptacion:
   dia seleccionado.
 - La accion `Hoy` permite volver rapidamente a la fecha actual.
 
-**RF-027. Seleccion de fecha en calendario**  
-Prioridad: Media. Estado: Implementado.  
+**RF-027. Seleccion de fecha en calendario**
+Prioridad: Media. Estado: Implementado.
 El sistema debe permitir seleccionar una fecha del calendario y conservar esa
 seleccion mientras el usuario permanece en el modulo.
 
-**RF-028. Lista de eventos por dia seleccionado**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-028. Lista de eventos por dia seleccionado**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe listar eventos que ocurran en el dia seleccionado, incluyendo
 eventos que empiezan antes y terminan despues de esa fecha.
 
@@ -297,8 +297,8 @@ Criterios de aceptacion:
 - El usuario puede cambiar de fecha con chips Material 3.
 - Si no hay eventos, se muestra un estado vacio Material 3.
 
-**RF-029. Representacion visual de eventos**  
-Prioridad: Media. Estado: Implementado.  
+**RF-029. Representacion visual de eventos**
+Prioridad: Media. Estado: Implementado.
 El sistema debe mostrar titulo, descripcion y color asociado de cada evento.
 
 Criterios de aceptacion:
@@ -308,8 +308,8 @@ Criterios de aceptacion:
 - Cada evento en la lista diaria muestra barra de color, icono, rango horario y
   descripcion como metadatos legibles.
 
-**RF-030. Creacion de eventos desde la interfaz**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-030. Creacion de eventos desde la interfaz**
+Prioridad: Alta. Estado: Implementado.
 El usuario debe poder crear eventos desde el modulo Calendario.
 
 Validaciones requeridas:
@@ -323,38 +323,38 @@ Validaciones requeridas:
 - El color debe ser uno de los colores permitidos por la interfaz o un valor
   valido reconocido por el sistema.
 
-**RF-031. Edicion de eventos desde la interfaz**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-031. Edicion de eventos desde la interfaz**
+Prioridad: Alta. Estado: Implementado.
 El usuario debe poder editar eventos existentes desde el modulo Calendario.
 
-**RF-032. Eliminacion de eventos desde la interfaz**  
-Prioridad: Media. Estado: Implementado.  
+**RF-032. Eliminacion de eventos desde la interfaz**
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder eliminar eventos existentes desde el modulo Calendario,
 previa confirmacion.
 
-**RF-033. Advertencia de eventos superpuestos**  
-Prioridad: Baja. Estado: Implementado.  
+**RF-033. Advertencia de eventos superpuestos**
+Prioridad: Baja. Estado: Implementado.
 El sistema debe advertir al usuario cuando un evento nuevo o editado se
 superpone con otro evento existente y permitir cancelar o guardar de todos
 modos.
 
 ## Configuracion
 
-**RF-034. Consulta de preferencias de notificacion**  
-Prioridad: Media. Estado: Implementado.  
+**RF-034. Consulta de preferencias de notificacion**
+Prioridad: Media. Estado: Implementado.
 El sistema debe cargar preferencias globales de notificacion para clases y
 tareas desde almacenamiento local.
 
-**RF-035. Configuracion de aviso de clases**  
-Prioridad: Media. Estado: Implementado.  
+**RF-035. Configuracion de aviso de clases**
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder seleccionar cuanto tiempo antes recibir avisos de clases.
 
 Criterios de aceptacion:
 
 - La seleccion se presenta con componentes Material 3 y texto descriptivo.
 
-**RF-036. Configuracion del primer aviso de tareas**  
-Prioridad: Media. Estado: Implementado.  
+**RF-036. Configuracion del primer aviso de tareas**
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder seleccionar cuanto tiempo antes recibir el primer aviso de
 tareas.
 
@@ -363,33 +363,183 @@ Criterios de aceptacion:
 - La seleccion se presenta con componentes Material 3 y conserva la
   reprogramacion de tareas pendientes.
 
-**RF-037. Validacion de preferencias de notificacion**  
-Prioridad: Media. Estado: Implementado.  
+**RF-037. Validacion de preferencias de notificacion**
+Prioridad: Media. Estado: Implementado.
 El sistema debe aceptar solo valores de anticipacion definidos por la aplicacion
 y rechazar valores nulos, negativos o no soportados.
 
-**RF-038. Persistencia de preferencias**  
-Prioridad: Media. Estado: Implementado.  
+**RF-038. Persistencia de preferencias**
+Prioridad: Media. Estado: Implementado.
 El sistema debe guardar preferencias de notificacion en almacenamiento local.
 
-**RF-039. Reprogramacion de tareas pendientes**  
-Prioridad: Media. Estado: Implementado.  
+**RF-039. Reprogramacion de tareas pendientes**
+Prioridad: Media. Estado: Implementado.
 Cuando cambian las preferencias de avisos de tareas, el sistema debe
 reprogramar notificaciones de tareas no completadas.
 
+**RF-043. Configuracion de aviso de eventos**
+Prioridad: Media. Estado: Implementado parcial.
+El usuario debe poder seleccionar cuanto tiempo antes recibir avisos de
+eventos.
+
+Criterios de aceptacion:
+
+- La configuracion debe ofrecer las mismas opciones permitidas por la aplicacion
+  para otros avisos, incluyendo "Sin recordatorio" si aplica.
+- La seleccion debe presentarse con componentes Material 3 y texto descriptivo.
+- El valor seleccionado debe persistirse localmente.
+- Cuando cambie la preferencia, los eventos futuros deben poder reprogramarse
+  cuando exista scheduler nativo disponible.
+- Implementado en esta iteracion: selector Material 3, persistencia local y
+  defaults validados. Pendiente: integracion con scheduler nativo de eventos.
+
+**RF-044. Preferencia de tema visual**
+Prioridad: Media. Estado: Implementado.
+El usuario debe poder elegir el tema visual de la aplicacion.
+
+Opciones requeridas:
+
+- Seguir sistema.
+- Claro.
+- Oscuro.
+
+Criterios de aceptacion:
+
+- La seleccion debe persistirse localmente.
+- La aplicacion debe aplicar la preferencia sin reiniciar.
+- El valor por defecto debe ser "Seguir sistema".
+- La UI debe usar componentes Material 3, preferentemente `SegmentedButton` o
+  `RadioListTile`.
+
+**RF-045. Vista inicial de la aplicacion**
+Prioridad: Baja. Estado: Implementado.
+El usuario debe poder elegir que modulo se abre al iniciar la aplicacion.
+
+Opciones requeridas:
+
+- Tareas.
+- Horario.
+- Calendario.
+- Ajustes.
+
+Criterios de aceptacion:
+
+- La seleccion debe persistirse localmente.
+- Si la preferencia esta ausente o es invalida, la aplicacion debe abrir el
+  modulo por defecto definido por el sistema.
+- La navegacion debe mantener seleccionado el modulo inicial correcto.
+
+**RF-046. Densidad visual de listas**
+Prioridad: Baja. Estado: Implementado.
+El usuario debe poder elegir la densidad visual de listas y paneles de
+contenido.
+
+Opciones requeridas:
+
+- Comoda.
+- Compacta.
+
+Criterios de aceptacion:
+
+- La preferencia debe afectar listas de tareas, clases y eventos.
+- La densidad compacta no debe reducir objetivos tactiles por debajo de `48x48`.
+- La seleccion debe persistirse localmente.
+- Implementado: preferencia, selector Material 3, persistencia local y
+  aplicacion en listas de tareas, clases y eventos.
+
+**RF-047. Inicio de semana configurable**
+Prioridad: Baja. Estado: Implementado.
+El usuario debe poder elegir el dia de inicio de semana para vistas de
+calendario y horario.
+
+Opciones requeridas:
+
+- Lunes.
+- Domingo.
+
+Criterios de aceptacion:
+
+- La preferencia debe aplicarse a calendario mensual y horario semanal.
+- El valor por defecto debe ser lunes.
+- La seleccion debe persistirse localmente.
+- Implementado: preferencia, selector Material 3, default, persistencia local y
+  aplicacion en calendario y horario.
+
+**RF-048. Confirmaciones configurables para acciones destructivas**
+Prioridad: Media. Estado: Implementado parcial.
+El usuario debe poder activar o desactivar confirmaciones antes de acciones
+destructivas.
+
+Acciones cubiertas:
+
+- Eliminar tareas.
+- Eliminar clases.
+- Eliminar eventos.
+- Borrar datos locales.
+
+Criterios de aceptacion:
+
+- Las confirmaciones deben estar activadas por defecto.
+- Las acciones irreversibles de alto impacto, como borrar todos los datos, deben
+  conservar confirmacion obligatoria aunque la preferencia general este
+  desactivada.
+- La preferencia debe persistirse localmente.
+- Implementado en esta iteracion: preferencia, switch Material 3, persistencia
+  local, eliminacion comun de tareas/eventos sin dialogo cuando se desactiva y
+  confirmacion reforzada obligatoria para borrado masivo. Pendiente: integrar
+  flujo de eliminacion de clases cuando exista accion visible equivalente.
+
+**RF-049. Gestion de datos locales**
+Prioridad: Baja. Estado: Implementado parcial.
+El usuario debe poder gestionar sus datos locales desde Ajustes.
+
+Acciones propuestas:
+
+- Exportar respaldo.
+- Importar respaldo.
+- Borrar todos los datos locales.
+
+Criterios de aceptacion:
+
+- Exportar debe generar un archivo con tareas, clases, eventos y preferencias.
+- Importar debe validar formato y version antes de modificar datos existentes.
+- Borrar todos los datos debe solicitar confirmacion reforzada.
+- Las acciones deben informar exito o error con mensajes visibles.
+- Implementado en esta iteracion: generacion/validacion de respaldo JSON desde
+  controller, exportacion de datos reales, importacion validada al store local,
+  seccion Material 3 y borrado completo de datos locales con confirmacion
+  reforzada. Pendiente: selector/escritura de archivo nativo.
+
+**RF-050. Informacion de la aplicacion**
+Prioridad: Baja. Estado: Implementado.
+El usuario debe poder consultar informacion general de la aplicacion desde
+Ajustes.
+
+Informacion requerida:
+
+- Version de la app.
+- Estado de almacenamiento local.
+- Estado de notificaciones nativas.
+
+Criterios de aceptacion:
+
+- La informacion debe mostrarse en una seccion Material 3 de solo lectura.
+- El estado de notificaciones debe distinguir claramente entre mock/parcial y
+  funcionalidad nativa completa.
+
 ## Persistencia
 
-**RF-040. Persistencia local de datos**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-040. Persistencia local de datos**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe persistir tareas, clases, eventos y preferencias en
 almacenamiento local para permitir uso offline.
 
-**RF-041. Migracion de base de datos**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-041. Migracion de base de datos**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe manejar migraciones de esquema cuando aumente la version de la
 base de datos.
 
-**RF-042. Soporte de persistencia en escritorio**  
-Prioridad: Alta. Estado: Implementado.  
+**RF-042. Soporte de persistencia en escritorio**
+Prioridad: Alta. Estado: Implementado.
 El sistema debe inicializar los componentes necesarios para usar SQLite en
 Windows y Linux.

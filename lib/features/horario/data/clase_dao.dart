@@ -34,4 +34,9 @@ class ClaseDao {
     final db = await dbHelper.initDB();
     return await db.delete("clases", where: "id = ?", whereArgs: [id]);
   }
+
+  Future<int> deleteAllClases() async {
+    final db = await dbHelper.initDB();
+    return await db.delete("clases");
+  }
 }

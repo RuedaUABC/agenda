@@ -10,6 +10,8 @@ class EventoListItem extends StatelessWidget {
   final VoidCallback? onTap;
   final FutureOr<void> Function()? onDelete;
   final EdgeInsetsGeometry margin;
+  final bool confirmBeforeDelete;
+  final VisualDensity visualDensity;
 
   const EventoListItem({
     super.key,
@@ -17,9 +19,16 @@ class EventoListItem extends StatelessWidget {
     this.onTap,
     this.onDelete,
     this.margin = const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    this.confirmBeforeDelete = true,
+    this.visualDensity = VisualDensity.standard,
   });
 
   Future<void> _confirmDelete(BuildContext context) async {
+    if (!confirmBeforeDelete) {
+      await Future<void>.sync(() => onDelete?.call());
+      return;
+    }
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
@@ -56,6 +65,12 @@ class EventoListItem extends StatelessWidget {
     final timeFormat = DateFormat.Hm();
     final timeRange =
         '${timeFormat.format(evento.inicio)} - ${timeFormat.format(evento.fin)}';
+    final compact = visualDensity == VisualDensity.compact;
+    final contentPadding = compact
+        ? const EdgeInsets.fromLTRB(8, 8, 6, 8)
+        : const EdgeInsets.fromLTRB(12, 12, 8, 12);
+    final iconSize = compact ? 36.0 : 40.0;
+    final gap = compact ? 8.0 : 12.0;
 
     return Card.filled(
       margin: margin,
@@ -76,15 +91,15 @@ class EventoListItem extends StatelessWidget {
               ),
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 12, 8, 12),
+                  padding: contentPadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
                           Container(
-                            width: 40,
-                            height: 40,
+                            width: iconSize,
+                            height: iconSize,
                             decoration: BoxDecoration(
                               color: eventColor.withValues(alpha: 0.14),
                               borderRadius: BorderRadius.circular(12),
@@ -95,7 +110,7 @@ class EventoListItem extends StatelessWidget {
                               semanticLabel: 'Evento',
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: gap),
                           Expanded(
                             child: Text(
                               evento.titulo,
@@ -112,14 +127,14 @@ class EventoListItem extends StatelessWidget {
                             ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: gap),
                       _MetadataLine(
                         icon: Icons.schedule_outlined,
                         label: timeRange,
                         color: colorScheme.onSurfaceVariant,
                       ),
                       if (description.isNotEmpty) ...[
-                        const SizedBox(height: 8),
+                        SizedBox(height: compact ? 6 : 8),
                         _MetadataLine(
                           icon: Icons.notes_outlined,
                           label: description,

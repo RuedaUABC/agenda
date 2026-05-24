@@ -1,5 +1,6 @@
 import 'package:agenda/core/widgets/agenda_empty_state.dart';
 import 'package:agenda/core/widgets/agenda_section_header.dart';
+import 'package:agenda/features/configuracion/preferences_helper.dart';
 import 'package:flutter/material.dart';
 import '../../domain/tarea.dart';
 import '../taskcontroller.dart';
@@ -14,6 +15,8 @@ class ListaTareasCategoria extends StatelessWidget {
     required this.tareas,
     this.isCompletedMode = false,
     this.isTrashMode = false,
+    this.visualDensityPreference = VisualDensityPreference.comoda,
+    this.confirmDestructiveActions = true,
   });
 
   final TasksController controller;
@@ -22,6 +25,17 @@ class ListaTareasCategoria extends StatelessWidget {
   final List<Tarea> tareas;
   final bool isCompletedMode;
   final bool isTrashMode;
+  final VisualDensityPreference visualDensityPreference;
+  final bool confirmDestructiveActions;
+
+  VisualDensity get _materialVisualDensity {
+    switch (visualDensityPreference) {
+      case VisualDensityPreference.comoda:
+        return VisualDensity.standard;
+      case VisualDensityPreference.compacta:
+        return VisualDensity.compact;
+    }
+  }
 
   Future<void> _abrirDetalle(BuildContext context, Tarea tarea) async {
     final result = await showModalBottomSheet<bool>(
@@ -33,6 +47,7 @@ class ListaTareasCategoria extends StatelessWidget {
           tarea: tarea,
           isCompletedMode: isCompletedMode,
           isTrashMode: isTrashMode,
+          confirmDestructiveActions: confirmDestructiveActions,
         );
       },
     );
@@ -59,6 +74,7 @@ class ListaTareasCategoria extends StatelessWidget {
         ...tareas.map((t) {
           return Card(
             child: ListTile(
+              visualDensity: _materialVisualDensity,
               onTap: () => _abrirDetalle(context, t),
               leading: isTrashMode
                   ? null
@@ -129,14 +145,21 @@ class _TareaDetalle extends StatelessWidget {
     required this.tarea,
     required this.isCompletedMode,
     required this.isTrashMode,
+    required this.confirmDestructiveActions,
   });
 
   final TasksController controller;
   final Tarea tarea;
   final bool isCompletedMode;
   final bool isTrashMode;
+  final bool confirmDestructiveActions;
 
   Future<void> _confirmarEliminacion(BuildContext context, Tarea tarea) async {
+    if (!confirmDestructiveActions) {
+      await _deleteTarea(context, tarea);
+      return;
+    }
+
     final confirmar = await showDialog<bool>(
       context: context,
       builder: (dialogContext) {
@@ -158,17 +181,22 @@ class _TareaDetalle extends StatelessWidget {
     );
 
     if (confirmar == true) {
-      try {
-        await controller.deleteTarea(tarea.id);
-      } catch (_) {
-        if (context.mounted) {
-          _showError(context);
-        }
-        return;
-      }
+      if (!context.mounted) return;
+      await _deleteTarea(context, tarea);
+    }
+  }
+
+  Future<void> _deleteTarea(BuildContext context, Tarea tarea) async {
+    try {
+      await controller.deleteTarea(tarea.id);
+    } catch (_) {
       if (context.mounted) {
-        Navigator.pop(context, true);
+        _showError(context);
       }
+      return;
+    }
+    if (context.mounted) {
+      Navigator.pop(context, true);
     }
   }
 

@@ -5,8 +5,13 @@ import '../../domain/clase.dart';
 
 class ClaseListItem extends StatelessWidget {
   final Clase clase;
+  final VisualDensity visualDensity;
 
-  const ClaseListItem({super.key, required this.clase});
+  const ClaseListItem({
+    super.key,
+    required this.clase,
+    this.visualDensity = VisualDensity.standard,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +20,12 @@ class ClaseListItem extends StatelessWidget {
     final timeFormat = DateFormat.Hm();
     final timeRange =
         '${timeFormat.format(clase.inicio)} - ${timeFormat.format(clase.fin)}';
+    final compact = visualDensity == VisualDensity.compact;
+    final contentPadding = compact
+        ? const EdgeInsets.fromLTRB(8, 8, 12, 8)
+        : const EdgeInsets.fromLTRB(12, 12, 16, 12);
+    final iconSize = compact ? 36.0 : 40.0;
+    final gap = compact ? 8.0 : 12.0;
 
     return Card.filled(
       margin: EdgeInsets.zero,
@@ -32,15 +43,15 @@ class ClaseListItem extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 12, 16, 12),
+                padding: contentPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
                         Container(
-                          width: 40,
-                          height: 40,
+                          width: iconSize,
+                          height: iconSize,
                           decoration: BoxDecoration(
                             color: classColor.withValues(alpha: 0.14),
                             borderRadius: BorderRadius.circular(12),
@@ -51,7 +62,7 @@ class ClaseListItem extends StatelessWidget {
                             semanticLabel: 'Clase',
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        SizedBox(width: gap),
                         Expanded(
                           child: Text(
                             clase.materia,
@@ -61,7 +72,7 @@ class ClaseListItem extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: gap),
                     Wrap(
                       spacing: 12,
                       runSpacing: 8,

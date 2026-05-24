@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'advanced_settings_widget.dart';
 import 'settings_controller.dart';
 import 'notificacion_config_widget.dart';
 
@@ -19,7 +20,14 @@ class MyDesktopBody extends StatelessWidget {
               children: [
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 600),
-                  child: NotificacionConfigWidget(controller: controller),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NotificacionConfigWidget(controller: controller),
+                      const SizedBox(height: 32),
+                      AdvancedSettingsWidget(controller: controller),
+                    ],
+                  ),
                 ),
               ],
             ),

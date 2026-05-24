@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive_layout.dart';
+import '../../configuracion/preferences_helper.dart';
+import '../../configuracion/presentation/settings_controller.dart';
 import '../data/evento_dao.dart';
 import '../domain/evento.dart';
 import '../repository/calendario_repository_impl.dart';
@@ -11,8 +13,9 @@ import 'widgets/evento_form.dart';
 
 class CalendarioPage extends StatefulWidget {
   final CalendarioController? controller;
+  final SettingsController? settingsController;
 
-  const CalendarioPage({super.key, this.controller});
+  const CalendarioPage({super.key, this.controller, this.settingsController});
 
   @override
   State<CalendarioPage> createState() => _CalendarioPageState();
@@ -52,6 +55,25 @@ class _CalendarioPageState extends State<CalendarioPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final settingsController = widget.settingsController;
+    if (settingsController != null) {
+      return ListenableBuilder(
+        listenable: settingsController,
+        builder: (context, _) => _buildScaffold(),
+      );
+    }
+
+    return _buildScaffold();
+  }
+
+  Widget _buildScaffold() {
+    final settings = widget.settingsController;
+    final weekStart = settings?.weekStart ?? WeekStartPreference.lunes;
+    final visualDensity =
+        settings?.materialVisualDensity ?? VisualDensity.standard;
+    final confirmDestructiveActions =
+        settings?.confirmDestructiveActions ?? true;
+
     return Scaffold(
       body: ResponsiveLayout(
         mobile: MyMobileBody(
@@ -59,12 +81,18 @@ class _CalendarioPageState extends State<CalendarioPage> {
           onRefresh: () => setState(() {}),
           onEditEvento: _showEventoForm,
           onDeleteEvento: _deleteEvento,
+          weekStart: weekStart,
+          visualDensity: visualDensity,
+          confirmDestructiveActions: confirmDestructiveActions,
         ),
         desktop: MyDesktopBody(
           controller: controller,
           onRefresh: () => setState(() {}),
           onEditEvento: _showEventoForm,
           onDeleteEvento: _deleteEvento,
+          weekStart: weekStart,
+          visualDensity: visualDensity,
+          confirmDestructiveActions: confirmDestructiveActions,
         ),
       ),
       floatingActionButton: FloatingActionButton(

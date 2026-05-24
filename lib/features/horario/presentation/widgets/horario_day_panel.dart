@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/agenda_empty_state.dart';
 import '../../../../core/widgets/agenda_section_header.dart';
+import '../../../configuracion/preferences_helper.dart';
 import '../../domain/clase.dart';
 import '../horario_controller.dart';
 import 'clase_list_item.dart';
@@ -9,11 +10,15 @@ import 'clase_list_item.dart';
 class HorarioDayPanel extends StatelessWidget {
   final HorarioController controller;
   final VoidCallback onRefresh;
+  final WeekStartPreference weekStart;
+  final VisualDensity visualDensity;
 
   const HorarioDayPanel({
     super.key,
     required this.controller,
     required this.onRefresh,
+    this.weekStart = WeekStartPreference.lunes,
+    this.visualDensity = VisualDensity.standard,
   });
 
   @override
@@ -40,6 +45,7 @@ class HorarioDayPanel extends StatelessWidget {
             ),
             _WeekdaySelector(
               selectedDate: date,
+              weekStart: weekStart,
               onSelected: (selectedDate) {
                 controller.selectedDate.value = selectedDate;
                 onRefresh();
@@ -57,9 +63,14 @@ class HorarioDayPanel extends StatelessWidget {
                   : ListView.separated(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                       itemCount: clases.length,
-                      separatorBuilder: (_, _) => const SizedBox(height: 8),
+                      separatorBuilder: (_, _) => SizedBox(
+                        height: visualDensity == VisualDensity.compact ? 4 : 8,
+                      ),
                       itemBuilder: (context, index) {
-                        return ClaseListItem(clase: clases[index]);
+                        return ClaseListItem(
+                          clase: clases[index],
+                          visualDensity: visualDensity,
+                        );
                       },
                     ),
             ),
@@ -81,19 +92,21 @@ class HorarioDayPanel extends StatelessWidget {
 class _WeekdaySelector extends StatelessWidget {
   final DateTime selectedDate;
   final ValueChanged<DateTime> onSelected;
+  final WeekStartPreference weekStart;
 
   const _WeekdaySelector({
     required this.selectedDate,
     required this.onSelected,
+    required this.weekStart,
   });
 
   @override
   Widget build(BuildContext context) {
     final startOfWeek = selectedDate.subtract(
-      Duration(days: selectedDate.weekday - DateTime.monday),
+      Duration(days: _daysFromWeekStart(selectedDate.weekday)),
     );
     final days = List.generate(
-      5,
+      7,
       (index) => startOfWeek.add(Duration(days: index)),
     );
 
@@ -115,6 +128,13 @@ class _WeekdaySelector extends StatelessWidget {
     );
   }
 
+  int _daysFromWeekStart(int weekday) {
+    final start = weekStart == WeekStartPreference.domingo
+        ? DateTime.sunday
+        : DateTime.monday;
+    return (weekday - start) % DateTime.daysPerWeek;
+  }
+
   String _weekdayLabel(int weekday) {
     switch (weekday) {
       case DateTime.monday:
@@ -127,6 +147,10 @@ class _WeekdaySelector extends StatelessWidget {
         return 'Jue';
       case DateTime.friday:
         return 'Vie';
+      case DateTime.saturday:
+        return 'Sab';
+      case DateTime.sunday:
+        return 'Dom';
       default:
         return 'Dia';
     }

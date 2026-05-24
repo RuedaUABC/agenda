@@ -34,6 +34,12 @@ class TareaDao {
     return result.map((map) => Tarea.fromMap(map)).toList();
   }
 
+  Future<List<Tarea>> getTodasLasTareas() async {
+    final db = await dbHelper.initDB();
+    final result = await db.query("tareas");
+    return result.map((map) => Tarea.fromMap(map)).toList();
+  }
+
   Future<int> updateTarea(Tarea tarea) async {
     final db = await dbHelper.initDB();
     return await db.update(
@@ -67,5 +73,10 @@ class TareaDao {
       where: "id = ?",
       whereArgs: [id],
     );
+  }
+
+  Future<int> deleteAllTareas() async {
+    final db = await dbHelper.initDB();
+    return await db.delete("tareas");
   }
 }

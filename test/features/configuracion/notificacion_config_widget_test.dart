@@ -82,6 +82,7 @@ void main() {
 
     expect(find.text('Notificaciones globales'), findsOneWidget);
     expect(find.text('Clases'), findsOneWidget);
+    expect(find.text('Eventos'), findsOneWidget);
     expect(find.text('Tareas (primer aviso)'), findsOneWidget);
     expect(find.text('30 minutos antes'), findsWidgets);
     expect(find.text('2 hora(s) antes'), findsWidgets);
@@ -122,7 +123,7 @@ void main() {
     );
 
     tester
-        .widget<DropdownMenu<int>>(find.byType(DropdownMenu<int>).at(1))
+        .widget<DropdownMenu<int>>(find.byType(DropdownMenu<int>).at(2))
         .onSelected!(10);
     await tester.pumpAndSettle();
 
