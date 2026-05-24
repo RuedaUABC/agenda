@@ -9,16 +9,15 @@ class MyMobileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          NotificacionConfigWidget(controller: controller),
-          const SizedBox(height: 32),
-          AdvancedSettingsWidget(controller: controller),
-        ],
-      ),
+    final bottomInset = MediaQuery.paddingOf(context).bottom;
+
+    return ListView(
+      padding: EdgeInsets.fromLTRB(16, 12, 16, 24 + bottomInset),
+      children: [
+        NotificacionConfigWidget(controller: controller),
+        const SizedBox(height: 16),
+        AdvancedSettingsWidget(controller: controller, scrollable: false),
+      ],
     );
   }
 }

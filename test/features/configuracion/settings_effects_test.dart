@@ -7,6 +7,7 @@ import 'package:agenda/features/calendario/presentation/mobile.dart'
 import 'package:agenda/features/calendario/presentation/widgets/evento_list_item.dart';
 import 'package:agenda/features/calendario/presentation/calendario_controller.dart';
 import 'package:agenda/features/calendario/repository/calendario_repository.dart';
+import 'package:agenda/core/app/app_restart_scope.dart';
 import 'package:agenda/features/configuracion/preferences_helper.dart';
 import 'package:agenda/features/configuracion/presentation/advanced_settings_widget.dart';
 import 'package:agenda/features/configuracion/presentation/notificacion_config_widget.dart';
@@ -18,6 +19,7 @@ import 'package:agenda/features/horario/presentation/mobile.dart'
 import 'package:agenda/main.dart';
 import 'package:agenda/features/horario/presentation/horario_controller.dart';
 import 'package:agenda/features/horario/repository/horario_repository.dart';
+import 'package:agenda/features/navegacion/presentation/navegacion.dart';
 import 'package:agenda/features/tareas/domain/tarea.dart';
 import 'package:agenda/features/tareas/presentation/tareas.dart';
 import 'package:agenda/features/tareas/presentation/taskcontroller.dart';
@@ -476,6 +478,55 @@ void main() {
 
     expect(settings.initialModule, InitialModulePreference.calendario);
     expect(find.textContaining('Se aplicara al abrir Agenda'), findsOneWidget);
+  });
+
+  testWidgets('boton aplicar cambios reinicia navegacion con vista guardada', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(390, 844);
+    addTearDown(() {
+      tester.view.resetDevicePixelRatio();
+      tester.view.resetPhysicalSize();
+    });
+
+    final settings = await _settingsController();
+
+    await tester.pumpWidget(
+      AppRestartScope(
+        child: ListenableBuilder(
+          listenable: settings,
+          builder: (context, _) {
+            return MaterialApp(
+              home: AgendaNavigation(
+                initialIndex: settings.initialNavigationIndex,
+                pages: [
+                  const Scaffold(body: Center(child: Text('Tareas test'))),
+                  const Scaffold(body: Center(child: Text('Horario test'))),
+                  const Scaffold(body: Center(child: Text('Calendario test'))),
+                  Scaffold(body: AdvancedSettingsWidget(controller: settings)),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+
+    expect(find.text('Tareas test'), findsOneWidget);
+
+    await tester.tap(find.text('Ajustes'));
+    await tester.pumpAndSettle();
+    expect(find.text('Aplicar cambios'), findsOneWidget);
+
+    await settings.updateInitialModule(InitialModulePreference.calendario);
+    await tester.pumpAndSettle();
+    expect(find.text('Aplicar cambios'), findsOneWidget);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Aplicar'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Calendario test'), findsOneWidget);
   });
 
   test('borrado de datos emite cambio para refresco en vivo', () async {

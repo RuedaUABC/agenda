@@ -67,9 +67,14 @@ void main() {
 
     await tester.tap(find.text('Oscuro'));
     await tester.pumpAndSettle();
-    await tester.tap(
-      find.widgetWithText(SwitchListTile, 'Confirmar eliminacion'),
+
+    final confirmSwitch = find.widgetWithText(
+      SwitchListTile,
+      'Confirmar eliminacion',
     );
+    await tester.ensureVisible(confirmSwitch);
+    await tester.pumpAndSettle();
+    await tester.tap(confirmSwitch);
     await tester.pumpAndSettle();
 
     expect(controller.themePreference, AppThemePreference.dark);

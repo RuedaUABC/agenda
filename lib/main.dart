@@ -1,4 +1,5 @@
 import 'package:agenda/core/theme/app_theme.dart';
+import 'package:agenda/core/app/app_restart_scope.dart';
 import 'package:agenda/features/configuracion/preferences_helper.dart';
 import 'package:agenda/features/configuracion/presentation/settings_controller.dart';
 import 'package:agenda/features/navegacion/presentation/navegacion.dart';
@@ -16,7 +17,7 @@ void main() async {
     databaseFactory = databaseFactoryFfi;
   }
 
-  runApp(const MyApp());
+  runApp(const AppRestartScope(child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
