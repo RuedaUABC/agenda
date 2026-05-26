@@ -9,7 +9,6 @@ repositorio y presentacion cuando aplica.
 ```text
 lib/
 |-- main.dart
-|-- firebase_options.dart
 |-- core/
 |   |-- db/
 |   |-- theme/
@@ -26,33 +25,32 @@ lib/
 
 ## Punto de Entrada
 
-`lib/main.dart` prepara los bindings de Flutter, configura `sqflite_common_ffi`
-en Windows y Linux, y monta `MyApp`.
+`lib/main.dart` prepara los bindings de Flutter, delega la configuracion
+SQLite de escritorio en `core/db/sqlite_platform.dart` y monta `MyApp`.
 
 `MyApp` usa:
 
-- `AppTheme.darkTheme` como tema principal.
-- `ThemeMode.dark` para forzar modo oscuro.
-- `nav` como widget raiz de navegacion.
+- `AppTheme.lightTheme` y `AppTheme.darkTheme`.
+- `ThemeMode` derivado de `SettingsController`.
+- `AgendaNavigation` como widget raiz de navegacion.
 
 La guia objetivo de interfaz esta documentada en
-[`diseno_material3.md`](diseno_material3.md). El rediseno planificado migra el
-tema hacia Material 3 completo, con `ThemeMode.system`, tema claro/oscuro,
-`ColorScheme.fromSeed` y navegacion adaptativa con `NavigationBar` y
-`NavigationRail`.
+[`diseno_material3.md`](diseno_material3.md). La app usa Material 3 con tema
+claro/oscuro y navegacion adaptativa con `NavigationBar` y `NavigationRail`.
 
-La inicializacion de Firebase esta presente como comentario. Esto significa que
-las opciones generadas existen en el repositorio, pero Firebase no se inicializa
-actualmente al arrancar la aplicacion.
+Firebase fue retirado del proyecto; no hay dependencias ni registrantes nativos
+de Firebase en el build actual.
 
 ## Core
 
 `core/` contiene piezas compartidas por varias features.
 
 - `core/db/database_helper.dart`: crea y migra la base local `agenda.db`.
+- `core/db/sqlite_platform.dart`: inicializa SQLite FFI en Windows/Linux y se
+  valida con smoke test automatizado.
 - `core/theme/app_theme.dart`: define el tema visual de la aplicacion.
 - `core/utils/`: utilidades transversales, incluyendo layout responsivo y
-  programacion de notificaciones.
+  programacion de notificaciones nativas.
 - `core/widgets/`: componentes reutilizables de interfaz.
 
 Los componentes visuales compartidos deben alinearse con Material 3 y, cuando
@@ -68,8 +66,9 @@ es `3` y crea estas tablas:
 - `clases`
 - `eventos`
 
-En escritorio, `main.dart` inicializa `sqflite_common_ffi` para que SQLite pueda
-funcionar en Windows y Linux.
+En escritorio, `configureSqliteForPlatform` inicializa `sqflite_common_ffi`
+para que SQLite pueda funcionar en Windows y Linux. `DatabaseHelper` acepta
+ruta/fabrica inyectable para pruebas de migracion sin afectar la base real.
 
 ## Features
 
@@ -135,12 +134,13 @@ Responsabilidades:
 - Convertir eventos del dominio a `Appointment` de Syncfusion.
 - Validar creacion y edicion de eventos antes de persistir.
 - Confirmar eliminaciones destructivas desde la interfaz.
+- Programar y cancelar avisos nativos de eventos segun la preferencia global.
 
 Piezas principales:
 
 - `domain/evento.dart`: modelo de evento.
 - `domain/evento_validator.dart`: reglas de validacion y normalizacion.
-- `data/evento_dao.dart`: acceso SQLite.
+- `data/evento_dao.dart`: acceso SQLite y contrato `EventoStore` para pruebas.
 - `repository/calendario_repository.dart`: contrato.
 - `repository/calendario_repository_impl.dart`: implementacion.
 - `presentation/calendario_controller.dart`: estado y `EventoDataSource`.
@@ -159,12 +159,16 @@ Responsabilidades:
 
 - Leer y guardar preferencias globales.
 - Configurar anticipacion de avisos para clases y tareas.
-- Reprogramar notificaciones de tareas pendientes cuando cambian las
-  preferencias.
+- Reprogramar notificaciones de tareas pendientes y eventos futuros cuando
+  cambian las preferencias.
+- Exportar e importar respaldos JSON mediante selector/escritura de archivo
+  nativo.
 
 Piezas principales:
 
 - `preferences_helper.dart`: acceso a `shared_preferences`.
+- `data/backup_file_service.dart`: servicio nativo de archivos con
+  `file_selector`.
 - `presentation/settings_controller.dart`: estado de configuracion.
 - `presentation/notificacion_config_widget.dart`: controles de avisos.
 - `presentation/settings.dart`, `mobile.dart`, `desktop.dart`: UI.
@@ -186,9 +190,8 @@ Ruta principal: `lib/features/navegacion/`.
 
 Ruta principal: `lib/features/auth/`.
 
-Contiene la pantalla y servicio de autenticacion. La dependencia de Firebase
-Auth existe en `pubspec.yaml`, pero Firebase no se inicializa actualmente desde
-`main.dart`.
+Contiene una pantalla y servicio de acceso local simple. No depende de Firebase
+ni de proveedores externos.
 
 ## Flujo de Datos
 

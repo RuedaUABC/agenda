@@ -29,16 +29,15 @@ El sistema cuenta con los siguientes modulos principales:
 - Calendario: gestion de eventos, vista mensual, lista diaria, eventos de varios
   dias, creacion, edicion, eliminacion y advertencia por superposiciones.
 - Configuracion: preferencias de recordatorios, tema visual, vista inicial,
-  densidad visual, inicio de semana, confirmaciones y gestion parcial de datos
+  densidad visual, inicio de semana, confirmaciones y gestion nativa de datos
   locales.
 - Navegacion: navegacion adaptativa con barra inferior en movil y
   `NavigationRail` en pantallas medianas o grandes.
 
 La persistencia principal usa SQLite local mediante `sqflite`; en Windows y
 Linux se inicializa `sqflite_common_ffi`. Tambien se usa `shared_preferences`
-para preferencias. El repositorio contiene configuracion de Firebase, pero la
-inicializacion esta desactivada actualmente, por lo que Firebase no debe
-considerarse dependencia activa de ejecucion.
+para preferencias. Firebase fue retirado del proyecto y no debe considerarse
+dependencia activa de compilacion o ejecucion.
 
 El desarrollo y las pruebas respetan principios de verificacion y validacion
 desde etapas tempranas. Existen requisitos documentados, casos de uso, reglas de
@@ -83,11 +82,7 @@ El alcance actual del sistema incluye:
 
 Quedan fuera o parcialmente fuera del alcance actual:
 
-- Notificaciones nativas completas, porque el scheduler actual funciona como
-  implementacion parcial o reemplazable.
-- Firebase Auth u otros servicios Firebase activos, porque la inicializacion
-  esta comentada.
-- Selector/escritura nativa de archivos para exportacion/importacion de datos.
+- Servicios externos de autenticacion o sincronizacion, incluido Firebase.
 - Validacion estadistica con usuarios reales mediante PSSUQ.
 - Certificacion externa o auditoria formal del producto.
 
@@ -122,11 +117,11 @@ principal por modulo es:
   densidad, inicio de semana, confirmaciones, gestion de datos e informacion de
   la aplicacion.
 
-La mayoria de los requisitos se encuentran en estado Implementado. Los
-requisitos RF-043, RF-048 y RF-049 se documentan como implementados
-parcialmente por brechas acotadas: scheduler nativo de eventos, eliminacion de
-clases con confirmacion configurable cuando exista accion visible equivalente y
-selector/escritura de archivo nativo.
+La mayoria de los requisitos se encuentran en estado Implementado. RF-043 se
+documenta como implementado con cobertura automatizada para scheduler nativo de
+eventos. RF-048 y RF-049 permanecen parciales: las confirmaciones comunes,
+archivo nativo e importacion/exportacion estan cubiertos, pero falta una
+confirmacion reforzada verificable para borrado total.
 
 ### Non-functional requirements
 
@@ -219,7 +214,7 @@ Quedan fuera del plan:
 
 - Certificacion externa del producto.
 - Auditoria formal de procesos organizacionales.
-- Validacion completa de notificaciones nativas.
+- Certificacion externa de entrega de notificaciones por cada sistema operativo.
 - Pruebas estadisticas PSSUQ hasta contar con usuarios y datos reales.
 
 #### References and related documents
@@ -464,8 +459,7 @@ Riesgos:
 - Cambios frecuentes en requisitos o comportamiento esperado.
 - Falta de usuarios reales para validacion PSSUQ.
 - Falta de datos representativos para pruebas.
-- Brechas en notificaciones nativas.
-- Pruebas manuales no ejecutadas para migraciones o plataformas especificas.
+- Regresiones en integraciones nativas de notificaciones, archivos o SQLite FFI.
 
 Mitigacion:
 
@@ -578,7 +572,7 @@ Los modulos principales cuentan con pruebas automatizadas:
 - Calendario: carga, eventos, seleccion de fecha, formularios, validaciones,
   edicion, eliminacion y superposiciones.
 - Configuracion: preferencias, valores por defecto, validaciones, reprogramacion,
-  tema, vista inicial, densidad, inicio de semana y gestion parcial de datos.
+  tema, vista inicial, densidad, inicio de semana y gestion nativa de datos.
 - Diseno Material 3: tema, navegacion, formularios, tarjetas, paneles diarios y
   ajustes.
 - Persistencia/modelos: serializacion de Tarea, Evento y Clase.
@@ -592,10 +586,14 @@ Metricas disponibles desde la documentacion:
   datos, calidad, robustez y notificaciones.
 - Casos de prueba por modulo con estado Pass, Partial o Not Executed.
 - Suites automatizadas recomendadas por feature.
-- RF parciales identificados: RF-043, RF-048 y RF-049.
-- Brechas documentadas: confirmacion de eliminacion de clases, selector/escritura
-  de archivo nativo, scheduler nativo de eventos y pruebas especificas de
-  migracion/smoke de escritorio.
+- RF-043 cerrado como implementado.
+- RF-048 y RF-049 identificados como parciales por la confirmacion reforzada
+  pendiente en borrado total.
+- Pruebas agregadas para confirmacion de eliminacion de clases,
+  selector/escritura de archivo nativo, scheduler nativo de eventos, migracion
+  SQLite y smoke test FFI de escritorio.
+- Pruebas agregadas para rechazo de tareas duplicadas exactas normalizadas en
+  creacion y edicion.
 
 [PENDIENTE] Ejecutar y registrar resultados actuales de:
 
@@ -617,8 +615,8 @@ Con la evidencia existente, el sistema presenta una base solida de calidad para
 funcionalidades principales. La mayor parte del comportamiento critico cuenta
 con pruebas automatizadas y trazabilidad. Los modulos de tareas, horario y
 calendario tienen validaciones especificas y pruebas de UI o controller. La
-configuracion avanzada muestra cobertura amplia, aunque conserva pendientes en
-notificaciones nativas, confirmacion de clases y manejo nativo de archivos.
+configuracion avanzada muestra cobertura amplia, incluyendo notificaciones
+nativas, confirmacion de clases y manejo nativo de archivos.
 
 Interpretacion preliminar:
 
@@ -628,8 +626,8 @@ Interpretacion preliminar:
   de perdida o corrupcion de datos basicos.
 - Mantenibilidad: la arquitectura feature-first y separacion por capas facilitan
   pruebas y cambios.
-- Robustez: el manejo visible de errores y confirmaciones reduce acciones
-  accidentales, aunque existen brechas parciales documentadas.
+- Robustez: el manejo visible de errores, confirmaciones y fallbacks nativos
+  reduce acciones accidentales y riesgos de plataforma.
 
 [PENDIENTE] Integrar resultados de PSSUQ y analisis estadistico para mapear los
 datos recolectados a atributos de usabilidad.
@@ -642,12 +640,13 @@ Defectos o brechas conocidas:
 
 | ID | Area | Descripcion | Estado | Sugerencia |
 | --- | --- | --- | --- | --- |
-| DEF-001 | Notificaciones | El scheduler nativo de eventos no esta completo. | Parcial | Integrar implementacion nativa o mantenerlo documentado como parcial. |
-| DEF-002 | Configuracion | Confirmaciones configurables no cubren eliminacion de clases cuando exista accion visible equivalente. | Parcial | Conectar preferencia global al flujo de eliminacion de clases. |
-| DEF-003 | Gestion de datos | Exportacion/importacion carece de selector/escritura nativa de archivo. | Parcial | Integrar file picker o API de plataforma. |
-| DEF-004 | Persistencia | Falta prueba automatizada dedicada para migracion SQLite. | Not Executed | Agregar prueba DAO/migracion con `sqflite_common_ffi`. |
-| DEF-005 | Plataforma | Falta smoke test automatizado de escritorio. | Not Executed | Ejecutar o automatizar prueba en Windows/Linux. |
-| DEF-006 | Usabilidad | Falta PSSUQ con usuarios reales. | Pendiente | Planear muestra, ejecutar cuestionario y analizar resultados. |
+| DEF-001 | Notificaciones | Scheduler nativo de eventos integrado con fallback testeable. | Cerrado | Mantener regresion automatizada. |
+| DEF-002 | Configuracion | Confirmaciones configurables cubren eliminacion visible de clases. | Cerrado | Mantener prueba widget. |
+| DEF-003 | Gestion de datos | Exportacion/importacion usa selector/escritura nativa de archivo. | Cerrado | Mantener servicio inyectable y fake de pruebas. |
+| DEF-004 | Persistencia | Migracion SQLite cubierta por prueba automatizada dedicada. | Cerrado | Mantener test con `sqflite_common_ffi`. |
+| DEF-005 | Plataforma | Smoke test automatizado de SQLite FFI para escritorio agregado. | Cerrado | Ejecutar en CI Windows/Linux. |
+| DEF-006 | Tareas | Duplicados exactos de tareas no se bloqueaban al crear o editar. | Cerrado | Mantener TC-TAR-016 en regresion. |
+| DEF-007 | Usabilidad | Falta PSSUQ con usuarios reales. | Pendiente | Planear muestra, ejecutar cuestionario y analizar resultados. |
 
 ### Cause Defects Analysis
 
@@ -671,6 +670,7 @@ herramientas y gestion.
 Mejoras ya implementadas y documentadas:
 
 - Validaciones completas de tareas y clases.
+- Rechazo de tareas duplicadas exactas normalizadas al crear o editar.
 - Creacion, edicion y eliminacion de eventos desde UI.
 - Advertencia por superposiciones de eventos.
 - Eliminacion definitiva de tareas desde papelera.
@@ -682,11 +682,13 @@ Mejoras ya implementadas y documentadas:
 
 Mejoras pendientes:
 
-- Integrar scheduler nativo real para eventos y notificaciones.
-- Agregar flujo completo de archivo nativo para exportar/importar datos.
-- Cubrir eliminacion de clases con confirmacion configurable.
-- Agregar pruebas de migracion SQLite y smoke test de escritorio.
 - Ejecutar PSSUQ y documentar resultados estadisticos.
+- Agregar recuperacion/deshacer para acciones reversibles cuando sea seguro.
+- Reforzar la confirmacion de borrado masivo con una accion deliberada
+  adicional verificable.
+- Mejorar feedback de carga/guardado en formularios y pantallas principales.
+- Mejorar estados vacios accionables y diagnostico de conflictos junto al
+  campo o seccion afectada.
 
 ## Conclusions and future work
 
@@ -708,9 +710,8 @@ parciales y pendientes para evitar sobredeclarar capacidades.
 - Completar pruebas de aceptacion con usuarios reales.
 - Aplicar PSSUQ y analizar resultados.
 - Formalizar metricas de defectos y tiempos de resolucion.
-- Completar notificaciones nativas.
-- Completar exportacion/importacion con archivos reales.
-- Ampliar pruebas de persistencia, migraciones y plataformas.
+- Mantener pruebas de regresion para notificaciones nativas, archivos,
+  migraciones y plataformas.
 - Mantener trazabilidad actualizada ante cada cambio.
 
 ### Learning experience in the course

@@ -106,30 +106,16 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
                     leading: const Icon(Icons.ios_share_outlined),
                     title: const Text('Exportar respaldo'),
                     subtitle: const Text(
-                      'Genera un respaldo JSON con datos reales',
+                      'Guarda un respaldo JSON con datos reales',
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () async {
-                      final backup = await controller
-                          .exportCompleteLocalDataBackup();
+                      final path = await controller
+                          .exportCompleteLocalDataBackupToFile();
                       if (!context.mounted) return;
-                      await showDialog<void>(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Respaldo generado'),
-                            content: SizedBox(
-                              width: 520,
-                              child: SelectableText(backup),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Cerrar'),
-                              ),
-                            ],
-                          );
-                        },
+                      if (path == null) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Respaldo exportado')),
                       );
                     },
                   ),
@@ -139,11 +125,24 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
                     leading: const Icon(Icons.upload_file_outlined),
                     title: const Text('Importar respaldo'),
                     subtitle: const Text(
-                      'Valida formato y version antes de importar',
+                      'Abre un respaldo JSON y valida su formato',
                     ),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      _showImportDialog(context);
+                    onTap: () async {
+                      try {
+                        await controller
+                            .importCompleteLocalDataBackupFromFile();
+                      } catch (_) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Respaldo invalido')),
+                        );
+                        return;
+                      }
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Respaldo importado')),
+                      );
                     },
                   ),
                   const Divider(height: 1),
@@ -260,58 +259,6 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
         const SnackBar(content: Text('No se pudo reiniciar desde esta vista')),
       );
     }
-  }
-
-  Future<void> _showImportDialog(BuildContext context) async {
-    final textController = TextEditingController();
-    await showDialog<void>(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('Importar respaldo'),
-          content: SizedBox(
-            width: 520,
-            child: TextField(
-              controller: textController,
-              minLines: 6,
-              maxLines: 10,
-              decoration: const InputDecoration(
-                labelText: 'JSON de respaldo',
-                alignLabelWithHint: true,
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancelar'),
-            ),
-            FilledButton(
-              onPressed: () async {
-                try {
-                  await controller.importCompleteLocalDataBackup(
-                    textController.text,
-                  );
-                } catch (_) {
-                  if (!dialogContext.mounted) return;
-                  ScaffoldMessenger.of(dialogContext).showSnackBar(
-                    const SnackBar(content: Text('Respaldo invalido')),
-                  );
-                  return;
-                }
-                if (!dialogContext.mounted) return;
-                Navigator.of(dialogContext).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Respaldo importado')),
-                );
-              },
-              child: const Text('Importar'),
-            ),
-          ],
-        );
-      },
-    );
-    textController.dispose();
   }
 }
 

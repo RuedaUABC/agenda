@@ -24,6 +24,9 @@ class FakeCalendarioRepository implements CalendarioRepository {
   Future<List<Evento>> fetchEventos() async => List<Evento>.from(stored);
 
   @override
+  Future<void> programarNotificacionEvento(String eventoId) async {}
+
+  @override
   Future<void> updateEvento(Evento evento) async {
     final index = stored.indexWhere((item) => item.id == evento.id);
     if (index == -1) {

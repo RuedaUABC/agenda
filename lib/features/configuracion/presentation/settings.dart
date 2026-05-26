@@ -1,4 +1,7 @@
 import 'package:agenda/core/utils/responsive_layout.dart';
+import 'package:agenda/core/utils/notification_scheduler.dart';
+import 'package:agenda/features/calendario/data/evento_dao.dart';
+import 'package:agenda/features/calendario/repository/calendario_repository_impl.dart';
 import 'package:agenda/features/configuracion/presentation/desktop.dart';
 import 'package:agenda/features/configuracion/presentation/mobile.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +37,17 @@ class _SettingsPageState extends State<SettingsPage> {
 
     final prefs = PreferencesHelper();
     await prefs.init();
+    final scheduler = NotificationScheduler();
+    await scheduler.init();
 
-    controller = SettingsController(prefs: prefs);
+    controller = SettingsController(
+      prefs: prefs,
+      calendarioRepo: CalendarioRepositoryImpl(
+        eventoDao: EventoDao(),
+        prefs: prefs,
+        scheduler: scheduler,
+      ),
+    );
     await controller.loadSettings();
 
     if (mounted) {

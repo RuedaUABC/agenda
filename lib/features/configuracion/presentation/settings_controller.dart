@@ -4,12 +4,16 @@ import 'package:flutter/material.dart';
 
 import '../../calendario/data/evento_dao.dart';
 import '../../calendario/domain/evento.dart';
+import '../../calendario/repository/calendario_repository.dart';
+import '../data/backup_file_service.dart';
 import '../../horario/data/clase_dao.dart';
 import '../../horario/domain/clase.dart';
 import '../../tareas/data/tarea_dao.dart';
 import '../../tareas/domain/tarea.dart';
 import '../preferences_helper.dart';
 import '../../tareas/repository/tarea_repository.dart';
+
+export '../data/backup_file_service.dart';
 
 abstract class SettingsDataStore {
   Future<List<Map<String, dynamic>>> exportTareas();
@@ -96,7 +100,9 @@ class SettingsAppInfo {
 class SettingsController extends ChangeNotifier {
   final PreferencesHelper prefs;
   final TareaRepository? tareaRepo;
+  final CalendarioRepository? calendarioRepo;
   final SettingsDataStore dataStore;
+  final BackupFileService backupFileService;
 
   Duration globalClaseNotif = const Duration(minutes: 15);
   Duration globalEventoNotif = const Duration(minutes: 30);
@@ -110,14 +116,17 @@ class SettingsController extends ChangeNotifier {
   final SettingsAppInfo appInfo = const SettingsAppInfo(
     version: '1.0.0+1',
     storageStatus: 'Almacenamiento local SQLite y preferencias locales',
-    notificationStatus: 'Notificaciones en estado mock/parcial',
+    notificationStatus: 'Notificaciones nativas configuradas',
   );
 
   SettingsController({
     required this.prefs,
     this.tareaRepo,
+    this.calendarioRepo,
     SettingsDataStore? dataStore,
-  }) : dataStore = dataStore ?? SqliteSettingsDataStore();
+    BackupFileService? backupFileService,
+  }) : dataStore = dataStore ?? SqliteSettingsDataStore(),
+       backupFileService = backupFileService ?? NativeBackupFileService();
 
   Future<void> loadSettings() async {
     globalClaseNotif = prefs.getGlobalClaseNotificacion();
@@ -141,8 +150,15 @@ class SettingsController extends ChangeNotifier {
   Future<void> updateGlobalEventoNotif(Duration d) async {
     await prefs.setGlobalEventoNotificacion(d);
     globalEventoNotif = d;
+    if (calendarioRepo != null) {
+      final eventos = await calendarioRepo!.fetchEventos();
+      for (final evento in eventos) {
+        if (evento.inicio.isAfter(DateTime.now())) {
+          await calendarioRepo!.programarNotificacionEvento(evento.id);
+        }
+      }
+    }
     notifyListeners();
-    // Pendiente: Re-programar usando eventoRepo cuando exista scheduler nativo
   }
 
   Future<void> updateGlobalTareaNotifs(List<Duration> ds) async {
@@ -279,6 +295,17 @@ class SettingsController extends ChangeNotifier {
       clases: await dataStore.exportClases(),
       eventos: await dataStore.exportEventos(),
     );
+  }
+
+  Future<String?> exportCompleteLocalDataBackupToFile() async {
+    final backup = await exportCompleteLocalDataBackup();
+    return backupFileService.saveBackup(backup);
+  }
+
+  Future<void> importCompleteLocalDataBackupFromFile() async {
+    final backup = await backupFileService.openBackup();
+    if (backup == null) return;
+    await importCompleteLocalDataBackup(backup);
   }
 
   Future<void> importCompleteLocalDataBackup(String rawJson) async {

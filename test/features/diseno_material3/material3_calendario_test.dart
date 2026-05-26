@@ -21,6 +21,9 @@ class _FakeCalendarioRepository implements CalendarioRepository {
   Future<List<Evento>> fetchEventos() async => [];
 
   @override
+  Future<void> programarNotificacionEvento(String eventoId) async {}
+
+  @override
   Future<void> updateEvento(Evento evento) async {}
 }
 

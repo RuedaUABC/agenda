@@ -66,39 +66,20 @@ flutter test test/features/tareas
 flutter test test/features/horario
 flutter test test/features/calendario
 flutter test test/features/configuracion
+flutter test test/features/persistencia
 ```
 
 El resumen funcional de la cobertura esta en [`pruebas.md`](pruebas.md).
 
-## Firebase
+## Servicios Externos
 
-El proyecto incluye archivos generados de Firebase:
+Firebase fue retirado del proyecto. `pubspec.yaml`, Android Gradle y los
+registrantes nativos no deben incluir `firebase_core`, `firebase_auth`,
+`google_sign_in` ni `google-services`.
 
-- `firebase.json`
-- `lib/firebase_options.dart`
-- `android/app/google-services.json`
-
-Actualmente `lib/main.dart` tiene comentada la llamada a:
-
-```dart
-// await Firebase.initializeApp();
-```
-
-Si se necesita Firebase Auth u otro servicio:
-
-1. Importar y usar `DefaultFirebaseOptions.currentPlatform` desde
-   `firebase_options.dart`.
-2. Descomentar o restaurar la inicializacion antes de `runApp`.
-3. Validar que cada plataforma tenga su configuracion correspondiente.
-4. Ejecutar pruebas y una corrida manual de autenticacion.
-
-Ejemplo esperado:
-
-```dart
-await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
-```
+Si se necesita agregar un proveedor externo en el futuro, debe documentarse la
+dependencia nueva, actualizar los registrantes con `flutter pub get` y validar
+Windows, Android y la suite automatizada.
 
 ## Base de Datos Local
 
@@ -115,18 +96,35 @@ Cuando se agreguen columnas o tablas:
 - Incrementar `_dbVersion`.
 - Agregar la migracion en `_onUpgrade`.
 - Mantener `_onCreate` como la estructura completa para instalaciones nuevas.
-- Agregar o actualizar tests de serializacion y DAO cuando corresponda.
+- Agregar o actualizar tests de serializacion, DAO y migracion cuando
+  corresponda. El test dedicado vive en
+  `test/features/persistencia/sqlite_migration_test.dart`.
 
 ## Plataformas de Escritorio
 
-En Windows y Linux, `main.dart` inicializa `sqflite_common_ffi`:
+En Windows y Linux, `main.dart` llama a `configureSqliteForPlatform`, que
+inicializa `sqflite_common_ffi`:
 
 ```dart
-sqfliteFfiInit();
-databaseFactory = databaseFactoryFfi;
+configureSqliteForPlatform();
 ```
 
 Esto permite usar SQLite fuera de Android/iOS.
+
+El smoke test automatizado esta en
+`test/features/persistencia/sqlite_ffi_smoke_test.dart`.
+
+## Notificaciones y Respaldos Nativos
+
+Los avisos usan `NotificationScheduler`, respaldado por
+`flutter_local_notifications` y `timezone`. En pruebas se inyectan fakes para
+validar programacion/cancelacion sin depender del plugin de plataforma.
+En Android, el manifest declara permisos de notificaciones y alarmas exactas
+para permitir avisos programados.
+
+La exportacion e importacion de respaldos locales usa `file_selector` mediante
+`NativeBackupFileService`. La UI de Ajustes abre dialogos nativos para guardar
+o seleccionar archivos JSON.
 
 ## Convenciones de Codigo
 

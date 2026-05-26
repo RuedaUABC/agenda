@@ -98,6 +98,97 @@ void main() {
     expect(repo.tareas.single.descripcion, 'Borrador');
   });
 
+  testWidgets('TareaForm rechaza duplicados exactos normalizados al crear', (
+    tester,
+  ) async {
+    final repo = _FakeTareaRepository()
+      ..tareas.add(
+        Tarea(
+          id: 'existente',
+          titulo: 'Ensayo',
+          asignatura: 'Literatura',
+          descripcion: 'Borrador',
+          fecha: DateTime(2026, 5, 13, 9),
+          completada: false,
+        ),
+      );
+    final controller = _controller(repo);
+    await controller.loadTareas();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: TareaForm(
+            controller: controller,
+            now: () => DateTime(2026, 5, 13, 8),
+          ),
+        ),
+      ),
+    );
+
+    await tester.enterText(find.byType(TextFormField).at(0), '  ensayo  ');
+    await tester.enterText(find.byType(TextFormField).at(1), 'literatura');
+    await tester.enterText(find.byType(TextFormField).at(2), ' borrador ');
+    await tester.tap(find.text('Guardar'));
+    await tester.pump();
+
+    expect(
+      find.text('Ya existe una tarea con los mismos datos'),
+      findsOneWidget,
+    );
+    expect(repo.tareas, hasLength(1));
+  });
+
+  testWidgets('TareaForm rechaza duplicar otra tarea durante edicion', (
+    tester,
+  ) async {
+    final repo = _FakeTareaRepository()
+      ..tareas.addAll([
+        Tarea(
+          id: 'uno',
+          titulo: 'Ensayo',
+          asignatura: 'Literatura',
+          descripcion: 'Borrador',
+          fecha: DateTime(2026, 5, 13, 9),
+          completada: false,
+        ),
+        Tarea(
+          id: 'dos',
+          titulo: 'Mapa',
+          asignatura: 'Geografia',
+          descripcion: 'Capitulo 2',
+          fecha: DateTime(2026, 5, 13, 9),
+          completada: false,
+        ),
+      ]);
+    final controller = _controller(repo);
+    await controller.loadTareas();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: TareaForm(
+            controller: controller,
+            tarea: repo.tareas.last,
+            now: () => DateTime(2026, 5, 13, 8),
+          ),
+        ),
+      ),
+    );
+
+    await tester.enterText(find.byType(TextFormField).at(0), 'ENSAYO');
+    await tester.enterText(find.byType(TextFormField).at(1), ' literatura ');
+    await tester.enterText(find.byType(TextFormField).at(2), 'borrador');
+    await tester.tap(find.text('Guardar'));
+    await tester.pump();
+
+    expect(
+      find.text('Ya existe una tarea con los mismos datos'),
+      findsOneWidget,
+    );
+    expect(repo.tareas.last.titulo, 'Mapa');
+  });
+
   testWidgets('TareaForm valida longitudes maximas', (tester) async {
     final repo = _FakeTareaRepository();
 

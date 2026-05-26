@@ -40,6 +40,8 @@ Flujos alternativos:
   guarda.
 - Si la fecha y hora estan en el pasado, el sistema advierte al usuario o pide
   confirmacion antes de guardar.
+- Si ya existe una tarea con datos identicos normalizados, el sistema informa
+  la duplicidad y no guarda.
 - Si el usuario cancela, el sistema cierra el formulario sin crear la tarea.
 
 Resultado: La tarea aparece en la categoria correspondiente.
@@ -64,6 +66,8 @@ Flujos alternativos:
 
 - Si el usuario edita la tarea con datos invalidos, el sistema informa los
   errores y no guarda.
+- Si la edicion deja la tarea con datos identicos a otra tarea registrada, el
+  sistema informa la duplicidad y no guarda.
 - Si el usuario elimina la tarea, el sistema solicita confirmacion.
 - Si el usuario cancela la confirmacion, la tarea no cambia.
 
@@ -121,7 +125,7 @@ Flujo principal:
 3. El usuario captura materia, aula, dia, hora de inicio, hora de fin y color.
 4. El usuario guarda.
 5. El sistema valida materia, dia y rango horario.
-6. El sistema verifica posibles conflictos de horario.
+6. El sistema verifica posibles solapamientos de horario.
 7. El sistema crea la recurrencia semanal.
 8. El sistema guarda la clase y recarga el horario.
 
@@ -131,8 +135,8 @@ Flujos alternativos:
   validacion y no guarda.
 - Si la hora de fin no es posterior a la de inicio, el sistema muestra
   validacion y no guarda.
-- Si existe conflicto con otra clase, el sistema advierte al usuario o impide
-  guardar segun la politica definida.
+- Si existe solapamiento con otra clase del mismo dia, el sistema impide
+  guardar y muestra el conflicto.
 - Si el usuario cancela, el sistema cierra el formulario sin crear la clase.
 
 Resultado: La clase aparece en el horario semanal y en la lista del dia.

@@ -13,13 +13,13 @@ class _LoginPageState extends State<LoginPage> {
   final AuthService _authService = AuthService();
   bool _isLoading = false;
 
-  Future<void> _handleGoogleSignIn() async {
+  Future<void> _handleLocalSignIn() async {
     setState(() => _isLoading = true);
 
     try {
-      final userCredential = await _authService.signInWithGoogle();
+      final userCredential = await _authService.signInLocally();
 
-      if (userCredential != null && mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Bienvenido ${userCredential.user?.displayName}"),
@@ -87,9 +87,9 @@ class _LoginPageState extends State<LoginPage> {
             _isLoading
                 ? CircularProgressIndicator(color: colors.primary)
                 : ElevatedButton.icon(
-                    onPressed: _handleGoogleSignIn,
+                    onPressed: _handleLocalSignIn,
                     icon: const Icon(Icons.account_circle_outlined, size: 24),
-                    label: const Text("Continuar con Google"),
+                    label: const Text("Continuar"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: colors.surfaceContainerHighest,
                       foregroundColor: colors.onSurface,

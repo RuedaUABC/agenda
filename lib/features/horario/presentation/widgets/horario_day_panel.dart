@@ -12,6 +12,8 @@ class HorarioDayPanel extends StatelessWidget {
   final VoidCallback onRefresh;
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
+  final Future<void> Function(Clase clase)? onDeleteClase;
+  final bool confirmDestructiveActions;
 
   const HorarioDayPanel({
     super.key,
@@ -19,6 +21,8 @@ class HorarioDayPanel extends StatelessWidget {
     required this.onRefresh,
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
+    this.onDeleteClase,
+    this.confirmDestructiveActions = true,
   });
 
   @override
@@ -70,6 +74,10 @@ class HorarioDayPanel extends StatelessWidget {
                         return ClaseListItem(
                           clase: clases[index],
                           visualDensity: visualDensity,
+                          confirmBeforeDelete: confirmDestructiveActions,
+                          onDelete: onDeleteClase == null
+                              ? null
+                              : () => onDeleteClase!(clases[index]),
                         );
                       },
                     ),

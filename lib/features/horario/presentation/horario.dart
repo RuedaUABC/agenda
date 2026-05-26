@@ -71,6 +71,8 @@ class _HorarioPageState extends State<HorarioPage> {
     final weekStart = settings?.weekStart ?? WeekStartPreference.lunes;
     final visualDensity =
         settings?.materialVisualDensity ?? VisualDensity.standard;
+    final confirmDestructiveActions =
+        settings?.confirmDestructiveActions ?? true;
 
     return Scaffold(
       body: ResponsiveLayout(
@@ -79,12 +81,16 @@ class _HorarioPageState extends State<HorarioPage> {
           onRefresh: () => setState(() {}),
           weekStart: weekStart,
           visualDensity: visualDensity,
+          onDeleteClase: _deleteClase,
+          confirmDestructiveActions: confirmDestructiveActions,
         ),
         desktop: MyDesktopBody(
           controller: controller,
           onRefresh: () => setState(() {}),
           weekStart: weekStart,
           visualDensity: visualDensity,
+          onDeleteClase: _deleteClase,
+          confirmDestructiveActions: confirmDestructiveActions,
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -123,5 +129,25 @@ class _HorarioPageState extends State<HorarioPage> {
     if (mounted) {
       setState(() {});
     }
+  }
+
+  Future<void> _deleteClase(Clase clase) async {
+    try {
+      await controller.deleteClase(clase.id);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo eliminar la clase')),
+        );
+      }
+      return;
+    }
+
+    if (!mounted) return;
+
+    setState(() {});
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Clase eliminada')));
   }
 }

@@ -1,21 +1,18 @@
 import 'package:agenda/core/theme/app_theme.dart';
 import 'package:agenda/core/app/app_restart_scope.dart';
+import 'package:agenda/core/db/sqlite_platform.dart';
+import 'package:agenda/core/utils/notification_scheduler.dart';
 import 'package:agenda/features/configuracion/preferences_helper.dart';
 import 'package:agenda/features/configuracion/presentation/settings_controller.dart';
+import 'package:agenda/features/calendario/data/evento_dao.dart';
+import 'package:agenda/features/calendario/repository/calendario_repository_impl.dart';
 import 'package:agenda/features/navegacion/presentation/navegacion.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (!kIsWeb &&
-      (defaultTargetPlatform == TargetPlatform.windows ||
-          defaultTargetPlatform == TargetPlatform.linux)) {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-  }
+  configureSqliteForPlatform();
 
   runApp(const AppRestartScope(child: MyApp()));
 }
@@ -63,7 +60,16 @@ class _MyAppState extends State<MyApp> {
   Future<void> _loadSettings() async {
     final prefs = PreferencesHelper();
     await prefs.init();
-    final controller = SettingsController(prefs: prefs);
+    final scheduler = NotificationScheduler();
+    await scheduler.init();
+    final controller = SettingsController(
+      prefs: prefs,
+      calendarioRepo: CalendarioRepositoryImpl(
+        eventoDao: EventoDao(),
+        prefs: prefs,
+        scheduler: scheduler,
+      ),
+    );
     await controller.loadSettings();
     controller.addListener(_onSettingsChanged);
     if (mounted) {

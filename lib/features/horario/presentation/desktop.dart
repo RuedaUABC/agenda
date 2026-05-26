@@ -3,6 +3,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../../core/theme/calendar_config.dart';
 import '../../configuracion/preferences_helper.dart';
+import '../domain/clase.dart';
 import 'horario_controller.dart';
 import 'widgets/horario_day_panel.dart';
 
@@ -11,6 +12,8 @@ class MyDesktopBody extends StatelessWidget {
   final VoidCallback onRefresh;
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
+  final Future<void> Function(Clase clase)? onDeleteClase;
+  final bool confirmDestructiveActions;
 
   const MyDesktopBody({
     super.key,
@@ -18,6 +21,8 @@ class MyDesktopBody extends StatelessWidget {
     required this.onRefresh,
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
+    this.onDeleteClase,
+    this.confirmDestructiveActions = true,
   });
 
   @override
@@ -80,6 +85,8 @@ class MyDesktopBody extends StatelessWidget {
                   onRefresh: onRefresh,
                   weekStart: weekStart,
                   visualDensity: visualDensity,
+                  onDeleteClase: onDeleteClase,
+                  confirmDestructiveActions: confirmDestructiveActions,
                 ),
               ),
             ),

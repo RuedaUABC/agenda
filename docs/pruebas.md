@@ -26,13 +26,16 @@ Ubicacion principal: `test/features/tareas/taskcontroller_test.dart` y
 - Normaliza titulo, asignatura y descripcion antes de guardar.
 - Aplica longitudes maximas para titulo, asignatura y descripcion.
 - Solicita confirmacion cuando la fecha y hora de la tarea estan en el pasado.
+- Rechaza tareas duplicadas con titulo, asignatura, descripcion, fecha y hora
+  identicos despues de normalizar textos; en edicion excluye el mismo id.
 - Permite completar, devolver a pendiente, editar, eliminar y recuperar tareas
   desde widgets.
 
 ## Feature: Calendario
 
 Ubicacion principal: `test/features/calendario/calendario_controller_test.dart`
-y `test/features/calendario/calendario_widgets_test.dart`.
+y `test/features/calendario/calendario_widgets_test.dart`. La programacion de
+avisos se cubre en `test/features/calendario/calendario_repository_notifications_test.dart`.
 
 - Carga eventos y apaga el estado de carga.
 - Agrega, actualiza y elimina eventos recargando el estado.
@@ -54,6 +57,8 @@ y `test/features/calendario/calendario_widgets_test.dart`.
   desde una accion visible.
 - La pantalla Calendario usa selector segmentado en mobile, panel secundario
   Material 3 en desktop, chips de fechas y estado vacio consistente.
+- El repositorio programa avisos nativos para eventos futuros, cancela al
+  eliminar, reprograma al cambiar anticipacion y respeta `Sin recordatorio`.
 
 ## Feature: Horario
 
@@ -72,8 +77,10 @@ Ubicacion principal: `test/features/horario/horario_controller_test.dart`,
 - Mapea todos los dias de semana a codigos RRULE y rechaza dias invalidos.
 - Valida que `ClaseForm` requiera materia y cree clases semanales validas.
 - Aplica longitudes maximas para materia y aula.
-- Impide guardar clases que se cruzan con otra clase del mismo dia y horario.
+- Impide guardar clases que se solapan con otra clase del mismo dia y horario.
 - `ClaseListItem` renderiza materia, aula, rango horario e iconos Material 3.
+- `ClaseListItem` expone accion visible de eliminar y respeta la preferencia
+  global de confirmaciones.
 - La pantalla Horario usa selector segmentado en mobile, panel secundario
   Material 3 en desktop, chips de dias y estado vacio consistente.
 
@@ -99,6 +106,8 @@ Cobertura avanzada:
 - El widget permite cambiar el primer aviso de tareas y dispara la
   reprogramacion de tareas pendientes.
 - El widget incluye aviso global de eventos y persiste su valor.
+- El controller reprograma eventos futuros cuando cambia el aviso global de
+  eventos.
 - El controller persiste tema visual, vista inicial, densidad visual, inicio de
   semana y confirmaciones.
 - El controller mapea tema a `ThemeMode` e indice inicial de navegacion.
@@ -109,8 +118,9 @@ Cobertura avanzada:
 - El inicio de semana afecta `SfCalendar` en calendario y horario.
 - La densidad compacta se aplica a listas de tareas.
 - Las confirmaciones desactivadas omiten dialogos en eliminaciones comunes de
-  tareas y eventos.
-- La gestion de datos usa un store real para exportar, importar y borrar datos.
+  tareas, clases y eventos.
+- La gestion de datos usa un store real y un servicio nativo inyectable para
+  exportar, importar y borrar datos.
 - Las pantallas de Tareas, Horario y Calendario escuchan cambios del
   `SettingsController` y aplican preferencias en tiempo real.
 - `MyApp` escucha cambios de tema y actualiza `ThemeMode` durante la sesion.
@@ -120,12 +130,6 @@ Cobertura avanzada:
   navegacion inmediata.
 - El borrado de datos locales emite notificacion para refrescar consumidores
   activos.
-
-Cobertura parcial pendiente:
-
-- Integrar confirmaciones configurables en eliminacion de clases cuando exista
-  accion visible equivalente.
-- Conectar gestion de datos locales con selector/escritura de archivo nativo.
 
 ## Feature: Diseno Material 3
 
@@ -157,6 +161,16 @@ Ubicacion principal: `test/features/models_serialization_test.dart`.
 - `Evento` conserva fechas, descripcion y color.
 - `Clase` conserva aula, recurrencia y color.
 
+## Feature: Persistencia SQLite
+
+Ubicacion principal: `test/features/persistencia/`.
+
+- Migra una base SQLite antigua a la version actual conservando tareas y
+  agregando columnas/tablas requeridas.
+- Valida que Windows y Linux usen SQLite FFI.
+- Ejecuta un smoke test que abre una base FFI en memoria, crea una tabla,
+  inserta y consulta datos.
+
 ## Ejecucion recomendada
 
 ```powershell
@@ -171,4 +185,5 @@ flutter test test/features/horario
 flutter test test/features/configuracion
 flutter test test/features/diseno_material3
 flutter test test/features/tareas
+flutter test test/features/persistencia
 ```

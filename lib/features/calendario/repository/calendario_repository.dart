@@ -5,4 +5,5 @@ abstract class CalendarioRepository {
   Future<void> addEvento(Evento evento);
   Future<void> updateEvento(Evento evento);
   Future<void> deleteEvento(String id);
+  Future<void> programarNotificacionEvento(String eventoId);
 }

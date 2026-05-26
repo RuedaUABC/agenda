@@ -4,6 +4,10 @@ Este documento describe las funciones que debe ofrecer la aplicacion Agenda.
 Los requisitos estan redactados desde la perspectiva del comportamiento
 esperado, no desde la implementacion interna.
 
+Version tabular con el formato Actor / Accion / Objeto de accion / Datos de
+entrada / Resultado esperado:
+[`requerimientos_funcionales_formato.md`](requerimientos_funcionales_formato.md).
+
 Estados usados:
 
 - Implementado: el comportamiento existe en la aplicacion.
@@ -85,6 +89,9 @@ Validaciones requeridas:
 - La descripcion debe tener una longitud maxima definida por el sistema.
 - Si la tarea se programa en una fecha pasada, el sistema debe advertir al
   usuario o solicitar confirmacion.
+- No debe existir otra tarea registrada con los mismos titulo, asignatura,
+  descripcion, fecha y hora normalizados; en edicion se excluye la tarea con el
+  mismo identificador.
 
 **RF-007. Edicion de tareas**
 Prioridad: Alta. Estado: Implementado.
@@ -95,6 +102,8 @@ Criterios de aceptacion:
 - El sistema precarga los datos actuales de la tarea.
 - Al guardar cambios validos, la tarea se actualiza localmente.
 - Las mismas validaciones de creacion aplican para la edicion.
+- La edicion no debe permitir que la tarea quede con datos identicos a otra
+  tarea registrada.
 
 **RF-008. Cambio de estado de tarea**
 Prioridad: Alta. Estado: Implementado.
@@ -216,8 +225,8 @@ Validaciones requeridas:
 - La hora de fin es obligatoria.
 - La hora de fin debe ser posterior a la hora de inicio.
 - El aula debe tener una longitud maxima definida por el sistema.
-- Si existe otra clase en el mismo dia y rango horario, el sistema impide el
-  guardado y muestra el conflicto al usuario.
+- Si existe otra clase en el mismo dia con un rango horario solapado parcial o
+  totalmente, el sistema impide el guardado y muestra el conflicto al usuario.
 
 **RF-020. Recurrencia semanal de clases**
 Prioridad: Alta. Estado: Implementado.
@@ -378,7 +387,7 @@ Cuando cambian las preferencias de avisos de tareas, el sistema debe
 reprogramar notificaciones de tareas no completadas.
 
 **RF-043. Configuracion de aviso de eventos**
-Prioridad: Media. Estado: Implementado parcial.
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder seleccionar cuanto tiempo antes recibir avisos de
 eventos.
 
@@ -388,10 +397,12 @@ Criterios de aceptacion:
   para otros avisos, incluyendo "Sin recordatorio" si aplica.
 - La seleccion debe presentarse con componentes Material 3 y texto descriptivo.
 - El valor seleccionado debe persistirse localmente.
-- Cuando cambie la preferencia, los eventos futuros deben poder reprogramarse
-  cuando exista scheduler nativo disponible.
-- Implementado en esta iteracion: selector Material 3, persistencia local y
-  defaults validados. Pendiente: integracion con scheduler nativo de eventos.
+- Cuando cambie la preferencia, los eventos futuros se reprograman con el
+  scheduler nativo disponible.
+- La opcion "Sin recordatorio" cancela el aviso del evento y no agenda uno
+  nuevo.
+- Implementado: selector Material 3, persistencia local, defaults validados,
+  scheduler nativo y pruebas con repositorio inyectable.
 
 **RF-044. Preferencia de tema visual**
 Prioridad: Media. Estado: Implementado.
@@ -466,7 +477,7 @@ Criterios de aceptacion:
   aplicacion en calendario y horario.
 
 **RF-048. Confirmaciones configurables para acciones destructivas**
-Prioridad: Media. Estado: Implementado parcial.
+Prioridad: Media. Estado: Parcial.
 El usuario debe poder activar o desactivar confirmaciones antes de acciones
 destructivas.
 
@@ -483,14 +494,16 @@ Criterios de aceptacion:
 - Las acciones irreversibles de alto impacto, como borrar todos los datos, deben
   conservar confirmacion obligatoria aunque la preferencia general este
   desactivada.
+- Desactivar confirmaciones comunes no debe eliminar mecanismos de recuperacion
+  cuando la accion sea reversible.
 - La preferencia debe persistirse localmente.
-- Implementado en esta iteracion: preferencia, switch Material 3, persistencia
-  local, eliminacion comun de tareas/eventos sin dialogo cuando se desactiva y
-  confirmacion reforzada obligatoria para borrado masivo. Pendiente: integrar
-  flujo de eliminacion de clases cuando exista accion visible equivalente.
+- Implementado parcialmente: preferencia, switch Material 3, persistencia local,
+  eliminacion comun de tareas, clases y eventos sin dialogo cuando se desactiva
+  y confirmacion obligatoria para borrado masivo. Pendiente: reforzar realmente
+  el borrado masivo con una defensa explicita adicional.
 
 **RF-049. Gestion de datos locales**
-Prioridad: Baja. Estado: Implementado parcial.
+Prioridad: Baja. Estado: Parcial.
 El usuario debe poder gestionar sus datos locales desde Ajustes.
 
 Acciones propuestas:
@@ -504,11 +517,19 @@ Criterios de aceptacion:
 - Exportar debe generar un archivo con tareas, clases, eventos y preferencias.
 - Importar debe validar formato y version antes de modificar datos existentes.
 - Borrar todos los datos debe solicitar confirmacion reforzada.
+- La confirmacion reforzada debe requerir una accion deliberada adicional, como
+  escribir una palabra de confirmacion, confirmar el alcance exacto o completar
+  un segundo paso no ambiguo.
+- El dialogo de borrado total debe comunicar que datos seran afectados y que
+  consecuencias tiene la accion.
+- La accion destructiva de borrado total debe usar tratamiento visual de error
+  del `ColorScheme`.
 - Las acciones deben informar exito o error con mensajes visibles.
-- Implementado en esta iteracion: generacion/validacion de respaldo JSON desde
-  controller, exportacion de datos reales, importacion validada al store local,
-  seccion Material 3 y borrado completo de datos locales con confirmacion
-  reforzada. Pendiente: selector/escritura de archivo nativo.
+- Implementado parcialmente: generacion/validacion de respaldo JSON desde controller,
+  exportacion de datos reales, importacion validada al store local, selector y
+  escritura de archivo nativo mediante `file_selector`, seccion Material 3 y
+  borrado completo de datos locales con confirmacion basica. Pendiente:
+  confirmacion reforzada verificable.
 
 **RF-050. Informacion de la aplicacion**
 Prioridad: Baja. Estado: Implementado.
@@ -524,8 +545,92 @@ Informacion requerida:
 Criterios de aceptacion:
 
 - La informacion debe mostrarse en una seccion Material 3 de solo lectura.
-- El estado de notificaciones debe distinguir claramente entre mock/parcial y
-  funcionalidad nativa completa.
+- El estado de notificaciones debe indicar que la funcionalidad nativa esta
+  configurada.
+
+## Usabilidad y recuperacion
+
+**RF-051. Recuperacion de acciones reversibles**
+Prioridad: Alta. Estado: Sugerido.
+El sistema debe permitir recuperar acciones destructivas o de cambio de estado
+cuando tecnicamente sean reversibles.
+
+Acciones cubiertas:
+
+- Enviar una tarea a papelera.
+- Marcar una tarea como completada o devolverla a pendiente.
+- Restaurar una tarea desde papelera.
+- Eliminar una clase, cuando el modelo permita reconstruirla sin perdida.
+- Eliminar un evento, cuando el modelo permita reconstruirlo sin perdida.
+
+Criterios de aceptacion:
+
+- Despues de una accion reversible, el sistema muestra un `SnackBar` con accion
+  `Deshacer`.
+- Si el usuario toca `Deshacer`, la entidad vuelve al estado anterior.
+- Si la accion no puede revertirse, el sistema debe indicarlo antes de ejecutar
+  la operacion.
+- El mensaje de exito debe nombrar la accion realizada, por ejemplo "Evento
+  eliminado" o "Tarea completada".
+
+**RF-052. Estados de carga y guardado informativos**
+Prioridad: Media. Estado: Sugerido.
+El sistema debe informar claramente cuando una pantalla, formulario o accion
+esta cargando o guardando datos.
+
+Criterios de aceptacion:
+
+- Las pantallas principales muestran indicador de carga con texto contextual,
+  por ejemplo "Cargando tareas".
+- Los botones de guardado se deshabilitan mientras la operacion esta en curso.
+- El texto del boton cambia durante la operacion cuando esta dure mas de una
+  interaccion instantanea, por ejemplo "Guardando".
+- La interfaz evita ejecutar dos veces la misma accion por taps repetidos.
+
+**RF-053. Estados vacios accionables**
+Prioridad: Media. Estado: Sugerido.
+El sistema debe mostrar estados vacios especificos para cada modulo o categoria
+y ofrecer una accion directa cuando exista una siguiente accion natural.
+
+Criterios de aceptacion:
+
+- El estado vacio de tareas distingue entre vencidas, pendientes, proximas,
+  completadas y papelera.
+- Calendario y horario ofrecen crear evento o clase cuando no hay elementos en
+  la fecha seleccionada.
+- Los textos de estado vacio deben explicar la situacion sin repetir mensajes
+  genericos en todas las secciones.
+
+**RF-054. Diagnostico de conflictos y validaciones complejas**
+Prioridad: Alta. Estado: Sugerido.
+Cuando una validacion depende de datos existentes, el sistema debe ayudar al
+usuario a entender la causa del problema y la forma de corregirlo.
+
+Criterios de aceptacion:
+
+- Un conflicto de clase indica con que clase o rango horario se cruza, cuando la
+  informacion este disponible.
+- Un evento superpuesto indica el evento o rango con el que se cruza, cuando la
+  informacion este disponible.
+- Los errores de rango horario se muestran cerca de la seccion de fecha y hora,
+  no solo como `SnackBar`.
+- Los mensajes deben estar redactados en lenguaje de usuario y sugerir una
+  accion correctiva.
+
+**RF-055. Ayuda contextual para operaciones sensibles**
+Prioridad: Baja. Estado: Sugerido.
+El sistema debe incluir ayuda contextual breve en operaciones que puedan afectar
+datos, permisos o configuracion dificil de recuperar.
+
+Criterios de aceptacion:
+
+- La importacion de respaldo explica si reemplaza, fusiona o valida antes de
+  modificar datos existentes.
+- El borrado total explica el alcance de datos afectados antes de confirmar.
+- El estado de notificaciones nativas explica si faltan permisos o si el
+  scheduler esta funcionando en modo limitado.
+- La ayuda contextual debe ser breve y estar integrada en la pantalla o dialogo
+  correspondiente.
 
 ## Persistencia
 

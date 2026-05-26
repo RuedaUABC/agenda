@@ -41,6 +41,9 @@ class _FakeCalendarioRepository implements CalendarioRepository {
   Future<List<Evento>> fetchEventos() async => [];
 
   @override
+  Future<void> programarNotificacionEvento(String eventoId) async {}
+
+  @override
   Future<void> updateEvento(Evento evento) async {}
 }
 
@@ -145,6 +148,21 @@ class _FakeSettingsDataStore implements SettingsDataStore {
   }
 }
 
+class _FakeBackupFileService implements BackupFileService {
+  String? exportedContent;
+  String? importedContent;
+  String? savedPath = 'C:\\tmp\\agenda-backup.json';
+
+  @override
+  Future<String?> openBackup() async => importedContent;
+
+  @override
+  Future<String?> saveBackup(String content) async {
+    exportedContent = content;
+    return savedPath;
+  }
+}
+
 Evento _evento() {
   return Evento(
     id: 'e1',
@@ -168,11 +186,16 @@ Tarea _tarea() {
 
 Future<SettingsController> _settingsController({
   SettingsDataStore? dataStore,
+  BackupFileService? backupFileService,
 }) async {
   SharedPreferences.setMockInitialValues({});
   final prefs = PreferencesHelper();
   await prefs.init();
-  final controller = SettingsController(prefs: prefs, dataStore: dataStore);
+  final controller = SettingsController(
+    prefs: prefs,
+    dataStore: dataStore,
+    backupFileService: backupFileService,
+  );
   await controller.loadSettings();
   return controller;
 }
@@ -317,6 +340,32 @@ void main() {
 
       await controller.deleteAllLocalData();
       expect(store.cleared, isTrue);
+    },
+  );
+
+  test(
+    'gestion de datos usa servicio nativo para exportar e importar archivos',
+    () async {
+      final store = _FakeSettingsDataStore();
+      final fileService = _FakeBackupFileService();
+      final controller = await _settingsController(
+        dataStore: store,
+        backupFileService: fileService,
+      );
+
+      final path = await controller.exportCompleteLocalDataBackupToFile();
+      expect(path, 'C:\\tmp\\agenda-backup.json');
+      expect(fileService.exportedContent, isNotNull);
+      expect(jsonDecode(fileService.exportedContent!)['eventos'], [
+        {'id': 'e1', 'titulo': 'Parcial'},
+      ]);
+
+      fileService.importedContent = fileService.exportedContent;
+      await controller.importCompleteLocalDataBackupFromFile();
+
+      expect(store.importedTareas.single['titulo'], 'Ensayo');
+      expect(store.importedClases.single['materia'], 'Fisica');
+      expect(store.importedEventos.single['titulo'], 'Parcial');
     },
   );
 

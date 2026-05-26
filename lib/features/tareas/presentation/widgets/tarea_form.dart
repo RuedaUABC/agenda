@@ -31,6 +31,7 @@ class _TareaFormState extends State<TareaForm> {
   late final TextEditingController _descripcionController;
   DateTime? _fechaSeleccionada;
   TimeOfDay? _horaSeleccionada;
+  String? _duplicateError;
 
   @override
   void initState() {
@@ -63,6 +64,7 @@ class _TareaFormState extends State<TareaForm> {
     if (titulo.length > maxTituloLength) {
       return "El titulo no puede superar $maxTituloLength caracteres";
     }
+    if (_duplicateError != null) return _duplicateError;
     return null;
   }
 
@@ -91,7 +93,10 @@ class _TareaFormState extends State<TareaForm> {
     );
 
     if (picked != null && picked != _fechaSeleccionada) {
-      setState(() => _fechaSeleccionada = picked);
+      setState(() {
+        _fechaSeleccionada = picked;
+        _duplicateError = null;
+      });
     }
   }
 
@@ -102,7 +107,10 @@ class _TareaFormState extends State<TareaForm> {
     );
 
     if (picked != null && picked != _horaSeleccionada) {
-      setState(() => _horaSeleccionada = picked);
+      setState(() {
+        _horaSeleccionada = picked;
+        _duplicateError = null;
+      });
     }
   }
 
@@ -161,7 +169,35 @@ class _TareaFormState extends State<TareaForm> {
     return '${date.day}/${date.month}/${date.year}';
   }
 
+  String _normalizeDuplicateText(String value) {
+    return value.trim().replaceAll(RegExp(r'\s+'), ' ').toLowerCase();
+  }
+
+  bool _sameTaskData(Tarea current, Tarea other) {
+    return _normalizeDuplicateText(current.titulo) ==
+            _normalizeDuplicateText(other.titulo) &&
+        _normalizeDuplicateText(current.asignatura) ==
+            _normalizeDuplicateText(other.asignatura) &&
+        _normalizeDuplicateText(current.descripcion) ==
+            _normalizeDuplicateText(other.descripcion) &&
+        current.fecha.isAtSameMomentAs(other.fecha);
+  }
+
+  bool _hasDuplicate(Tarea tarea) {
+    return [...widget.controller.tareas, ...widget.controller.papelera].any((
+      existing,
+    ) {
+      return existing.id != tarea.id && _sameTaskData(tarea, existing);
+    });
+  }
+
+  void _clearDuplicateError(String _) {
+    if (_duplicateError == null) return;
+    setState(() => _duplicateError = null);
+  }
+
   void _guardar() async {
+    _duplicateError = null;
     if (!_formKey.currentState!.validate()) return;
     if (_fechaSeleccionada == null || _horaSeleccionada == null) return;
 
@@ -182,6 +218,14 @@ class _TareaFormState extends State<TareaForm> {
       completada: widget.tarea?.completada ?? false,
       eliminada: widget.tarea?.eliminada ?? false,
     );
+
+    if (_hasDuplicate(nuevaTarea)) {
+      setState(
+        () => _duplicateError = 'Ya existe una tarea con los mismos datos',
+      );
+      _formKey.currentState!.validate();
+      return;
+    }
 
     if (fechaCompleta.isBefore(widget.now())) {
       final confirmed = await _confirmPastDate();
@@ -230,6 +274,7 @@ class _TareaFormState extends State<TareaForm> {
                     labelText: "Titulo",
                     prefixIcon: Icon(Icons.task_alt),
                   ),
+                  onChanged: _clearDuplicateError,
                   validator: _validateTitulo,
                 ),
                 const SizedBox(height: 12),
@@ -239,6 +284,7 @@ class _TareaFormState extends State<TareaForm> {
                     labelText: "Asignatura",
                     prefixIcon: Icon(Icons.school_outlined),
                   ),
+                  onChanged: _clearDuplicateError,
                   validator: _validateAsignatura,
                 ),
                 const SizedBox(height: 12),
@@ -249,6 +295,7 @@ class _TareaFormState extends State<TareaForm> {
                     prefixIcon: Icon(Icons.notes),
                   ),
                   maxLines: 3,
+                  onChanged: _clearDuplicateError,
                   validator: _validateDescripcion,
                 ),
                 const SizedBox(height: 16),

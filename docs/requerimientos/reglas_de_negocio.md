@@ -29,6 +29,13 @@ guardar.
 Cada tarea debe tener un identificador unico que permita actualizarla,
 eliminarla o restaurarla sin afectar otras tareas.
 
+**RN-060. Tarea duplicada no permitida**
+Una tarea no puede registrarse dos veces con datos identicos. Para determinar
+duplicidad se comparan titulo, asignatura, descripcion, fecha y hora despues de
+normalizar textos, sin considerar el identificador tecnico. Al editar una
+tarea, solo se permite coincidir con el registro que conserva el mismo
+identificador.
+
 **RN-007. Eliminacion logica de tarea**  
 Eliminar una tarea desde las listas activas cambia su estado a eliminada y la
 envia a papelera; no debe borrar el registro de forma definitiva.
@@ -106,9 +113,11 @@ innecesarios al inicio y al final de materia y aula.
 **RN-027. Longitud maxima de campos de clase**  
 El sistema debe definir y aplicar una longitud maxima para materia y aula.
 
-**RN-028. Conflicto de horario**  
-Si una clase nueva o editada se cruza con otra clase del mismo dia, el sistema
-debe advertir el conflicto o impedir el guardado segun la politica definida.
+**RN-028. Clases sin solapamiento**
+Una clase nueva o editada no puede solaparse con otra clase del mismo dia. Dos
+clases se consideran solapadas cuando sus rangos horarios se intersectan de
+forma parcial o total; se permite que una clase termine exactamente a la misma
+hora en que otra inicia.
 
 **RN-029. Clase semanal por defecto**  
 Las clases creadas desde el formulario son semanales.
@@ -202,9 +211,35 @@ los demas avisos configurados si existen.
 Cuando se actualizan avisos de tarea, solo deben reprogramarse tareas no
 completadas y no eliminadas.
 
-**RN-053. Notificaciones nativas no completas**  
-Mientras la implementacion nativa de notificaciones no este integrada, las
-notificaciones no deben considerarse funcionalidad completa para usuario final.
+**RN-053. Notificaciones nativas integradas**
+Los avisos integrados con scheduler nativo deben poder programarse, cancelarse
+y reprogramarse desde preferencias sin acoplar la UI al plugin de plataforma.
+
+## Experiencia, Recuperacion y Seguridad Operacional
+
+**RN-061. Acciones reversibles con recuperacion**
+Cuando una accion de usuario pueda revertirse sin perder integridad de datos,
+el sistema debe ofrecer una forma visible de recuperacion inmediata. La
+recuperacion debe restaurar el estado anterior sin crear duplicados ni afectar
+otras entidades.
+
+**RN-062. Confirmacion reforzada para borrado masivo**
+El borrado total de datos locales requiere una confirmacion reforzada e
+independiente de la preferencia general de confirmaciones. La confirmacion debe
+hacer explicito el alcance de datos afectados y exigir una accion deliberada
+adicional antes de ejecutar el borrado.
+
+**RN-063. Diagnostico de conflictos de agenda**
+Cuando una clase o evento no pueda guardarse, o requiera confirmacion, por
+conflicto de horario, el sistema debe identificar el conflicto de forma
+comprensible para el usuario siempre que los datos necesarios esten
+disponibles.
+
+**RN-064. Calidad textual de mensajes criticos**
+Los mensajes de confirmacion, error, exito y advertencia deben mostrarse con
+texto legible y codificacion correcta. Un mensaje critico no debe contener
+caracteres corruptos, terminos ambiguos ni redaccion que oculte la consecuencia
+de la accion.
 
 ## Persistencia
 

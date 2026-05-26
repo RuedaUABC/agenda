@@ -29,4 +29,74 @@ void main() {
     expect(find.byIcon(Icons.schedule_outlined), findsOneWidget);
     expect(find.byIcon(Icons.meeting_room_outlined), findsOneWidget);
   });
+
+  testWidgets(
+    'ClaseListItem confirma eliminacion cuando la preferencia esta activa',
+    (tester) async {
+      var deleted = false;
+      final clase = Clase(
+        id: '1',
+        materia: 'Programacion',
+        inicio: DateTime(2026, 5, 13, 8),
+        fin: DateTime(2026, 5, 13, 10),
+        aula: 'Lab 3',
+        color: Colors.indigo.toARGB32(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ClaseListItem(
+              clase: clase,
+              onDelete: () async => deleted = true,
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byTooltip('Eliminar clase Programacion'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Eliminar clase'), findsOneWidget);
+      expect(deleted, isFalse);
+
+      await tester.tap(find.widgetWithText(TextButton, 'Eliminar'));
+      await tester.pumpAndSettle();
+
+      expect(deleted, isTrue);
+    },
+  );
+
+  testWidgets(
+    'ClaseListItem elimina sin dialogo cuando la preferencia esta desactivada',
+    (tester) async {
+      var deleted = false;
+      final clase = Clase(
+        id: '1',
+        materia: 'Programacion',
+        inicio: DateTime(2026, 5, 13, 8),
+        fin: DateTime(2026, 5, 13, 10),
+        aula: 'Lab 3',
+        color: Colors.indigo.toARGB32(),
+      );
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ClaseListItem(
+              clase: clase,
+              confirmBeforeDelete: false,
+              onDelete: () async => deleted = true,
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byTooltip('Eliminar clase Programacion'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Eliminar clase'), findsNothing);
+      expect(deleted, isTrue);
+    },
+  );
 }

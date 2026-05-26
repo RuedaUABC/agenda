@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../configuracion/preferences_helper.dart';
+import '../domain/clase.dart';
 import 'horario_controller.dart';
 import 'widgets/horario_day_panel.dart';
 
@@ -12,6 +13,8 @@ class MyMobileBody extends StatefulWidget {
   final VoidCallback onRefresh;
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
+  final Future<void> Function(Clase clase)? onDeleteClase;
+  final bool confirmDestructiveActions;
 
   const MyMobileBody({
     super.key,
@@ -19,6 +22,8 @@ class MyMobileBody extends StatefulWidget {
     required this.onRefresh,
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
+    this.onDeleteClase,
+    this.confirmDestructiveActions = true,
   });
 
   @override
@@ -115,6 +120,8 @@ class _MyMobileBodyState extends State<MyMobileBody> {
                   onRefresh: widget.onRefresh,
                   weekStart: widget.weekStart,
                   visualDensity: widget.visualDensity,
+                  onDeleteClase: widget.onDeleteClase,
+                  confirmDestructiveActions: widget.confirmDestructiveActions,
                 ),
               ],
             ),

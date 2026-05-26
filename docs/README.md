@@ -11,7 +11,7 @@ esta organizado el proyecto y como trabajar con el.
 - [`casos_prueba.md`](casos_prueba.md): casos de prueba completos por
   funcionalidad usando el template formal de test case.
 - [`desarrollo.md`](desarrollo.md): requisitos, instalacion, ejecucion,
-  comandos de mantenimiento y notas de Firebase.
+  comandos de mantenimiento y notas de servicios externos.
 - [`diseno_material3.md`](diseno_material3.md): guia objetivo de interfaz
   Material 3 inspirada en patrones de Google Calendar, Tasks, Keep y Gmail.
 - [`pruebas.md`](pruebas.md): resumen de cobertura y comandos para correr

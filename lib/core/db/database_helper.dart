@@ -2,26 +2,53 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DatabaseHelper {
-  static Database? _db;
+  static Database? _defaultDb;
+  Database? _db;
 
   // Nombre y versión de la base de datos
   static const String _dbName = "agenda.db";
   static const int _dbVersion = 3;
+  final String? databasePath;
+  final int databaseVersion;
+  final DatabaseFactory? databaseFactoryOverride;
+
+  DatabaseHelper({
+    this.databasePath,
+    this.databaseVersion = _dbVersion,
+    this.databaseFactoryOverride,
+  });
 
   // Inicializar la base de datos
   Future<Database> initDB() async {
-    if (_db != null) return _db!;
+    if (_usesDefaultDatabase && _defaultDb != null) return _defaultDb!;
+    if (!_usesDefaultDatabase && _db != null) return _db!;
 
-    String path = join(await getDatabasesPath(), _dbName);
+    final factory = databaseFactoryOverride ?? databaseFactory;
+    final path =
+        databasePath ?? join(await factory.getDatabasesPath(), _dbName);
 
-    _db = await openDatabase(
+    final openedDb = await factory.openDatabase(
       path,
-      version: _dbVersion,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
+      options: OpenDatabaseOptions(
+        version: databaseVersion,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade,
+      ),
     );
 
-    return _db!;
+    if (_usesDefaultDatabase) {
+      _defaultDb = openedDb;
+    } else {
+      _db = openedDb;
+    }
+
+    return openedDb;
+  }
+
+  bool get _usesDefaultDatabase {
+    return databasePath == null &&
+        databaseVersion == _dbVersion &&
+        databaseFactoryOverride == null;
   }
 
   // Crear tablas iniciales
@@ -78,6 +105,14 @@ class DatabaseHelper {
 
   // Cerrar la base de datos
   Future<void> closeDB() async {
+    if (_usesDefaultDatabase) {
+      if (_defaultDb != null) {
+        await _defaultDb!.close();
+        _defaultDb = null;
+      }
+      return;
+    }
+
     if (_db != null) {
       await _db!.close();
       _db = null;

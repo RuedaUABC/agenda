@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive_layout.dart';
+import '../../../core/utils/notification_scheduler.dart';
 import '../../configuracion/preferences_helper.dart';
 import '../../configuracion/presentation/settings_controller.dart';
 import '../data/evento_dao.dart';
@@ -37,7 +38,15 @@ class _CalendarioPageState extends State<CalendarioPage> {
   }
 
   Future<void> _initDependencies() async {
-    final repo = CalendarioRepositoryImpl(eventoDao: EventoDao());
+    final prefs = PreferencesHelper();
+    await prefs.init();
+    final scheduler = NotificationScheduler();
+    await scheduler.init();
+    final repo = CalendarioRepositoryImpl(
+      eventoDao: EventoDao(),
+      prefs: prefs,
+      scheduler: scheduler,
+    );
 
     controller = CalendarioController(repository: repo);
     await controller.loadEventos();

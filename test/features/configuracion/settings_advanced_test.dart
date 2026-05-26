@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:agenda/features/calendario/domain/evento.dart';
+import 'package:agenda/features/calendario/repository/calendario_repository.dart';
 import 'package:agenda/features/configuracion/preferences_helper.dart';
 import 'package:agenda/features/configuracion/presentation/settings_controller.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +10,41 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<SettingsController> _controller({
   Map<String, Object> initialPrefs = const {},
+  CalendarioRepository? calendarioRepo,
 }) async {
   SharedPreferences.setMockInitialValues(initialPrefs);
   final prefs = PreferencesHelper();
   await prefs.init();
-  final controller = SettingsController(prefs: prefs);
+  final controller = SettingsController(
+    prefs: prefs,
+    calendarioRepo: calendarioRepo,
+  );
   await controller.loadSettings();
   return controller;
+}
+
+class _FakeCalendarioRepository implements CalendarioRepository {
+  final List<Evento> eventos;
+  final reprogramados = <String>[];
+
+  _FakeCalendarioRepository(this.eventos);
+
+  @override
+  Future<void> addEvento(Evento evento) async {}
+
+  @override
+  Future<void> deleteEvento(String id) async {}
+
+  @override
+  Future<List<Evento>> fetchEventos() async => eventos;
+
+  @override
+  Future<void> programarNotificacionEvento(String eventoId) async {
+    reprogramados.add(eventoId);
+  }
+
+  @override
+  Future<void> updateEvento(Evento evento) async {}
 }
 
 void main() {
@@ -54,6 +84,26 @@ void main() {
       expect(restored.weekStart, WeekStartPreference.domingo);
       expect(restored.confirmDestructiveActions, isFalse);
     });
+
+    test(
+      'reprograma eventos futuros al cambiar aviso global de eventos',
+      () async {
+        final futureStart = DateTime.now().add(const Duration(days: 2));
+        final repo = _FakeCalendarioRepository([
+          Evento(
+            id: 'evt-1',
+            titulo: 'Parcial',
+            inicio: futureStart,
+            fin: futureStart.add(const Duration(hours: 1)),
+          ),
+        ]);
+        final controller = await _controller(calendarioRepo: repo);
+
+        await controller.updateGlobalEventoNotif(const Duration(minutes: 60));
+
+        expect(repo.reprogramados, ['evt-1']);
+      },
+    );
 
     test('rechaza valores invalidos y recupera defaults', () async {
       final controller = await _controller(
@@ -117,7 +167,7 @@ void main() {
 
       expect(controller.appInfo.version, '1.0.0+1');
       expect(controller.appInfo.storageStatus, contains('local'));
-      expect(controller.appInfo.notificationStatus, contains('mock'));
+      expect(controller.appInfo.notificationStatus, contains('nativas'));
     });
 
     test('mapea preferencias hacia ThemeMode e indice inicial', () async {

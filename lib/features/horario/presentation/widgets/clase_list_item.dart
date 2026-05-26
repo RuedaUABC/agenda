@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -6,12 +8,48 @@ import '../../domain/clase.dart';
 class ClaseListItem extends StatelessWidget {
   final Clase clase;
   final VisualDensity visualDensity;
+  final FutureOr<void> Function()? onDelete;
+  final bool confirmBeforeDelete;
 
   const ClaseListItem({
     super.key,
     required this.clase,
     this.visualDensity = VisualDensity.standard,
+    this.onDelete,
+    this.confirmBeforeDelete = true,
   });
+
+  Future<void> _delete(BuildContext context) async {
+    if (onDelete == null) return;
+    if (!confirmBeforeDelete) {
+      await Future<void>.sync(onDelete!);
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Eliminar clase'),
+          content: Text('¿Eliminar ${clase.materia}?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true) {
+      await Future<void>.sync(onDelete!);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +108,12 @@ class ClaseListItem extends StatelessWidget {
                                 ?.copyWith(fontWeight: FontWeight.w700),
                           ),
                         ),
+                        if (onDelete != null)
+                          IconButton(
+                            tooltip: 'Eliminar clase ${clase.materia}',
+                            onPressed: () => _delete(context),
+                            icon: const Icon(Icons.delete_outline),
+                          ),
                       ],
                     ),
                     SizedBox(height: gap),
