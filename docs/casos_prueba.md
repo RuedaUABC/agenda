@@ -101,6 +101,18 @@ automatizada especifica.
 | TC-M3-005 | Horario Material 3 | Verifica selector segmentado, panel diario, chips y tarjetas de clase. | Widget de Horario disponible con clases simuladas. | 1. Renderizar mobile.<br>2. Alternar a `Dia`.<br>3. Renderizar desktop.<br>4. Revisar tarjeta de clase. | Clase `Programacion`, aula `Lab 3`, 08:00-10:00. | Mobile usa `SegmentedButton`; desktop usa panel secundario; la lista diaria muestra contador, chips, estado vacio y metadatos con iconos. | UI conserva seleccion por `ValueNotifier`. | Pass en `test/features/diseno_material3/material3_horario_test.dart`. | Pass | Refinamiento especifico de Horario inspirado en Google Calendar. | RF-021, RF-022, RNF-010, RNF-012 | Alta |
 | TC-M3-006 | Calendario Material 3 | Verifica selector segmentado, panel diario, chips y tarjetas de evento. | Widget de Calendario disponible con eventos simulados. | 1. Renderizar mobile.<br>2. Alternar a `Dia`.<br>3. Renderizar desktop.<br>4. Revisar tarjeta de evento. | Evento `Parcial`, descripcion `Aula 2`, 10:00-11:30. | Mobile usa `SegmentedButton`; desktop usa panel secundario; la lista diaria muestra contador, chips, estado vacio y metadatos con iconos. | UI conserva seleccion por `ValueNotifier`. | Pass en `test/features/diseno_material3/material3_calendario_test.dart`. | Pass | Refinamiento especifico del calendario de eventos inspirado en Google Calendar. | RF-026, RF-028, RF-029, RNF-010, RNF-012 | Alta |
 
+## Interfaz de usuario y usabilidad
+
+| Test Case ID | Test Case Title | Test Description | Pre-conditions | Test Steps | Test Data | Expected Result | Post Conditions | Actual Result | Status | Comments / Attachments | Associated Requirement ID | Priority |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TC-UI-001 | Consistencia visual de la interfaz | Verifica apariencia, alineacion, componentes Material 3, iconografia, estados vacios y consistencia entre pantallas. | La app compila y los widgets principales estan disponibles. | 1. Renderizar Tareas.<br>2. Renderizar Horario.<br>3. Renderizar Calendario.<br>4. Renderizar Ajustes.<br>5. Comparar uso de componentes y estados visuales. | Pantallas principales con datos y sin datos. | La interfaz mantiene componentes Material 3, estructura consistente, textos legibles y estados vacios comprensibles. | La UI queda lista para revision funcional o visual. | Pass en pruebas de `test/features/diseno_material3/`. | Pass | Relacionado con pruebas visuales y consistencia del PDF. | RNF-010, RNF-012 | Alta |
+| TC-UI-002 | Navegacion y flujo entre pantallas | Verifica que la navegacion permita desplazarse entre modulos sin perder contexto. | La aplicacion esta abierta. | 1. Cambiar entre Tareas, Horario, Calendario y Ajustes.<br>2. Seleccionar una fecha.<br>3. Salir y volver al modulo. | Modulos principales y fecha seleccionada. | Cada pantalla se muestra correctamente y conserva el estado esperado al volver. | El usuario puede continuar la tarea sin reiniciar el flujo. | Pass en `material3_navigation_test.dart`. | Pass | Relacionado con pruebas de navegacion del PDF. | RF-001, RF-002, RNF-009 | Alta |
+| TC-UI-003 | Responsividad de navegacion | Verifica que la interfaz adapte la navegacion a distintos anchos de pantalla. | La navegacion se renderiza con paginas de prueba. | 1. Probar ancho movil.<br>2. Probar ancho tablet.<br>3. Probar ancho escritorio. | Anchos: 390, 800 y 1200 px. | Se usa barra inferior en movil, rail en tablet y rail extendido en escritorio. | La navegacion queda adaptada al dispositivo. | Pass en `material3_navigation_test.dart`. | Pass | Relacionado con pruebas responsivas del PDF. | RNF-009, RNF-010 | Alta |
+| TC-UI-004 | Retroalimentacion ante acciones | Verifica que la interfaz informe guardado, errores, eliminaciones y recuperacion. | Existen formularios y elementos eliminables. | 1. Guardar tarea, clase y evento.<br>2. Ejecutar eliminaciones reversibles.<br>3. Provocar error de persistencia simulado.<br>4. Revisar mensajes. | Guardados validos, eliminaciones y error `db down`. | La app muestra estado de guardado, snackbar, accion `Deshacer` cuando aplica y errores visibles. | El usuario recibe confirmacion o recuperacion de la accion. | Pass en `widget_test.dart`, `tarea_form_test.dart`, `clase_form_test.dart`, `evento_form_test.dart` y widgets de calendario/horario. | Pass | Relacionado con pruebas de interaccion del PDF. | RNF-023, RF-048, RF-051 | Alta |
+| TC-UI-005 | Accesibilidad basica de controles | Verifica objetivos tactiles minimos y controles reconocibles en formularios y ajustes. | Formularios y ajustes estan disponibles. | 1. Revisar selectores de color.<br>2. Revisar densidad compacta.<br>3. Revisar controles de ajustes.<br>4. Confirmar que no se reduzcan objetivos tactiles criticos. | Color picker `48x48`; densidad compacta. | Los controles principales conservan objetivos tactiles minimos y usan componentes reconocibles. | La interfaz mantiene operabilidad basica. | Pass parcial en pruebas de Material 3; no sustituye una auditoria WCAG completa. | Partial | Relacionado con accesibilidad del PDF. | RNF-010, RNF-027 | Media |
+| TC-US-001 | Prueba de tareas con usuarios reales | Evalua si usuarios representativos completan tareas comunes con facilidad, eficiencia y pocos errores. | Deben reclutarse usuarios o representantes y preparar escenarios. | 1. Pedir crear una tarea.<br>2. Pedir editarla.<br>3. Pedir enviarla a papelera y recuperarla.<br>4. Registrar errores, ayudas y tiempo. | Escenario de tarea academica real. | El usuario completa el flujo sin bloqueos, con pocas ayudas y comprendiendo confirmaciones. | Se obtiene evidencia de facilidad de uso. | No ejecutado; no hay sesiones con usuarios reales registradas. | Not Executed | Relacionado con pruebas de usabilidad del PDF: usuarios, tareas, observacion y analisis. | RF-005, RF-007, RF-009, RF-010 | Alta |
+| TC-US-002 | Satisfaccion de usuario | Mide satisfaccion percibida despues de completar escenarios principales. | Deben existir participantes y cuestionario definido. | 1. Ejecutar escenarios de uso.<br>2. Aplicar SUS o PSSUQ.<br>3. Calcular puntuacion.<br>4. Registrar comentarios. | Cuestionario SUS o PSSUQ. | Se obtiene una medicion de satisfaccion y oportunidades de mejora. | La evaluacion queda documentada para priorizar ajustes de UX. | No ejecutado; pendiente hasta contar con usuarios y cuestionario aplicado. | Not Executed | Relacionado con metrica de satisfaccion/SUS del PDF. | RNF-012, RNF-027 | Media |
+
 ## Persistencia y Modelos
 
 | Test Case ID | Test Case Title | Test Description | Pre-conditions | Test Steps | Test Data | Expected Result | Post Conditions | Actual Result | Status | Comments / Attachments | Associated Requirement ID | Priority |
@@ -112,7 +124,25 @@ automatizada especifica.
 | TC-PER-005 | Soporte SQLite en escritorio | Verifica inicializacion de SQLite FFI en Windows/Linux. | App ejecutada en Windows o Linux. | 1. Evaluar configuracion de plataforma.<br>2. Inicializar FFI.<br>3. Abrir base en memoria.<br>4. Crear y consultar datos. | Plataforma: Windows/Linux. | SQLite se inicializa y las operaciones locales funcionan. | La app queda operativa en escritorio. | Pass en `test/features/persistencia/sqlite_ffi_smoke_test.dart`. | Pass | Smoke automatizado con `sqflite_common_ffi`. | RF-042 | Alta |
 | TC-PER-006 | Error visible de persistencia | Verifica que una falla local se muestre al usuario. | Una accion de persistencia falla en el repositorio. | 1. Abrir una accion critica.<br>2. Ejecutarla con repositorio fallando.<br>3. Revisar mensaje. | Error simulado: `db down`. | Se muestra snackbar con mensaje claro y no se cierra el flujo como si hubiera exito. | La UI permanece estable y los datos no se eliminan falsamente. | Pass en `test/widget_test.dart` y `test/features/tareas/taskcontroller_test.dart`. | Pass | Cubre RNF-023. | RNF-023 | Alta |
 
-## Ejecucion Automatizada Recomendada
+## Ejecucion de las pruebas
+
+Fecha de ejecucion: 2026-05-26.
+
+Ambiente: proyecto Flutter local en Windows, ejecutado desde
+`C:\Proyectos\agenda`.
+
+Resultado de la suite completa:
+
+| Comando | Resultado | Estado |
+| --- | --- | --- |
+| `flutter test` | 138 pruebas aprobadas, 0 fallidas. | Pass |
+
+La ejecucion cubre pruebas unitarias, controllers, widgets, formularios,
+persistencia local, configuracion, navegacion adaptativa y componentes Material
+3. Las pruebas de usabilidad con usuarios reales quedan registradas como `Not
+Executed`, porque requieren participantes, observacion y cuestionarios.
+
+Comandos recomendados para repetir la ejecucion:
 
 ```powershell
 flutter test
@@ -122,8 +152,20 @@ flutter test test/features/calendario
 flutter test test/features/configuracion
 ```
 
-## Brechas de Cobertura Detectadas
+## Reporte de hallazgos/errores
 
-| Area | Brecha | Caso relacionado |
-| --- | --- | --- |
-| Configuracion | Falta validacion estricta de opciones invalidas de notificacion. | TC-CONF-005 |
+| ID | Area | Hallazgo / error | Evidencia | Estado | Accion recomendada |
+| --- | --- | --- | --- | --- | --- |
+| H-UI-001 | Usabilidad | No se han ejecutado pruebas con usuarios reales, por lo que aun no hay medicion de facilidad, eficiencia, errores de usuario o satisfaccion. | TC-US-001 y TC-US-002. | Abierto | Ejecutar escenarios con usuarios representativos y registrar tiempo, ayudas, errores y SUS/PSSUQ. |
+| H-UI-002 | Accesibilidad | La accesibilidad esta cubierta solo de forma basica mediante objetivos tactiles y controles reconocibles; no hay auditoria WCAG completa. | TC-UI-005. | Parcial | Revisar contraste, navegacion por teclado, etiquetas semanticas y lectura por tecnologias asistivas. |
+| H-UI-003 | Compatibilidad | La suite automatizada valida comportamiento de widgets, pero no documenta una matriz manual por navegador, resolucion o dispositivo fisico. | TC-UI-003 cubre anchos; falta matriz real de dispositivos. | Abierto | Probar en al menos movil, tablet/escritorio y navegador objetivo, registrando resolucion y resultado. |
+
+## Mejoras realizadas
+
+| ID | Mejora | Evidencia | Estado |
+| --- | --- | --- | --- |
+| M-001 | Se incorporo navegacion adaptativa con barra inferior, rail y rail extendido segun ancho de pantalla. | TC-M3-002, TC-UI-002 y TC-UI-003. | Implementada |
+| M-002 | Se reforzaron estados de guardado para evitar taps duplicados y dar retroalimentacion visible. | TC-UI-004 y pruebas de formularios en tareas, horario y calendario. | Implementada |
+| M-003 | Se agrego recuperacion mediante `Deshacer` y confirmaciones reforzadas en acciones destructivas. | TC-CONF-012, TC-UI-004 y pruebas de widgets. | Implementada |
+| M-004 | Se mejoro la consistencia visual con Material 3 en formularios, ajustes, horario y calendario. | TC-M3-001 a TC-M3-006 y TC-UI-001. | Implementada |
+| M-005 | Se documentaron pruebas de usabilidad pendientes para no confundir cobertura automatizada con validacion humana. | TC-US-001, TC-US-002 y hallazgo H-UI-001. | Documentada |
