@@ -16,6 +16,8 @@ esta organizado el proyecto y como trabajar con el.
   Material 3 inspirada en patrones de Google Calendar, Tasks, Keep y Gmail.
 - [`pruebas.md`](pruebas.md): resumen de cobertura y comandos para correr
   pruebas por modulo.
+- [`pruebas_rendimiento.md`](pruebas_rendimiento.md): reporte de pruebas de
+  rendimiento con corridas, metricas y estadistica basica.
 - [`requerimientos/README.md`](requerimientos/README.md): indice de
   requerimientos funcionales, no funcionales, reglas de negocio, casos de uso,
   trazabilidad y versiones tabulares con atributos de calidad.
