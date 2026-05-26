@@ -32,6 +32,7 @@ class _TareaFormState extends State<TareaForm> {
   DateTime? _fechaSeleccionada;
   TimeOfDay? _horaSeleccionada;
   String? _duplicateError;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -141,6 +142,7 @@ class _TareaFormState extends State<TareaForm> {
   }
 
   Future<void> _persistir(Tarea tarea) async {
+    setState(() => _isSaving = true);
     try {
       if (widget.tarea == null) {
         await widget.controller.createTarea(tarea);
@@ -149,6 +151,7 @@ class _TareaFormState extends State<TareaForm> {
       }
     } catch (_) {
       if (mounted) {
+        setState(() => _isSaving = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -197,6 +200,7 @@ class _TareaFormState extends State<TareaForm> {
   }
 
   void _guardar() async {
+    if (_isSaving) return;
     _duplicateError = null;
     if (!_formKey.currentState!.validate()) return;
     if (_fechaSeleccionada == null || _horaSeleccionada == null) return;
@@ -335,8 +339,10 @@ class _TareaFormState extends State<TareaForm> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: FilledButton(
-                        onPressed: _guardar,
-                        child: const Text("Guardar"),
+                        onPressed: _isSaving ? null : _guardar,
+                        child: Text(
+                          _isSaving ? 'Guardando tarea...' : 'Guardar',
+                        ),
                       ),
                     ),
                   ],

@@ -220,4 +220,40 @@ void main() {
 
     expect(deletedEvento, evento);
   });
+
+  testWidgets('CalendarioPage permite deshacer eliminacion de evento', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1100, 800);
+    addTearDown(() {
+      tester.view.resetDevicePixelRatio();
+      tester.view.resetPhysicalSize();
+    });
+
+    final evento = _evento(titulo: 'Parcial', descripcion: 'Aula 2');
+    final repo = _FakeCalendarioRepository([evento]);
+    final controller = CalendarioController(repository: repo)
+      ..selectedDate.value = DateTime(2026, 5, 13);
+    await controller.loadEventos();
+
+    await tester.pumpWidget(
+      MaterialApp(home: CalendarioPage(controller: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byTooltip('Eliminar evento Parcial'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'Eliminar'));
+    await tester.pumpAndSettle();
+
+    expect(repo.stored, isEmpty);
+    expect(find.text('Evento eliminado'), findsOneWidget);
+    expect(find.text('Deshacer'), findsOneWidget);
+
+    await tester.tap(find.text('Deshacer'));
+    await tester.pumpAndSettle();
+
+    expect(repo.stored.single.titulo, 'Parcial');
+  });
 }

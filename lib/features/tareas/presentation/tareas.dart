@@ -80,7 +80,9 @@ class _TasksPageState extends State<TasksPage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        body: Center(child: _LoadingStatus(message: 'Cargando tareas...')),
+      );
     }
 
     final settingsController = widget.settingsController;
@@ -109,6 +111,7 @@ class _TasksPageState extends State<TasksPage> {
         mobile: MyMobileBody(
           controller: controller,
           onRefresh: () => setState(() {}),
+          onCreateTask: _abrirFormulario,
           clasificacion: clasificacion,
           papelera: papeleraFiltrada,
           visualDensityPreference: visualDensity,
@@ -117,6 +120,7 @@ class _TasksPageState extends State<TasksPage> {
         desktop: MyDesktopBody(
           controller: controller,
           onRefresh: () => setState(() {}),
+          onCreateTask: _abrirFormulario,
           clasificacion: clasificacion,
           papelera: papeleraFiltrada,
           visualDensityPreference: visualDensity,
@@ -127,6 +131,24 @@ class _TasksPageState extends State<TasksPage> {
         onPressed: _abrirFormulario,
         child: const Icon(Icons.add),
       ),
+    );
+  }
+}
+
+class _LoadingStatus extends StatelessWidget {
+  final String message;
+
+  const _LoadingStatus({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const CircularProgressIndicator(),
+        const SizedBox(height: 12),
+        Text(message),
+      ],
     );
   }
 }

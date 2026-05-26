@@ -61,7 +61,9 @@ class _CalendarioPageState extends State<CalendarioPage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        body: Center(child: _LoadingStatus(message: 'Cargando calendario...')),
+      );
     }
 
     final settingsController = widget.settingsController;
@@ -90,6 +92,7 @@ class _CalendarioPageState extends State<CalendarioPage> {
           onRefresh: () => setState(() {}),
           onEditEvento: _showEventoForm,
           onDeleteEvento: _deleteEvento,
+          onCreateEvento: () => _showEventoForm(),
           weekStart: weekStart,
           visualDensity: visualDensity,
           confirmDestructiveActions: confirmDestructiveActions,
@@ -99,6 +102,7 @@ class _CalendarioPageState extends State<CalendarioPage> {
           onRefresh: () => setState(() {}),
           onEditEvento: _showEventoForm,
           onDeleteEvento: _deleteEvento,
+          onCreateEvento: () => _showEventoForm(),
           weekStart: weekStart,
           visualDensity: visualDensity,
           confirmDestructiveActions: confirmDestructiveActions,
@@ -162,8 +166,49 @@ class _CalendarioPageState extends State<CalendarioPage> {
     if (!mounted) return;
 
     setState(() {});
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Evento eliminado')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Evento eliminado'),
+        action: SnackBarAction(
+          label: 'Deshacer',
+          onPressed: () {
+            _restoreEvento(evento);
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _restoreEvento(Evento evento) async {
+    try {
+      await controller.addEvento(evento);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo recuperar el evento')),
+        );
+      }
+      return;
+    }
+
+    if (mounted) setState(() {});
+  }
+}
+
+class _LoadingStatus extends StatelessWidget {
+  final String message;
+
+  const _LoadingStatus({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const CircularProgressIndicator(),
+        const SizedBox(height: 12),
+        Text(message),
+      ],
+    );
   }
 }

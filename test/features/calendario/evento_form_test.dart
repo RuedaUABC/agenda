@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agenda/features/calendario/domain/evento.dart';
 import 'package:agenda/features/calendario/presentation/widgets/evento_form.dart';
 import 'package:flutter/material.dart';
@@ -127,11 +129,44 @@ void main() {
 
     expect(savedEvento, isNull);
     expect(find.text('Evento superpuesto'), findsOneWidget);
+    expect(find.textContaining('Parcial'), findsOneWidget);
+    expect(find.textContaining('08:30 - 09:30'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(TextButton, 'Guardar de todos modos'));
     await tester.pump();
 
     expect(savedEvento, isNotNull);
     expect(savedEvento!.titulo, 'Choque');
+  });
+
+  testWidgets('EventoForm mantiene estado Guardando mientras persiste', (
+    tester,
+  ) async {
+    final completer = Completer<void>();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: EventoForm(
+            initialDate: DateTime(2026, 5, 13),
+            eventos: const [],
+            onSave: (_) => completer.future,
+          ),
+        ),
+      ),
+    );
+
+    await tester.enterText(find.byType(TextFormField).at(0), 'Tutoria');
+    await tester.tap(find.text('Guardar evento'));
+    await tester.pump();
+
+    expect(find.text('Guardando evento...'), findsOneWidget);
+    final button = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Guardando evento...'),
+    );
+    expect(button.onPressed, isNull);
+
+    completer.complete();
+    await tester.pump();
   });
 }

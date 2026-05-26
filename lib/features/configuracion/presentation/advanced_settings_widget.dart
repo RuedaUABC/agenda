@@ -20,6 +20,19 @@ class AdvancedSettingsWidget extends StatefulWidget {
 
 class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
   SettingsController get controller => widget.controller;
+  String? _busyMessage;
+
+  Future<void> _runDataOperation(
+    String message,
+    Future<void> Function() operation,
+  ) async {
+    setState(() => _busyMessage = message);
+    try {
+      await operation();
+    } finally {
+      if (mounted) setState(() => _busyMessage = null);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +42,10 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
         final content = Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            if (_busyMessage != null) ...[
+              _OperationStatus(message: _busyMessage!),
+              const SizedBox(height: 16),
+            ],
             _SettingsSurface(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,8 +127,14 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
                     ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () async {
-                      final path = await controller
-                          .exportCompleteLocalDataBackupToFile();
+                      String? path;
+                      await _runDataOperation(
+                        'Exportando respaldo...',
+                        () async {
+                          path = await controller
+                              .exportCompleteLocalDataBackupToFile();
+                        },
+                      );
                       if (!context.mounted) return;
                       if (path == null) return;
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -130,8 +153,10 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () async {
                       try {
-                        await controller
-                            .importCompleteLocalDataBackupFromFile();
+                        await _runDataOperation('Importando respaldo...', () {
+                          return controller
+                              .importCompleteLocalDataBackupFromFile();
+                        });
                       } catch (_) {
                         if (!context.mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -154,44 +179,13 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
                     ),
                     title: const Text('Borrar todos los datos'),
                     subtitle: const Text(
-                      'Siempre requiere confirmacion reforzada',
+                      'Requiere escribir BORRAR y no se salta por preferencias',
                     ),
                     trailing: Icon(
                       Icons.chevron_right,
                       color: Theme.of(context).colorScheme.error,
                     ),
-                    onTap: () {
-                      showDialog<void>(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: const Text('Borrar todos los datos'),
-                            content: const Text(
-                              'Esta accion requiere confirmacion reforzada.',
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('Cancelar'),
-                              ),
-                              FilledButton(
-                                onPressed: () async {
-                                  await controller.deleteAllLocalData();
-                                  if (!context.mounted) return;
-                                  Navigator.of(context).pop();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Datos locales eliminados'),
-                                    ),
-                                  );
-                                },
-                                child: const Text('Eliminar'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
+                    onTap: () => _confirmDeleteAllData(context),
                   ),
                 ],
               ),
@@ -259,6 +253,157 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
         const SnackBar(content: Text('No se pudo reiniciar desde esta vista')),
       );
     }
+  }
+
+  Future<void> _confirmDeleteAllData(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => const _DeleteAllDataDialog(),
+    );
+    if (confirmed != true || !context.mounted) return;
+
+    try {
+      await _runDataOperation('Borrando datos locales...', () {
+        return controller.deleteAllLocalData();
+      });
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No se pudieron borrar los datos')),
+      );
+      return;
+    }
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Datos locales eliminados')));
+  }
+}
+
+class _OperationStatus extends StatelessWidget {
+  final String message;
+
+  const _OperationStatus({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                SizedBox.square(
+                  dimension: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.5,
+                    color: colorScheme.onPrimaryContainer,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    message,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            LinearProgressIndicator(
+              color: colorScheme.primary,
+              backgroundColor: colorScheme.primary.withValues(alpha: 0.18),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DeleteAllDataDialog extends StatefulWidget {
+  const _DeleteAllDataDialog();
+
+  @override
+  State<_DeleteAllDataDialog> createState() => _DeleteAllDataDialogState();
+}
+
+class _DeleteAllDataDialogState extends State<_DeleteAllDataDialog> {
+  final _confirmationController = TextEditingController();
+
+  bool get _isConfirmed => _confirmationController.text.trim() == 'BORRAR';
+
+  @override
+  void dispose() {
+    _confirmationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return AlertDialog(
+      icon: Icon(Icons.delete_forever_outlined, color: colorScheme.error),
+      title: const Text('Confirmacion reforzada'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Esta accion elimina tareas, clases y eventos guardados en este dispositivo. No elimina tus respaldos exportados.',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Ayuda: exporta un respaldo antes de continuar si necesitas recuperar informacion despues.',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            key: const Key('delete-all-confirmation-field'),
+            controller: _confirmationController,
+            autofocus: true,
+            decoration: const InputDecoration(
+              labelText: 'Escribe BORRAR para confirmar',
+              helperText: 'La palabra debe coincidir exactamente.',
+              prefixIcon: Icon(Icons.edit_note_outlined),
+            ),
+            onChanged: (_) => setState(() {}),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancelar'),
+        ),
+        FilledButton(
+          onPressed: _isConfirmed
+              ? () => Navigator.of(context).pop(true)
+              : null,
+          style: FilledButton.styleFrom(
+            backgroundColor: colorScheme.error,
+            foregroundColor: colorScheme.onError,
+            disabledBackgroundColor: colorScheme.errorContainer,
+            disabledForegroundColor: colorScheme.onErrorContainer,
+          ),
+          child: const Text('Borrar datos'),
+        ),
+      ],
+    );
   }
 }
 

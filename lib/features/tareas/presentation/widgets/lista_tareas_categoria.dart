@@ -6,6 +6,8 @@ import '../../domain/tarea.dart';
 import '../taskcontroller.dart';
 import 'tarea_form.dart';
 
+enum _TareaDetalleResult { refresh, deleted }
+
 class ListaTareasCategoria extends StatelessWidget {
   const ListaTareasCategoria({
     super.key,
@@ -17,6 +19,7 @@ class ListaTareasCategoria extends StatelessWidget {
     this.isTrashMode = false,
     this.visualDensityPreference = VisualDensityPreference.comoda,
     this.confirmDestructiveActions = true,
+    this.onCreateTask,
   });
 
   final TasksController controller;
@@ -27,6 +30,7 @@ class ListaTareasCategoria extends StatelessWidget {
   final bool isTrashMode;
   final VisualDensityPreference visualDensityPreference;
   final bool confirmDestructiveActions;
+  final VoidCallback? onCreateTask;
 
   VisualDensity get _materialVisualDensity {
     switch (visualDensityPreference) {
@@ -38,7 +42,7 @@ class ListaTareasCategoria extends StatelessWidget {
   }
 
   Future<void> _abrirDetalle(BuildContext context, Tarea tarea) async {
-    final result = await showModalBottomSheet<bool>(
+    final result = await showModalBottomSheet<_TareaDetalleResult>(
       context: context,
       isScrollControlled: true,
       builder: (context) {
@@ -52,9 +56,41 @@ class ListaTareasCategoria extends StatelessWidget {
       },
     );
 
-    if (result == true) {
+    if (result == _TareaDetalleResult.refresh) {
       onRefresh();
+    } else if (result == _TareaDetalleResult.deleted) {
+      onRefresh();
+      if (!context.mounted) return;
+      _showUndoDelete(context, tarea);
     }
+  }
+
+  void _showUndoDelete(BuildContext context, Tarea tarea) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Tarea enviada a papelera'),
+        action: SnackBarAction(
+          label: 'Deshacer',
+          onPressed: () async {
+            try {
+              await controller.restoreTarea(tarea.id);
+            } catch (_) {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      controller.lastError ?? 'No se pudo recuperar la tarea',
+                    ),
+                  ),
+                );
+              }
+              return;
+            }
+            onRefresh();
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -63,7 +99,16 @@ class ListaTareasCategoria extends StatelessWidget {
       return AgendaEmptyState(
         icon: Icons.task_alt,
         title: 'Sin tareas en $title',
-        description: 'Cuando haya elementos para esta seccion apareceran aqui.',
+        description: onCreateTask == null
+            ? 'Cuando haya elementos para esta seccion apareceran aqui.'
+            : 'Crea una tarea para llenar esta seccion.',
+        action: onCreateTask == null
+            ? null
+            : FilledButton.icon(
+                onPressed: onCreateTask,
+                icon: const Icon(Icons.add),
+                label: const Text('Crear tarea'),
+              ),
       );
     }
 
@@ -173,6 +218,10 @@ class _TareaDetalle extends StatelessWidget {
             ),
             FilledButton(
               onPressed: () => Navigator.pop(dialogContext, true),
+              style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(dialogContext).colorScheme.error,
+                foregroundColor: Theme.of(dialogContext).colorScheme.onError,
+              ),
               child: const Text("Sí"),
             ),
           ],
@@ -196,7 +245,7 @@ class _TareaDetalle extends StatelessWidget {
       return;
     }
     if (context.mounted) {
-      Navigator.pop(context, true);
+      Navigator.pop(context, _TareaDetalleResult.deleted);
     }
   }
 
@@ -219,6 +268,10 @@ class _TareaDetalle extends StatelessWidget {
             ),
             FilledButton(
               onPressed: () => Navigator.pop(dialogContext, true),
+              style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(dialogContext).colorScheme.error,
+                foregroundColor: Theme.of(dialogContext).colorScheme.onError,
+              ),
               child: const Text("Eliminar"),
             ),
           ],
@@ -236,7 +289,7 @@ class _TareaDetalle extends StatelessWidget {
         return;
       }
       if (context.mounted) {
-        Navigator.pop(context, true);
+        Navigator.pop(context, _TareaDetalleResult.refresh);
       }
     }
   }
@@ -252,7 +305,7 @@ class _TareaDetalle extends StatelessWidget {
 
     if (result == true) {
       if (context.mounted) {
-        Navigator.pop(context, true);
+        Navigator.pop(context, _TareaDetalleResult.refresh);
       }
     }
   }
@@ -335,7 +388,7 @@ class _TareaDetalle extends StatelessWidget {
                             return;
                           }
                           if (context.mounted) {
-                            Navigator.pop(context, true);
+                            Navigator.pop(context, _TareaDetalleResult.refresh);
                           }
                         },
                       ),
@@ -345,6 +398,12 @@ class _TareaDetalle extends StatelessWidget {
                       child: FilledButton.icon(
                         icon: const Icon(Icons.delete_forever_outlined),
                         label: const Text("Eliminar definitivo"),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onError,
+                        ),
                         onPressed: () =>
                             _confirmarEliminacionDefinitiva(context, tarea),
                       ),
@@ -376,7 +435,7 @@ class _TareaDetalle extends StatelessWidget {
                             return;
                           }
                           if (context.mounted) {
-                            Navigator.pop(context, true);
+                            Navigator.pop(context, _TareaDetalleResult.refresh);
                           }
                         },
                       ),
@@ -394,6 +453,12 @@ class _TareaDetalle extends StatelessWidget {
                       child: FilledButton.icon(
                         icon: const Icon(Icons.delete_outline),
                         label: const Text("Eliminar"),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.error,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onError,
+                        ),
                         onPressed: () => _confirmarEliminacion(context, tarea),
                       ),
                     ),

@@ -68,10 +68,19 @@ class EventoValidator {
     List<Evento> eventos, {
     String? excludeId,
   }) {
-    return eventos.any((evento) {
-      if (evento.id == excludeId) return false;
-      return _overlap(candidate, evento);
-    });
+    return firstOverlap(candidate, eventos, excludeId: excludeId) != null;
+  }
+
+  static Evento? firstOverlap(
+    Evento candidate,
+    List<Evento> eventos, {
+    String? excludeId,
+  }) {
+    for (final evento in eventos) {
+      if (evento.id == excludeId) continue;
+      if (_overlap(candidate, evento)) return evento;
+    }
+    return null;
   }
 
   static bool _overlap(Evento a, Evento b) {

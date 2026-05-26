@@ -4,6 +4,10 @@ Este documento define restricciones y atributos de calidad esperados para la
 aplicacion Agenda. Los RNF deben ser verificables mediante revision, pruebas o
 ejecucion de la aplicacion.
 
+Version tabular con actor responsable, accion esperada, objeto de calidad,
+condicion y resultado esperado:
+[`requerimientos_no_funcionales_formato.md`](requerimientos_no_funcionales_formato.md).
+
 ## Plataforma
 
 **RNF-001. Aplicacion Flutter multiplataforma**  
@@ -93,7 +97,7 @@ Criterio de verificacion:
 - La aplicacion debe soportar tema claro, oscuro y preferencia del sistema.
 
 **RNF-011. Indicadores de carga**  
-Prioridad: Media. Estado: Parcial.  
+Prioridad: Media. Estado: Implementado.  
 Las pantallas principales deben mostrar un indicador mientras cargan datos o
 dependencias iniciales.
 
@@ -103,7 +107,7 @@ Criterio de verificacion:
   suficiente para que el usuario entienda que modulo se esta cargando.
 
 **RNF-012. Estados vacios visibles**  
-Prioridad: Media. Estado: Parcial.  
+Prioridad: Media. Estado: Implementado.  
 Las listas y calendarios deben mostrar un mensaje claro cuando no existan datos
 para presentar.
 
@@ -113,7 +117,7 @@ Criterio de verificacion:
   aplique, ofrecer una accion directa para crear el primer elemento.
 
 **RNF-013. Mensajes de validacion comprensibles**  
-Prioridad: Alta. Estado: Parcial.  
+Prioridad: Alta. Estado: Implementado.  
 Cuando el usuario capture datos invalidos, el sistema debe mostrar mensajes
 claros, cercanos al campo afectado y orientados a la accion.
 
@@ -180,7 +184,7 @@ automatizadas.
 ## Seguridad Local y Robustez
 
 **RNF-022. Confirmacion para acciones destructivas**  
-Prioridad: Alta. Estado: Parcial.  
+Prioridad: Alta. Estado: Implementado.  
 El sistema debe solicitar confirmacion antes de ejecutar acciones destructivas
 como eliminar tareas, clases o eventos.
 
@@ -232,7 +236,7 @@ Criterio de verificacion:
 - No deben aparecer cadenas como `Â¿` o `SÃ­` en la interfaz.
 
 **RNF-028. Recuperabilidad de acciones de usuario**  
-Prioridad: Alta. Estado: Sugerido.  
+Prioridad: Alta. Estado: Implementado.  
 La interfaz debe permitir recuperarse de acciones frecuentes cuando exista una
 forma tecnica segura de revertirlas.
 
@@ -243,7 +247,7 @@ Criterio de verificacion:
 - La recuperacion no debe crear duplicados ni perder datos relacionados.
 
 **RNF-029. Retroalimentacion de operaciones en progreso**  
-Prioridad: Media. Estado: Sugerido.  
+Prioridad: Media. Estado: Implementado.  
 La interfaz debe prevenir incertidumbre o acciones duplicadas durante
 operaciones asincronas.
 
@@ -268,7 +272,7 @@ Criterio de verificacion:
   aplicable.
 
 **RNF-031. Consistencia visual de acciones destructivas**  
-Prioridad: Media. Estado: Sugerido.  
+Prioridad: Media. Estado: Implementado.  
 Las acciones destructivas deben tener un tratamiento visual consistente y
 diferenciable de acciones primarias no destructivas.
 

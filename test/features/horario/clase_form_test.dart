@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agenda/features/horario/domain/clase.dart';
 import 'package:agenda/features/horario/presentation/widgets/clase_form.dart';
 import 'package:flutter/material.dart';
@@ -107,9 +109,37 @@ void main() {
     await tester.pump();
 
     expect(savedClase, isNull);
-    expect(
-      find.text('La clase se cruza con otra clase del mismo dia'),
-      findsOneWidget,
+    expect(find.textContaining('Matematicas'), findsOneWidget);
+    expect(find.textContaining('08:30 - 09:30'), findsOneWidget);
+  });
+
+  testWidgets('ClaseForm muestra estado Guardando mientras persiste', (
+    tester,
+  ) async {
+    final completer = Completer<void>();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ClaseForm(
+            initialDate: DateTime(2026, 5, 13),
+            onSave: (_) => completer.future,
+          ),
+        ),
+      ),
     );
+
+    await tester.enterText(find.byType(TextFormField).at(0), 'Fisica');
+    await tester.tap(find.text('Guardar clase semanal'));
+    await tester.pump();
+
+    expect(find.text('Guardando clase...'), findsOneWidget);
+    final button = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Guardando clase...'),
+    );
+    expect(button.onPressed, isNull);
+
+    completer.complete();
+    await tester.pump();
   });
 }

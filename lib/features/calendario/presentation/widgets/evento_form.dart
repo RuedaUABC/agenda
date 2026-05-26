@@ -159,12 +159,13 @@ class _EventoFormState extends State<EventoForm> {
       color: _selectedColor,
     );
 
-    if (EventoValidator.hasOverlap(
+    final overlap = EventoValidator.firstOverlap(
       evento,
       widget.eventos,
       excludeId: widget.evento?.id,
-    )) {
-      final confirmed = await _confirmOverlap();
+    );
+    if (overlap != null) {
+      final confirmed = await _confirmOverlap(overlap);
       if (!confirmed || !mounted) return;
     }
 
@@ -191,14 +192,20 @@ class _EventoFormState extends State<EventoForm> {
     setState(() => _isSaving = false);
   }
 
-  Future<bool> _confirmOverlap() async {
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour.toString().padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
+  }
+
+  Future<bool> _confirmOverlap(Evento overlap) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Evento superpuesto'),
-          content: const Text(
-            'Este evento se cruza con otro evento existente. Puedes revisar el horario o guardarlo de todos modos.',
+          content: Text(
+            'Este evento se cruza con ${overlap.titulo} (${_formatTime(overlap.inicio)} - ${_formatTime(overlap.fin)}). Puedes revisar el horario o guardarlo de todos modos.',
           ),
           actions: [
             TextButton(
@@ -338,7 +345,11 @@ class _EventoFormState extends State<EventoForm> {
                         onPressed: _isSaving ? null : _save,
                         icon: const Icon(Icons.save),
                         label: Text(
-                          isEditing ? 'Actualizar evento' : 'Guardar evento',
+                          _isSaving
+                              ? 'Guardando evento...'
+                              : isEditing
+                              ? 'Actualizar evento'
+                              : 'Guardar evento',
                         ),
                       ),
                     ),

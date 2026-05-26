@@ -11,8 +11,8 @@ interfaz, la logica de estado, los repositorios y el acceso a datos.
 - Modulos principales: tareas, horario, calendario, configuracion y navegacion.
 - Persistencia local con SQLite mediante `sqflite`.
 - Soporte para Windows y Linux con `sqflite_common_ffi`.
-- Configuracion de Firebase generada en el proyecto, aunque la inicializacion
-  esta desactivada en `lib/main.dart`.
+- Firebase fue retirado del proyecto; la app usa servicios locales para el
+  alcance actual.
 - Pruebas unitarias y de widgets organizadas por feature.
 
 ## Documentacion
@@ -24,6 +24,10 @@ La documentacion del proyecto esta en [`docs/`](docs/README.md):
 - [`docs/desarrollo.md`](docs/desarrollo.md): instalacion, ejecucion,
   comandos utiles y notas de configuracion.
 - [`docs/pruebas.md`](docs/pruebas.md): cobertura y comandos de pruebas.
+- [`docs/requerimientos/`](docs/requerimientos/README.md): requerimientos,
+  reglas de negocio, trazabilidad y formatos tabulares de calidad.
+- [`docs/plan_verificacion_validacion.md`](docs/plan_verificacion_validacion.md):
+  plan de verificacion y validacion.
 
 ## Requisitos
 
@@ -65,20 +69,18 @@ flutter devices
    flutter test
    ```
 
-## Notas de Firebase
+## Servicios Externos
 
-El repositorio contiene `firebase.json`, `lib/firebase_options.dart` y
-`android/app/google-services.json`. Sin embargo, en el punto de entrada actual
-la llamada a `Firebase.initializeApp()` esta comentada. Si se reactiva la
-autenticacion o cualquier servicio de Firebase, revisa
-[`docs/desarrollo.md`](docs/desarrollo.md) antes de ejecutar la app.
+Firebase fue retirado del proyecto. Si se reactiva autenticacion,
+sincronizacion o cualquier proveedor externo, revisa
+[`docs/desarrollo.md`](docs/desarrollo.md) y actualiza dependencias,
+configuracion nativa, pruebas y documentacion.
 
 ## Estructura Principal
 
 ```text
 lib/
 |-- main.dart
-|-- firebase_options.dart
 |-- core/
 |   |-- db/
 |   |-- theme/

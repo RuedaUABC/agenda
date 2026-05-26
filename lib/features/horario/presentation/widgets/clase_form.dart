@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agenda/core/widgets/agenda_color_picker.dart';
 import 'package:agenda/core/widgets/agenda_date_time_button.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,7 @@ import '../horario_controller.dart';
 
 class ClaseForm extends StatefulWidget {
   final DateTime initialDate;
-  final ValueChanged<Clase>? onSave;
+  final FutureOr<void> Function(Clase clase)? onSave;
   final List<Clase> clases;
 
   const ClaseForm({
@@ -41,6 +43,8 @@ class _ClaseFormState extends State<ClaseForm> {
   TimeOfDay _startTime = const TimeOfDay(hour: 8, minute: 0);
   TimeOfDay _endTime = const TimeOfDay(hour: 9, minute: 0);
   Color _selectedColor = _colors.first;
+  String? _scheduleError;
+  bool _isSaving = false;
 
   @override
   void initState() {
@@ -78,16 +82,25 @@ class _ClaseFormState extends State<ClaseForm> {
     return null;
   }
 
-  bool _hasConflict(DateTime start, DateTime end) {
+  Clase? _conflictingClass(DateTime start, DateTime end) {
     final startMinutes = start.hour * 60 + start.minute;
     final endMinutes = end.hour * 60 + end.minute;
 
-    return widget.clases.any((clase) {
-      if (clase.inicio.weekday != start.weekday) return false;
+    for (final clase in widget.clases) {
+      if (clase.inicio.weekday != start.weekday) continue;
       final classStartMinutes = clase.inicio.hour * 60 + clase.inicio.minute;
       final classEndMinutes = clase.fin.hour * 60 + clase.fin.minute;
-      return startMinutes < classEndMinutes && endMinutes > classStartMinutes;
-    });
+      if (startMinutes < classEndMinutes && endMinutes > classStartMinutes) {
+        return clase;
+      }
+    }
+    return null;
+  }
+
+  String _formatTime(DateTime dateTime) {
+    final hour = dateTime.hour.toString().padLeft(2, '0');
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 
   Future<void> _pickDate() async {
@@ -99,7 +112,10 @@ class _ClaseFormState extends State<ClaseForm> {
     );
 
     if (selected != null) {
-      setState(() => _date = selected);
+      setState(() {
+        _date = selected;
+        _scheduleError = null;
+      });
     }
   }
 
@@ -123,29 +139,30 @@ class _ClaseFormState extends State<ClaseForm> {
       } else {
         _endTime = selected;
       }
+      _scheduleError = null;
     });
   }
 
-  void _save() {
+  Future<void> _save() async {
+    if (_isSaving) return;
     if (!_formKey.currentState!.validate()) return;
 
     final start = _combine(_date, _startTime);
     final end = _combine(_date, _endTime);
 
     if (!end.isAfter(start)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('La hora de fin debe ser posterior a la de inicio'),
-        ),
+      setState(
+        () => _scheduleError =
+            'La hora de fin debe ser posterior a la de inicio.',
       );
       return;
     }
 
-    if (_hasConflict(start, end)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('La clase se cruza con otra clase del mismo dia'),
-        ),
+    final conflict = _conflictingClass(start, end);
+    if (conflict != null) {
+      setState(
+        () => _scheduleError =
+            'La clase se cruza con ${conflict.materia} (${_formatTime(conflict.inicio)} - ${_formatTime(conflict.fin)}). Ajusta el horario o revisa la clase existente.',
       );
       return;
     }
@@ -161,11 +178,25 @@ class _ClaseFormState extends State<ClaseForm> {
       color: _selectedColor.toARGB32(),
     );
 
-    widget.onSave?.call(clase);
-
     if (widget.onSave == null) {
       Navigator.of(context).pop(clase);
+      return;
     }
+
+    setState(() => _isSaving = true);
+    try {
+      await Future<void>.sync(() => widget.onSave!(clase));
+    } catch (_) {
+      if (mounted) {
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo guardar la clase')),
+        );
+      }
+      return;
+    }
+
+    if (mounted) setState(() => _isSaving = false);
   }
 
   @override
@@ -252,6 +283,15 @@ class _ClaseFormState extends State<ClaseForm> {
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
                 ),
+                if (_scheduleError != null) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    _scheduleError!,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 12),
                 Text('Color', style: textTheme.titleMedium),
                 const SizedBox(height: 8),
@@ -274,9 +314,13 @@ class _ClaseFormState extends State<ClaseForm> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: FilledButton.icon(
-                        onPressed: _save,
+                        onPressed: _isSaving ? null : _save,
                         icon: const Icon(Icons.save),
-                        label: const Text('Guardar clase semanal'),
+                        label: Text(
+                          _isSaving
+                              ? 'Guardando clase...'
+                              : 'Guardar clase semanal',
+                        ),
                       ),
                     ),
                   ],

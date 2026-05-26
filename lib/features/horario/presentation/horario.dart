@@ -52,7 +52,9 @@ class _HorarioPageState extends State<HorarioPage> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(
+        body: Center(child: _LoadingStatus(message: 'Cargando horario...')),
+      );
     }
 
     final settingsController = widget.settingsController;
@@ -82,6 +84,7 @@ class _HorarioPageState extends State<HorarioPage> {
           weekStart: weekStart,
           visualDensity: visualDensity,
           onDeleteClase: _deleteClase,
+          onCreateClase: _showClaseForm,
           confirmDestructiveActions: confirmDestructiveActions,
         ),
         desktop: MyDesktopBody(
@@ -90,6 +93,7 @@ class _HorarioPageState extends State<HorarioPage> {
           weekStart: weekStart,
           visualDensity: visualDensity,
           onDeleteClase: _deleteClase,
+          onCreateClase: _showClaseForm,
           confirmDestructiveActions: confirmDestructiveActions,
         ),
       ),
@@ -146,8 +150,49 @@ class _HorarioPageState extends State<HorarioPage> {
     if (!mounted) return;
 
     setState(() {});
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Clase eliminada')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Clase eliminada'),
+        action: SnackBarAction(
+          label: 'Deshacer',
+          onPressed: () {
+            _restoreClase(clase);
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _restoreClase(Clase clase) async {
+    try {
+      await controller.addClase(clase);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No se pudo recuperar la clase')),
+        );
+      }
+      return;
+    }
+
+    if (mounted) setState(() {});
+  }
+}
+
+class _LoadingStatus extends StatelessWidget {
+  final String message;
+
+  const _LoadingStatus({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const CircularProgressIndicator(),
+        const SizedBox(height: 12),
+        Text(message),
+      ],
+    );
   }
 }

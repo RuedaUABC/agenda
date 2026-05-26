@@ -74,9 +74,11 @@ class TareaRepositoryImpl implements TareaRepository {
 
     // Obtener preferencias globales (ej. recordatorios 1h antes, 1 día antes)
     final tiempos = prefs.getGlobalTareaNotificaciones();
+    final now = DateTime.now();
 
     for (var tiempo in tiempos) {
       final when = tarea.fecha.subtract(tiempo);
+      if (!when.isAfter(now)) continue;
 
       // Programar notificación
       await scheduler.scheduleNotification(

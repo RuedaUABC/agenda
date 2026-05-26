@@ -10,6 +10,7 @@ import 'widgets/tareas_filter_bar.dart';
 class MyMobileBody extends StatelessWidget {
   final TasksController controller;
   final VoidCallback onRefresh;
+  final VoidCallback? onCreateTask;
   final Map<String, List<Tarea>> clasificacion;
   final List<Tarea> papelera;
   final VisualDensityPreference visualDensityPreference;
@@ -19,6 +20,7 @@ class MyMobileBody extends StatelessWidget {
     super.key,
     required this.controller,
     required this.onRefresh,
+    this.onCreateTask,
     required this.clasificacion,
     this.papelera = const [],
     this.visualDensityPreference = VisualDensityPreference.comoda,
@@ -65,6 +67,7 @@ class MyMobileBody extends StatelessWidget {
       isTrashMode: isTrashMode,
       visualDensityPreference: visualDensityPreference,
       confirmDestructiveActions: confirmDestructiveActions,
+      onCreateTask: isTrashMode || isCompletedMode ? null : onCreateTask,
     );
   }
 }

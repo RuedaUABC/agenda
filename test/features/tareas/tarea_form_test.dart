@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:agenda/features/tareas/domain/tarea.dart';
 import 'package:agenda/features/tareas/presentation/taskcontroller.dart';
 import 'package:agenda/features/tareas/presentation/widgets/tarea_form.dart';
@@ -7,9 +9,13 @@ import 'package:flutter_test/flutter_test.dart';
 
 class _FakeTareaRepository implements TareaRepository {
   final List<Tarea> tareas = [];
+  Completer<void>? addCompleter;
 
   @override
   Future<void> addTarea(Tarea tarea) async {
+    if (addCompleter != null) {
+      await addCompleter!.future;
+    }
     tareas.add(tarea);
   }
 
@@ -261,5 +267,35 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(repo.tareas.single.titulo, 'Entrega');
+  });
+
+  testWidgets('TareaForm muestra estado Guardando mientras persiste', (
+    tester,
+  ) async {
+    final repo = _FakeTareaRepository()..addCompleter = Completer<void>();
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: TareaForm(
+            controller: _controller(repo),
+            now: () => DateTime(2026, 5, 13, 8),
+          ),
+        ),
+      ),
+    );
+
+    await tester.enterText(find.byType(TextFormField).at(0), 'Ensayo');
+    await tester.tap(find.text('Guardar'));
+    await tester.pump();
+
+    expect(find.text('Guardando tarea...'), findsOneWidget);
+    final button = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, 'Guardando tarea...'),
+    );
+    expect(button.onPressed, isNull);
+
+    repo.addCompleter!.complete();
+    await tester.pumpAndSettle();
   });
 }

@@ -16,6 +16,15 @@ esta organizado el proyecto y como trabajar con el.
   Material 3 inspirada en patrones de Google Calendar, Tasks, Keep y Gmail.
 - [`pruebas.md`](pruebas.md): resumen de cobertura y comandos para correr
   pruebas por modulo.
+- [`requerimientos/README.md`](requerimientos/README.md): indice de
+  requerimientos funcionales, no funcionales, reglas de negocio, casos de uso,
+  trazabilidad y versiones tabulares con atributos de calidad.
+- [`plan_verificacion_validacion.md`](plan_verificacion_validacion.md): plan
+  de verificacion y validacion del proyecto.
+- [`reporte_vyv_borrador.md`](reporte_vyv_borrador.md): borrador del reporte
+  de verificacion y validacion, con pendientes marcados.
+- [`auditoria_heuristicas_nielsen.md`](auditoria_heuristicas_nielsen.md):
+  auditoria de usabilidad basada en heuristicas de Nielsen.
 - [`red_green_refactor_eventos.md`](red_green_refactor_eventos.md): evidencia
   TDD para creacion, edicion, eliminacion y validaciones de eventos.
 - [`red_green_refactor_diseno_material3.md`](red_green_refactor_diseno_material3.md):
@@ -31,6 +40,9 @@ esta organizado el proyecto y como trabajar con el.
 - [`red_green_refactor_tareas_configuracion_robustez.md`](red_green_refactor_tareas_configuracion_robustez.md):
   evidencia TDD para borrado definitivo, filtros, preferencias,
   superposiciones y errores visibles.
+- [`red_green_refactor_recuperacion_confirmaciones.md`](red_green_refactor_recuperacion_confirmaciones.md):
+  evidencia TDD para recuperacion, confirmaciones reforzadas, feedback de
+  carga/guardado, estados vacios accionables y diagnostico de conflictos.
 
 ## Resumen Funcional
 
@@ -52,3 +64,5 @@ Agenda permite administrar:
   de configuracion.
 - Actualizar `docs/diseno_material3.md` cuando cambien lineamientos visuales,
   componentes compartidos o patrones responsive.
+- Actualizar `docs/requerimientos/README.md` y los documentos tabulares cuando
+  cambie el alcance o el formato de requerimientos.

@@ -12,6 +12,7 @@ class MyDesktopBody extends StatelessWidget {
   final VoidCallback onRefresh;
   final ValueChanged<Evento>? onEditEvento;
   final Future<void> Function(Evento evento)? onDeleteEvento;
+  final VoidCallback? onCreateEvento;
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
   final bool confirmDestructiveActions;
@@ -22,6 +23,7 @@ class MyDesktopBody extends StatelessWidget {
     required this.onRefresh,
     this.onEditEvento,
     this.onDeleteEvento,
+    this.onCreateEvento,
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
     this.confirmDestructiveActions = true,
@@ -84,6 +86,7 @@ class MyDesktopBody extends StatelessWidget {
                   onRefresh: onRefresh,
                   onEditEvento: onEditEvento,
                   onDeleteEvento: onDeleteEvento,
+                  onCreateEvento: onCreateEvento,
                   weekStart: weekStart,
                   visualDensity: visualDensity,
                   confirmDestructiveActions: confirmDestructiveActions,

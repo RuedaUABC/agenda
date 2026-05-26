@@ -13,6 +13,7 @@ class MyDesktopBody extends StatelessWidget {
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
   final Future<void> Function(Clase clase)? onDeleteClase;
+  final VoidCallback? onCreateClase;
   final bool confirmDestructiveActions;
 
   const MyDesktopBody({
@@ -22,6 +23,7 @@ class MyDesktopBody extends StatelessWidget {
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
     this.onDeleteClase,
+    this.onCreateClase,
     this.confirmDestructiveActions = true,
   });
 
@@ -86,6 +88,7 @@ class MyDesktopBody extends StatelessWidget {
                   weekStart: weekStart,
                   visualDensity: visualDensity,
                   onDeleteClase: onDeleteClase,
+                  onCreateClase: onCreateClase,
                   confirmDestructiveActions: confirmDestructiveActions,
                 ),
               ),

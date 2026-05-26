@@ -32,10 +32,16 @@ Ultima revision de requerimientos: 2026-05-26.
 - [`requerimientos_no_funcionales.md`](requerimientos_no_funcionales.md):
   restricciones de plataforma, arquitectura, datos, pruebas, usabilidad,
   robustez y notificaciones.
+- [`requerimientos_no_funcionales_formato.md`](requerimientos_no_funcionales_formato.md):
+  version tabular de los RNF con actor responsable, accion esperada, objeto de
+  calidad, condicion y resultado esperado.
 - [`casos_de_uso.md`](casos_de_uso.md): casos de uso principales, flujos
   alternativos y requisitos relacionados.
 - [`reglas_de_negocio.md`](reglas_de_negocio.md): reglas de validacion,
   clasificacion, recurrencia, calendario, configuracion y persistencia.
+- [`reglas_de_negocio_formato.md`](reglas_de_negocio_formato.md): version
+  tabular de reglas de negocio con actor responsable, accion regulada, objeto,
+  condicion, resultado esperado y verificacion.
 - [`trazabilidad.md`](trazabilidad.md): relacion entre requerimientos, casos de
   uso, reglas de negocio, pruebas y evidencia tecnica.
 
@@ -75,8 +81,8 @@ El alcance funcional documentado se concentra en:
 Cada requisito debe mantenerse con:
 
 - Identificador unico.
-- Actor, accion, objeto de accion, datos de entrada y resultado esperado cuando
-  se trate de un requerimiento funcional.
+- Actor o responsable, accion, objeto de accion o calidad, condicion/datos de
+  entrada y resultado esperado.
 - Prioridad.
 - Estado.
 - Descripcion clara del comportamiento esperado.

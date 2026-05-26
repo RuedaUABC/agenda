@@ -4,6 +4,10 @@ Este documento define reglas que gobiernan el comportamiento de Agenda. Las
 reglas deben mantenerse independientes de la tecnologia usada para
 implementarlas.
 
+Version tabular con actor responsable, accion regulada, objeto, condicion,
+resultado esperado y verificacion:
+[`reglas_de_negocio_formato.md`](reglas_de_negocio_formato.md).
+
 ## Tareas
 
 **RN-001. Titulo obligatorio de tarea**  

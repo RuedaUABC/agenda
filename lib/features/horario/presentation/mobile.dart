@@ -14,6 +14,7 @@ class MyMobileBody extends StatefulWidget {
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
   final Future<void> Function(Clase clase)? onDeleteClase;
+  final VoidCallback? onCreateClase;
   final bool confirmDestructiveActions;
 
   const MyMobileBody({
@@ -23,6 +24,7 @@ class MyMobileBody extends StatefulWidget {
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
     this.onDeleteClase,
+    this.onCreateClase,
     this.confirmDestructiveActions = true,
   });
 
@@ -121,6 +123,7 @@ class _MyMobileBodyState extends State<MyMobileBody> {
                   weekStart: widget.weekStart,
                   visualDensity: widget.visualDensity,
                   onDeleteClase: widget.onDeleteClase,
+                  onCreateClase: widget.onCreateClase,
                   confirmDestructiveActions: widget.confirmDestructiveActions,
                 ),
               ],

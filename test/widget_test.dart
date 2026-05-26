@@ -139,6 +139,45 @@ void main() {
     expect(refreshCount, 1);
   });
 
+  testWidgets('ListaTareasCategoria permite deshacer envio a papelera', (
+    tester,
+  ) async {
+    final repo = _FakeTareaRepository()..tareas.add(_tarea(titulo: 'Ensayo'));
+    final controller = TasksController(repository: repo);
+    await controller.loadTareas();
+    var refreshCount = 0;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ListaTareasCategoria(
+            controller: controller,
+            onRefresh: () => refreshCount++,
+            title: 'Pendientes',
+            tareas: controller.tareas,
+            confirmDestructiveActions: false,
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Ensayo'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Eliminar'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tarea enviada a papelera'), findsOneWidget);
+    expect(find.text('Deshacer'), findsOneWidget);
+    expect(controller.papelera.single.titulo, 'Ensayo');
+
+    await tester.tap(find.text('Deshacer'));
+    await tester.pumpAndSettle();
+
+    expect(controller.tareas.single.titulo, 'Ensayo');
+    expect(controller.papelera, isEmpty);
+    expect(refreshCount, 2);
+  });
+
   testWidgets('ListaTareasCategoria recupera una tarea desde papelera', (
     tester,
   ) async {

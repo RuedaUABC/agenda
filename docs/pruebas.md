@@ -8,7 +8,9 @@ documentacion ejecutable.
 
 Ubicacion principal: `test/features/tareas/taskcontroller_test.dart` y
 `test/widget_test.dart`. Las validaciones del formulario tambien se cubren en
-`test/features/tareas/tarea_form_test.dart`.
+`test/features/tareas/tarea_form_test.dart`. La programacion de recordatorios
+al guardar tareas se cubre en
+`test/features/tareas/tarea_repository_notifications_test.dart`.
 
 - Carga tareas activas y papelera desde el repositorio.
 - Crea, actualiza y envia tareas a papelera recargando el estado.
@@ -30,6 +32,12 @@ Ubicacion principal: `test/features/tareas/taskcontroller_test.dart` y
   identicos despues de normalizar textos; en edicion excluye el mismo id.
 - Permite completar, devolver a pendiente, editar, eliminar y recuperar tareas
   desde widgets.
+- Al enviar una tarea a papelera, muestra `SnackBarAction` con `Deshacer` y
+  restaura la tarea sin perder datos.
+- `TareaForm` muestra `Guardando tarea...` y bloquea taps duplicados mientras
+  persiste.
+- `TareaRepositoryImpl` omite recordatorios calculados para el presente o el
+  pasado, evitando que el scheduler nativo haga fallar el guardado de la tarea.
 
 ## Feature: Calendario
 
@@ -48,13 +56,17 @@ avisos se cubre en `test/features/calendario/calendario_repository_notifications
   evento puntual permitido, color por defecto y deteccion de superposiciones.
 - `EventoForm` valida el titulo, normaliza titulo y descripcion, crea eventos
   con horario por defecto, edita conservando el id y advierte superposiciones
-  antes de permitir guardar.
+  antes de permitir guardar identificando el evento y rango conflictivo.
+- `EventoForm` muestra `Guardando evento...` y bloquea taps duplicados mientras
+  persiste.
 - `CalendarioPage` abre el formulario desde el boton agregar y crea el evento
   mediante el controller.
 - El widget mobile lista eventos del dia seleccionado y muestra estado vacio.
 - El widget desktop lista eventos de varios dias y muestra estado vacio.
 - El widget desktop permite editar al tocar un evento y confirma eliminacion
   desde una accion visible.
+- `CalendarioPage` permite deshacer la eliminacion de eventos desde el
+  `SnackBar`.
 - La pantalla Calendario usa selector segmentado en mobile, panel secundario
   Material 3 en desktop, chips de fechas y estado vacio consistente.
 - El repositorio programa avisos nativos para eventos futuros, cancela al
@@ -78,11 +90,15 @@ Ubicacion principal: `test/features/horario/horario_controller_test.dart`,
 - Valida que `ClaseForm` requiera materia y cree clases semanales validas.
 - Aplica longitudes maximas para materia y aula.
 - Impide guardar clases que se solapan con otra clase del mismo dia y horario.
+  El mensaje identifica la clase y rango conflictivo junto a fecha y hora.
+- `ClaseForm` muestra `Guardando clase...` y bloquea taps duplicados mientras
+  persiste.
 - `ClaseListItem` renderiza materia, aula, rango horario e iconos Material 3.
 - `ClaseListItem` expone accion visible de eliminar y respeta la preferencia
   global de confirmaciones.
 - La pantalla Horario usa selector segmentado en mobile, panel secundario
   Material 3 en desktop, chips de dias y estado vacio consistente.
+- `HorarioPage` permite deshacer la eliminacion de clases desde el `SnackBar`.
 
 ## Feature: Configuracion
 
@@ -130,6 +146,9 @@ Cobertura avanzada:
   navegacion inmediata.
 - El borrado de datos locales emite notificacion para refrescar consumidores
   activos.
+- El borrado total de datos requiere escribir `BORRAR`, explica el alcance y
+  usa tratamiento visual destructivo.
+- Exportacion, importacion y borrado muestran estado de operacion visible.
 
 ## Feature: Diseno Material 3
 

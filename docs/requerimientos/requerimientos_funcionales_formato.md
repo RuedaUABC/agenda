@@ -72,14 +72,14 @@ necesario, prioritario, factible, trazable, modificable, conciso y entendible.
 | RF-045 | Usuario | Elegir | Vista inicial | Modulo inicial seleccionado | El sistema abre el modulo elegido al iniciar la aplicacion. | Baja | Implementado | Reiniciar y verificar modulo activo. |
 | RF-046 | Usuario | Elegir | Densidad visual | Opcion comoda o compacta | El sistema aplica densidad a listas de tareas, clases y eventos sin romper objetivos tactiles. | Baja | Implementado | Cambiar densidad y revisar listas. |
 | RF-047 | Usuario | Elegir | Inicio de semana | Lunes o domingo | El sistema aplica la preferencia a Calendario y Horario. | Baja | Implementado | Cambiar inicio y revisar vistas. |
-| RF-048 | Usuario | Configurar | Confirmaciones destructivas | Preferencia activada o desactivada | El sistema respeta la preferencia en acciones comunes y conserva defensa obligatoria en borrado masivo. | Media | Parcial | Desactivar confirmaciones y probar acciones cubiertas. |
-| RF-049 | Usuario | Gestionar | Datos locales | Accion exportar, importar o borrar datos | El sistema exporta, valida importaciones y borra datos solo con confirmacion reforzada verificable. | Baja | Parcial | Ejecutar gestion de datos locales. |
+| RF-048 | Usuario | Configurar | Confirmaciones destructivas | Preferencia activada o desactivada | El sistema respeta la preferencia en acciones comunes, ofrece recuperacion cuando aplica y conserva defensa obligatoria en borrado masivo. | Media | Implementado | Desactivar confirmaciones y probar acciones cubiertas. |
+| RF-049 | Usuario | Gestionar | Datos locales | Accion exportar, importar o borrar datos | El sistema exporta, valida importaciones y borra datos solo con confirmacion reforzada verificable. | Baja | Implementado | Ejecutar gestion de datos locales. |
 | RF-050 | Usuario | Consultar | Informacion de la aplicacion | Apertura de seccion Acerca de | El sistema muestra version, almacenamiento local y estado de notificaciones. | Baja | Implementado | Abrir seccion informativa. |
-| RF-051 | Usuario | Recuperar | Acciones reversibles | Accion reversible recien ejecutada | El sistema muestra `Deshacer` y restaura el estado anterior si el usuario lo solicita. | Alta | Sugerido | Ejecutar accion reversible y usar Deshacer. |
-| RF-052 | Sistema | Informar | Carga y guardado | Operacion asincrona en pantalla o formulario | El sistema muestra progreso, deshabilita acciones repetidas y evita doble ejecucion. | Media | Sugerido | Ejecutar operacion lenta o simulada. |
-| RF-053 | Sistema | Mostrar | Estados vacios accionables | Modulo o categoria sin datos | El sistema muestra mensaje especifico y accion directa cuando aplique. | Media | Sugerido | Abrir modulo sin elementos. |
-| RF-054 | Sistema | Diagnosticar | Validaciones complejas | Datos que causan conflicto o error de rango | El sistema explica la causa y sugiere una correccion cerca del campo afectado. | Alta | Sugerido | Provocar conflicto de clase o evento. |
-| RF-055 | Sistema | Orientar | Operaciones sensibles | Importacion, borrado total o estado de notificaciones | El sistema muestra ayuda contextual breve antes de modificar datos o permisos. | Baja | Sugerido | Revisar dialogs y secciones sensibles. |
+| RF-051 | Usuario | Recuperar | Acciones reversibles | Accion reversible recien ejecutada | El sistema muestra `Deshacer` y restaura el estado anterior si el usuario lo solicita. | Alta | Implementado | Ejecutar accion reversible y usar Deshacer. |
+| RF-052 | Sistema | Informar | Carga y guardado | Operacion asincrona en pantalla o formulario | El sistema muestra progreso, deshabilita acciones repetidas y evita doble ejecucion. | Media | Implementado | Ejecutar operacion lenta o simulada. |
+| RF-053 | Sistema | Mostrar | Estados vacios accionables | Modulo o categoria sin datos | El sistema muestra mensaje especifico y accion directa cuando aplique. | Media | Implementado | Abrir modulo sin elementos. |
+| RF-054 | Sistema | Diagnosticar | Validaciones complejas | Datos que causan conflicto o error de rango | El sistema explica la causa y sugiere una correccion cerca del campo afectado. | Alta | Implementado | Provocar conflicto de clase o evento. |
+| RF-055 | Sistema | Orientar | Operaciones sensibles | Importacion, borrado total o estado de notificaciones | El sistema muestra ayuda contextual breve antes de modificar datos o permisos. | Baja | Implementado | Revisar dialogs y secciones sensibles. |
 
 ## Validacion de Calidad del Formato
 
@@ -100,7 +100,7 @@ necesario, prioritario, factible, trazable, modificable, conciso y entendible.
 
 | ID | Motivo | Ajuste recomendado |
 | --- | --- | --- |
-| RF-048 | La confirmacion reforzada de borrado masivo debe ser verificable y no solo declarativa. | Definir el mecanismo exacto de confirmacion adicional. |
+| RF-048 | La confirmacion reforzada de borrado masivo debe ser verificable y no solo declarativa. | Implementado con palabra obligatoria `BORRAR`. |
 | RF-049 | La gestion de datos locales depende de validar claramente exportacion, importacion y borrado total. | Separar criterios de exportar, importar y borrar si crecen en alcance. |
-| RF-051 | El alcance de `Deshacer` debe limitarse a acciones tecnicamente reversibles. | Definir por entidad que acciones son reversibles. |
-| RF-054 | Los diagnosticos de conflicto deben indicar el dato causante cuando este disponible. | Mostrar entidad o rango horario involucrado. |
+| RF-051 | El alcance de `Deshacer` debe limitarse a acciones tecnicamente reversibles. | Implementado en tarea a papelera, clases y eventos eliminados. |
+| RF-054 | Los diagnosticos de conflicto deben indicar el dato causante cuando este disponible. | Implementado con entidad y rango horario involucrado. |

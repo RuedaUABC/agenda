@@ -13,6 +13,7 @@ class MyMobileBody extends StatefulWidget {
   final VoidCallback onRefresh;
   final ValueChanged<Evento>? onEditEvento;
   final Future<void> Function(Evento evento)? onDeleteEvento;
+  final VoidCallback? onCreateEvento;
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
   final bool confirmDestructiveActions;
@@ -23,6 +24,7 @@ class MyMobileBody extends StatefulWidget {
     required this.onRefresh,
     this.onEditEvento,
     this.onDeleteEvento,
+    this.onCreateEvento,
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
     this.confirmDestructiveActions = true,
@@ -127,6 +129,7 @@ class _MyMobileBodyState extends State<MyMobileBody> {
                     onRefresh: widget.onRefresh,
                     onEditEvento: widget.onEditEvento,
                     onDeleteEvento: widget.onDeleteEvento,
+                    onCreateEvento: widget.onCreateEvento,
                     weekStart: widget.weekStart,
                     visualDensity: widget.visualDensity,
                     confirmDestructiveActions: widget.confirmDestructiveActions,

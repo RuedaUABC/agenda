@@ -589,4 +589,49 @@ void main() {
     expect(store.cleared, isTrue);
     expect(notifications, 1);
   });
+
+  testWidgets(
+    'borrado total requiere escribir BORRAR y usa tratamiento destructivo',
+    (tester) async {
+      final store = _FakeSettingsDataStore();
+      final settings = await _settingsController(dataStore: store);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(body: AdvancedSettingsWidget(controller: settings)),
+        ),
+      );
+
+      await tester.ensureVisible(find.text('Borrar todos los datos'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Borrar todos los datos'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Confirmacion reforzada'), findsOneWidget);
+      expect(find.textContaining('tareas, clases y eventos'), findsOneWidget);
+      expect(find.textContaining('Escribe BORRAR'), findsOneWidget);
+
+      final deleteButton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Borrar datos'),
+      );
+      expect(deleteButton.onPressed, isNull);
+
+      await tester.enterText(
+        find.byKey(const Key('delete-all-confirmation-field')),
+        'BORRAR',
+      );
+      await tester.pump();
+
+      final enabledButton = tester.widget<FilledButton>(
+        find.widgetWithText(FilledButton, 'Borrar datos'),
+      );
+      expect(enabledButton.onPressed, isNotNull);
+
+      await tester.tap(find.widgetWithText(FilledButton, 'Borrar datos'));
+      await tester.pumpAndSettle();
+
+      expect(store.cleared, isTrue);
+      expect(find.text('Datos locales eliminados'), findsOneWidget);
+    },
+  );
 }

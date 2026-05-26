@@ -477,7 +477,7 @@ Criterios de aceptacion:
   aplicacion en calendario y horario.
 
 **RF-048. Confirmaciones configurables para acciones destructivas**
-Prioridad: Media. Estado: Parcial.
+Prioridad: Media. Estado: Implementado.
 El usuario debe poder activar o desactivar confirmaciones antes de acciones
 destructivas.
 
@@ -497,13 +497,13 @@ Criterios de aceptacion:
 - Desactivar confirmaciones comunes no debe eliminar mecanismos de recuperacion
   cuando la accion sea reversible.
 - La preferencia debe persistirse localmente.
-- Implementado parcialmente: preferencia, switch Material 3, persistencia local,
-  eliminacion comun de tareas, clases y eventos sin dialogo cuando se desactiva
-  y confirmacion obligatoria para borrado masivo. Pendiente: reforzar realmente
-  el borrado masivo con una defensa explicita adicional.
+- Implementado: preferencia, switch Material 3, persistencia local,
+  eliminacion comun de tareas, clases y eventos sin dialogo cuando se desactiva,
+  recuperacion con `Deshacer` cuando la accion es reversible y confirmacion
+  obligatoria reforzada para borrado masivo mediante la palabra `BORRAR`.
 
 **RF-049. Gestion de datos locales**
-Prioridad: Baja. Estado: Parcial.
+Prioridad: Baja. Estado: Implementado.
 El usuario debe poder gestionar sus datos locales desde Ajustes.
 
 Acciones propuestas:
@@ -525,11 +525,11 @@ Criterios de aceptacion:
 - La accion destructiva de borrado total debe usar tratamiento visual de error
   del `ColorScheme`.
 - Las acciones deben informar exito o error con mensajes visibles.
-- Implementado parcialmente: generacion/validacion de respaldo JSON desde controller,
+- Implementado: generacion/validacion de respaldo JSON desde controller,
   exportacion de datos reales, importacion validada al store local, selector y
-  escritura de archivo nativo mediante `file_selector`, seccion Material 3 y
-  borrado completo de datos locales con confirmacion basica. Pendiente:
-  confirmacion reforzada verificable.
+  escritura de archivo nativo mediante `file_selector`, seccion Material 3,
+  indicadores de operacion, mensajes visibles y borrado completo de datos
+  locales con confirmacion reforzada verificable y tratamiento destructivo.
 
 **RF-050. Informacion de la aplicacion**
 Prioridad: Baja. Estado: Implementado.
@@ -551,7 +551,7 @@ Criterios de aceptacion:
 ## Usabilidad y recuperacion
 
 **RF-051. Recuperacion de acciones reversibles**
-Prioridad: Alta. Estado: Sugerido.
+Prioridad: Alta. Estado: Implementado.
 El sistema debe permitir recuperar acciones destructivas o de cambio de estado
 cuando tecnicamente sean reversibles.
 
@@ -574,7 +574,7 @@ Criterios de aceptacion:
   eliminado" o "Tarea completada".
 
 **RF-052. Estados de carga y guardado informativos**
-Prioridad: Media. Estado: Sugerido.
+Prioridad: Media. Estado: Implementado.
 El sistema debe informar claramente cuando una pantalla, formulario o accion
 esta cargando o guardando datos.
 
@@ -588,7 +588,7 @@ Criterios de aceptacion:
 - La interfaz evita ejecutar dos veces la misma accion por taps repetidos.
 
 **RF-053. Estados vacios accionables**
-Prioridad: Media. Estado: Sugerido.
+Prioridad: Media. Estado: Implementado.
 El sistema debe mostrar estados vacios especificos para cada modulo o categoria
 y ofrecer una accion directa cuando exista una siguiente accion natural.
 
@@ -602,7 +602,7 @@ Criterios de aceptacion:
   genericos en todas las secciones.
 
 **RF-054. Diagnostico de conflictos y validaciones complejas**
-Prioridad: Alta. Estado: Sugerido.
+Prioridad: Alta. Estado: Implementado.
 Cuando una validacion depende de datos existentes, el sistema debe ayudar al
 usuario a entender la causa del problema y la forma de corregirlo.
 
@@ -618,7 +618,7 @@ Criterios de aceptacion:
   accion correctiva.
 
 **RF-055. Ayuda contextual para operaciones sensibles**
-Prioridad: Baja. Estado: Sugerido.
+Prioridad: Baja. Estado: Implementado.
 El sistema debe incluir ayuda contextual breve en operaciones que puedan afectar
 datos, permisos o configuracion dificil de recuperar.
 

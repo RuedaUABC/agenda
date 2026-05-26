@@ -13,6 +13,7 @@ class HorarioDayPanel extends StatelessWidget {
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
   final Future<void> Function(Clase clase)? onDeleteClase;
+  final VoidCallback? onCreateClase;
   final bool confirmDestructiveActions;
 
   const HorarioDayPanel({
@@ -22,6 +23,7 @@ class HorarioDayPanel extends StatelessWidget {
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
     this.onDeleteClase,
+    this.onCreateClase,
     this.confirmDestructiveActions = true,
   });
 
@@ -57,11 +59,18 @@ class HorarioDayPanel extends StatelessWidget {
             ),
             Expanded(
               child: clases.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: AgendaEmptyState(
                         icon: Icons.event_busy_outlined,
                         title: 'No hay clases este dia',
                         description: 'Selecciona otro dia o agrega una clase.',
+                        action: onCreateClase == null
+                            ? null
+                            : FilledButton.icon(
+                                onPressed: onCreateClase,
+                                icon: const Icon(Icons.add),
+                                label: const Text('Agregar clase'),
+                              ),
                       ),
                     )
                   : ListView.separated(

@@ -12,6 +12,7 @@ class CalendarioDayPanel extends StatelessWidget {
   final VoidCallback onRefresh;
   final ValueChanged<Evento>? onEditEvento;
   final Future<void> Function(Evento evento)? onDeleteEvento;
+  final VoidCallback? onCreateEvento;
   final WeekStartPreference weekStart;
   final VisualDensity visualDensity;
   final bool confirmDestructiveActions;
@@ -22,6 +23,7 @@ class CalendarioDayPanel extends StatelessWidget {
     required this.onRefresh,
     this.onEditEvento,
     this.onDeleteEvento,
+    this.onCreateEvento,
     this.weekStart = WeekStartPreference.lunes,
     this.visualDensity = VisualDensity.standard,
     this.confirmDestructiveActions = true,
@@ -59,11 +61,18 @@ class CalendarioDayPanel extends StatelessWidget {
             ),
             Expanded(
               child: eventos.isEmpty
-                  ? const Center(
+                  ? Center(
                       child: AgendaEmptyState(
                         icon: Icons.event_busy_outlined,
                         title: 'No hay eventos este dia',
                         description: 'Selecciona otra fecha o crea un evento.',
+                        action: onCreateEvento == null
+                            ? null
+                            : FilledButton.icon(
+                                onPressed: onCreateEvento,
+                                icon: const Icon(Icons.add),
+                                label: const Text('Crear evento'),
+                              ),
                       ),
                     )
                   : ListView.separated(
