@@ -7,6 +7,7 @@
 | 1.0 | 2026-05-24 | Version inicial del Plan de Verificacion y Validacion de Agenda. | Equipo de V&V |
 | 1.1 | 2026-05-28 | Actualizacion con pruebas de interfaz de usuario, usabilidad, metricas UI, Pareto y resultados actuales de `flutter analyze`/`flutter test`. | Equipo de V&V |
 | 1.2 | 2026-05-28 | Actualizacion con resultados del reporte integrado de pruebas UI/UX ejecutado el 2026-05-27. | Equipo de V&V |
+| 1.3 | 2026-05-28 | Se agrega dispositivo fisico de aceptacion, valoracion de calidad, muestra por fase, comparacion TDD vs NO TDD y reflexion final de V&V. | Equipo de V&V |
 
 ## 1. Proposito
 
@@ -384,8 +385,9 @@ Entregables:
 - Acta de aceptacion o lista de acciones pendientes.
 
 Estado actual: las pruebas UI/UX fisicas fueron ejecutadas el 2026-05-27 con
-tres usuarios reales, Juan, Ariel y Marcos, y evaluacion tecnica del equipo de
-desarrollo sobre el port de escritorio. El reporte integrado registra 15 casos
+tres usuarios reales, Juan, Ariel y Marcos, usando como dispositivo fisico un
+Samsung Galaxy S23+, ademas de evaluacion tecnica del equipo de desarrollo
+sobre el port de escritorio. El reporte integrado registra 15 casos
 ejecutados, todos con estado final exitoso o exitoso con alerta, y 10 hallazgos
 colectivos de interfaz/usabilidad que quedan como acciones de remediacion.
 
@@ -551,8 +553,7 @@ planeacion, construccion, verificacion, validacion y cierre.
 - Ambiente Web o movil para validar responsividad y navegacion.
 - Anchos de referencia para UI responsiva documentados en pruebas: 390 px
   (movil), 800 px (tablet) y 1200 px (escritorio).
-- Dispositivo fisico, emulador o navegador final de aceptacion: pendiente de
-  registrar cuando se ejecuten sesiones con usuarios reales.
+- Dispositivo fisico de aceptacion: Samsung Galaxy S23+.
 
 ## 10. Gestion de Configuracion y Control de Cambios
 
@@ -766,6 +767,27 @@ Resumen de salida:
   fisicas presenciales, tiempos de ejecucion, usuarios reales y hallazgos de
   interfaz/usabilidad.
 
+#### 12.1.1. Estrategia para valorar el nivel de calidad logrado
+
+El nivel de calidad del proyecto se valora combinando evidencia automatizada,
+revision documental, trazabilidad, resultados UI/UX, defectos abiertos y
+criticidad de las brechas. Para evitar una conclusion subjetiva, se usa la
+siguiente escala:
+
+| Nivel | Criterio de decision |
+| --- | --- |
+| Excelente | `flutter analyze` sin issues, `flutter test` con 100% de pruebas aprobadas, todos los RF criticos cubiertos, sin defectos criticos/altos abiertos y hallazgos UI/UX solo menores. |
+| Bueno | Suite automatizada aprobada, RF criticos cubiertos, defectos abiertos de severidad media/baja con mitigacion documentada y trazabilidad actualizada. |
+| Aceptable | Funcionalidad principal operable, pero existen brechas parciales o defectos medios que no bloquean el uso academico del sistema. |
+| No aceptable | Fallas en pruebas criticas, defectos altos sin mitigacion, perdida de datos, requisitos criticos sin evidencia o ausencia de trazabilidad. |
+
+Aplicacion al proyecto Agenda: el nivel logrado se clasifica como **Bueno**.
+La justificacion es que `flutter analyze` no reporta issues, `flutter test`
+mantiene 138 pruebas aprobadas y 0 fallidas, los RF principales tienen
+trazabilidad y cobertura, y no hay defectos criticos abiertos. No se clasifica
+como Excelente porque permanecen hallazgos UI/UX abiertos, accesibilidad solo
+basica y acciones de remediacion pendientes tras las pruebas con usuarios.
+
 ### 12.2. Reportes
 
 Reportes esperados:
@@ -817,11 +839,14 @@ Cada reporte debe indicar:
 Al finalizar las actividades de V&V, el plan y sus resultados deben aprobarse por
 los responsables definidos.
 
-| Rol | Nombre | Firma | Fecha |
-| --- | --- | --- | --- |
-| Responsable de V&V | Moreno Lopez Yamir Exel | [PENDIENTE] | [PENDIENTE] |
-| Responsable de QA | Alan Alexis Galvez Necoechea | [PENDIENTE] | [PENDIENTE] |
-| Jefe de proyecto / patrocinador | Luis Ernesto Mellín Pineda | [PENDIENTE] | [PENDIENTE] |
+Para esta entrega se omiten firmas manuscritas. La aprobacion queda registrada
+por rol y nombre dentro del documento.
+
+| Rol | Nombre | Estado |
+| --- | --- | --- |
+| Responsable de V&V | Moreno Lopez Yamir Exel | Revisado para entrega |
+| Responsable de QA | Alan Alexis Galvez Necoechea | Revisado para entrega |
+| Jefe de proyecto / patrocinador | Luis Ernesto Mellín Pineda | Pendiente de aceptacion final |
 
 ## Anexo A. Requisitos Funcionales Integrados
 
@@ -954,10 +979,24 @@ Seguimiento de cobertura:
 | Accesibilidad | Cobertura basica; falta auditoria WCAG completa. | TC-UI-005 |
 | Usabilidad | Sesiones con usuarios reales ejecutadas; quedan acciones de remediacion UI/UX y eventual re-prueba. | TC-US-001, TC-US-002 |
 
+### Anexo C.1. Ejecucion del plan por fase y muestra evaluada
+
+Para ejecutar el plan de V&V se tomo una muestra representativa de artefactos
+por fase. En la fase de codigo fuente se considero la cobertura completa de la
+suite automatizada disponible.
+
+| Fase | Muestra de artefactos evaluados | Tecnicas aplicadas | Defectos/hallazgos encontrados | Corregidos o estado |
+| --- | --- | --- | --- | --- |
+| Requisitos | 55 RF, 31 RNF, casos de uso, reglas de negocio y matriz de trazabilidad. | Inspeccion documental, revision de trazabilidad y verificacion de testabilidad. | Requisitos parciales o sugeridos que requerian evidencia adicional, especialmente RNF-008, RNF-017 y RNF-030. | Parciales documentados; no se declaran como completos hasta tener evidencia. |
+| Analisis | Casos de uso de tareas, horario, calendario, configuracion y reglas de negocio asociadas. | Walkthrough de flujos principales y alternativos. | Riesgo de expectativas no capturadas en aceptacion y satisfaccion de usuario. | Mitigado con pruebas UI/UX con Juan, Ariel y Marcos; falta encuesta formal SUS/PSSUQ si se requiere puntaje numerico. |
+| Diseno UI/arquitectura | Arquitectura feature-first, Material 3, navegacion adaptativa y pantallas principales. | Revision de arquitectura, revision visual, pruebas de widgets y heuristicas de usabilidad. | 10 hallazgos UI/UX: botones, hover, layout desktop, selector de hora, calendario, horario y refresco visual tras borrado. | Hallazgos documentados con acciones correctivas; remediacion pendiente para cierre final. |
+| Implementacion/codigo fuente | Todo `lib/` cubierto por analisis estatico y toda la suite `test/`. | `flutter analyze`, `flutter test`, pruebas unitarias, widgets, controllers, serializacion, persistencia y regresion. | 0 issues de analisis y 0 pruebas fallidas en la ejecucion final. | 138 pruebas aprobadas; codigo aceptado para el alcance actual. |
+| Integracion y sistema | Flujos entre tareas, horario, calendario, configuracion, persistencia SQLite y preferencias. | Pruebas por feature, pruebas de integracion funcional, migracion SQLite y smoke test FFI. | Riesgos previos en scheduler, confirmaciones, archivos nativos, migracion, FFI y duplicados de tareas. | Cerrados con pruebas automatizadas DEF-001 a DEF-006. |
+| Aceptacion y operacion piloto | 15 casos UI/UX ejecutados con usuarios reales en Samsung Galaxy S23+. | Pruebas presenciales, cronometraje, observacion, retroalimentacion cualitativa y Pareto de hallazgos. | 15 casos exitosos o exitosos con alerta; 10 hallazgos colectivos de interfaz/usabilidad. | Aceptacion funcional con hallazgos; requiere remediacion UI/UX y eventual re-prueba. |
+
 ## Anexo D. Evidencia TDD y Mejoras Integradas
 
-La evidencia Red-Green-Refactor usada por este SVVP no se limita a citar
-archivos; su contenido clave es:
+Resumen ejecutivo de los ciclos Red-Green-Refactor documentados:
 
 | Ciclo | Alcance extraido | Resultado importante |
 | --- | --- | --- |
@@ -968,6 +1007,222 @@ archivos; su contenido clave es:
 | Horario Material 3 | Vista semanal/dia, panel diario, tarjetas de clase, chips y estado vacio. | Pantalla Horario validada con widgets y componentes responsive. |
 | Calendario Material 3 | Vista mensual/dia, panel diario, tarjetas de evento, chips y estado vacio. | Pantalla Calendario validada con comportamiento responsive. |
 | Ajustes avanzados Material 3 | RF-043 a RF-055: aviso de eventos, tema, vista inicial, densidad, inicio de semana, confirmaciones, gestion de datos, informacion, recuperacion, estados de carga, estados vacios, diagnostico y ayuda contextual. | RF-043 a RF-055 completos; reporte UI/UX agrega hallazgo de refresco visual tras borrado local. |
+
+### Anexo D.1. Citas legibles de evidencia Red-Green-Refactor
+
+Para que la evidencia no quede solo como mencion de archivos, se integran
+citas legibles de cada bitacora TDD. Cada ciclo se presenta como texto, con
+las fases Red, Green y Refactor/verificacion separadas para facilitar su
+lectura.
+
+#### Ciclo: Eventos de Calendario
+
+##### Red
+
+En `docs/red_green_refactor_eventos.md` se registra que se agregaron pruebas
+para titulo obligatorio, longitud maxima, rango de fechas, evento puntual,
+normalizacion, color por defecto, superposiciones, creacion, edicion y
+eliminacion con confirmacion. La fase Red esperaba fallas por ausencia de
+`EventoValidator`, `EventoForm`, callbacks y color por defecto.
+
+##### Green
+
+La fase Green implemento `Evento.defaultColor`, `EventoValidator`,
+`EventoForm`, `EventoListItem` y la conexion de `CalendarioPage` con
+`addEvento`, `updateEvento` y `deleteEvento`.
+
+##### Refactor
+
+La bitacora indica que las reglas de negocio quedaron fuera del widget, el
+formulario no conoce DAO ni repositorio y `CalendarioPage` acepta controller
+inyectado. Resultado: suite de calendario en verde.
+
+#### Ciclo: Validaciones de Tareas y Clases
+
+##### Red
+
+En `docs/red_green_refactor_validaciones.md` se documenta que las pruebas nuevas
+rechazaban titulos solo con espacios, textos fuera de longitud, fechas pasadas,
+duplicados exactos y clases solapadas. Red esperaba fallas por parametros
+`now` y `clases` ausentes.
+
+##### Green
+
+Green agrego reloj inyectable en `TareaForm`, validaciones de longitud,
+`trim()`, confirmacion para fecha pasada, bloqueo de duplicados y validacion de
+solapamientos en `ClaseForm`.
+
+##### Refactor
+
+La bitacora conserva la decision de mantener las reglas cerca de los formularios
+porque son validaciones de captura. Resultado: pruebas focalizadas en verde.
+
+#### Ciclo: Tareas, Configuracion y Robustez
+
+##### Red
+
+En `docs/red_green_refactor_tareas_configuracion_robustez.md` se agregaron
+pruebas para borrado definitivo, busqueda, filtros, error visible de
+persistencia, superposicion como advertencia y preferencias invalidas. Red
+esperaba fallas por metodos inexistentes y preferencias permisivas.
+
+##### Green
+
+Green agrego `deleteTareaDefinitiva`, `lastError`, busqueda/filtros, snackbar
+ante fallas, advertencia de superposicion y validacion centralizada de
+preferencias.
+
+##### Refactor
+
+La bitacora separa borrado definitivo de eliminacion logica, deja filtros en
+`TasksController` y ubica la validacion de preferencias en `PreferencesHelper`.
+Resultado: suite completa en verde.
+
+#### Ciclo: Diseno Material 3
+
+##### Red
+
+En `docs/red_green_refactor_diseno_material3.md` se registra una baseline con
+77 pruebas y 12 issues de analisis. Red agrego pruebas para tema claro/oscuro,
+navegacion adaptativa, filtros Material 3, formularios, color picker y ajustes.
+
+##### Green
+
+Green incorporo `AppTheme`, `AgendaNavigation`, `NavigationBar`,
+`NavigationRail`, estados vacios, botones de fecha/hora, color picker accesible
+y `DropdownMenu` en ajustes.
+
+##### Refactor
+
+Refactor removio `google_nav_bar`, agrego `path`, reemplazo `print` por
+`debugPrint`, elimino imports no usados y actualizo pruebas antiguas. Resultado
+final: `flutter analyze` sin issues y `flutter test` con 90 pruebas.
+
+#### Ciclo: Horario Material 3
+
+##### Red
+
+En `docs/red_green_refactor_horario_material3.md` Red agrego pruebas para
+`SegmentedButton`, panel diario, contador, estado vacio, panel desktop y
+`ClaseListItem` con metadatos Material 3.
+
+##### Green
+
+Green migro mobile de `TabBar` a `SegmentedButton`, agrego `HorarioDayPanel`,
+panel lateral desktop y `ClaseListItem` como `Card.filled`.
+
+##### Refactor
+
+Refactor centralizo la lista diaria en `HorarioDayPanel`, corrigio textos
+visibles y conservo `ValueNotifier` sin tocar persistencia. Resultado final:
+`flutter analyze` sin issues y `flutter test` con 94 pruebas.
+
+#### Ciclo: Calendario Material 3
+
+##### Red
+
+En `docs/red_green_refactor_calendario_material3.md` Red agrego pruebas para
+alternar `Mes` y `Dia`, panel diario, accion `Hoy`, chips de fechas y metadatos
+de eventos.
+
+##### Green
+
+Green migro mobile a `SegmentedButton`, agrego `CalendarioDayPanel`, panel
+desktop Material 3 y `EventoListItem` con barra de color, icono, horario y
+descripcion.
+
+##### Refactor
+
+Refactor centralizo la lista diaria, evito overflow con `Expanded` y mantuvo la
+seleccion por `ValueNotifier`. Resultado final: `flutter analyze` sin issues y
+`flutter test` con 98 pruebas.
+
+#### Ciclo: Ajustes avanzados Material 3
+
+##### Red
+
+En `docs/red_green_refactor_ajustes_avanzados.md` Red registro fallas por
+enums, propiedades y metodos faltantes en `SettingsController`, ausencia de
+`AdvancedSettingsWidget` y falta de aviso global de eventos. Un segundo Red
+cubrio efectos reales de ajustes en calendario, horario, listas, confirmaciones
+y datos locales.
+
+##### Green
+
+Green implemento persistencia de evento, tema, vista inicial, densidad, inicio
+de semana, confirmaciones, respaldo JSON, `AdvancedSettingsWidget`, aplicacion
+de preferencias en pantallas y borrado/importacion/exportacion de datos reales.
+
+##### Refactor
+
+Refactor dejo la UI desplazable, compartio estructura de tiles y agrego
+aplicacion en tiempo real con `ListenableBuilder`. Resultado final:
+`flutter test` en verde con 112 pruebas y `flutter analyze` sin issues.
+
+#### Ciclo: Recuperacion, confirmaciones y feedback
+
+##### Red
+
+En `docs/red_green_refactor_recuperacion_confirmaciones.md` Red exigio escribir
+`BORRAR`, mostrar `Deshacer`, bloquear taps duplicados durante guardado y
+nombrar conflictos de clase/evento. Tambien se agrego una prueba posterior para
+recordatorios de tareas no futuros.
+
+##### Green
+
+Green reforzo el borrado total, agrego `SnackBarAction`, estados
+`Guardando...`, conflictos explicativos, estados vacios accionables y omision
+de recordatorios vencidos.
+
+##### Refactor
+
+La verificacion focalizada termino con `All tests passed`; la correccion
+posterior confirma que la tarea se guarda aunque el recordatorio calculado
+quede en presente o pasado.
+
+### Anexo D.2. Evaluacion del nivel de calidad logrado con TDD
+
+El uso de TDD se valoro a partir de la evidencia Red-Green-Refactor, el numero
+de defectos cerrados mediante pruebas y la estabilidad de regresion.
+
+| Aspecto | Resultado observado |
+| --- | --- |
+| Cobertura preventiva | Las reglas criticas de tareas, clases, eventos, configuracion, persistencia y Material 3 quedaron convertidas en pruebas ejecutables. |
+| Correccion guiada por pruebas | Defectos como duplicados de tareas, confirmaciones, scheduler de eventos, migracion SQLite y soporte FFI se cerraron con pruebas de regresion. |
+| Regresion | La suite completa se mantiene en verde con 138 pruebas aprobadas y 0 fallidas. |
+| Calidad lograda | TDD aporto mayor confianza en reglas de negocio, validaciones, persistencia y comportamiento de widgets. |
+
+Comparacion TDD vs NO TDD en el proyecto:
+
+| Criterio | Funcionalidades con TDD/evidencia Red-Green-Refactor | Funcionalidades sin TDD formal o con validacion posterior |
+| --- | --- | --- |
+| Momento de deteccion | Los defectos se detectaron durante el desarrollo o al ejecutar regresion. | Los hallazgos aparecieron principalmente en revision manual o pruebas con usuarios. |
+| Tipo de calidad fortalecida | Correctitud funcional, reglas de negocio, persistencia, validaciones y regresion automatizada. | Usabilidad, aprendibilidad, ergonomia visual y compatibilidad percibida. |
+| Evidencia | Pruebas unitarias, widgets, controllers, serializacion, migracion y smoke tests. | Reporte UI/UX, observacion cualitativa, Pareto y acciones correctivas. |
+| Efectividad | Alta para evitar regresiones logicas y asegurar comportamiento repetible. | Media para descubrir problemas humanos de interaccion que las pruebas automatizadas no detectan solas. |
+| Conclusion | TDD fue mas efectivo para calidad interna y funcional. | La validacion no TDD fue necesaria para calidad externa y experiencia de usuario. |
+
+La comparacion muestra que TDD y V&V manual no compiten: se complementan. TDD
+reduce defectos funcionales repetibles, mientras que las pruebas con usuarios
+descubren problemas de interfaz, claridad y flujo que no siempre aparecen en
+pruebas automatizadas.
+
+### Anexo D.3. Reflexion sobre V&V y calidad del software
+
+Aplicar correctamente V&V mejora significativamente la calidad del software
+porque obliga a revisar el producto desde varias perspectivas: requisitos,
+diseno, codigo, pruebas, usuario y operacion. En Agenda, la V&V permitio
+mantener trazabilidad entre lo solicitado y lo implementado, cerrar defectos
+funcionales con pruebas automatizadas, detectar riesgos de persistencia y
+plataforma, y descubrir hallazgos de usabilidad que no eran visibles solo desde
+el codigo.
+
+La principal leccion es que la calidad no se logra unicamente al final con una
+ejecucion de pruebas. Se construye durante todo el ciclo: requisitos claros,
+criterios verificables, TDD para reglas criticas, analisis estatico, regresion,
+control de cambios, gestion de defectos y validacion con usuarios reales. Por
+eso, la aplicacion sistematica de V&V reduce retrabajo, evita sobredeclarar
+funcionalidades y aumenta la confianza en la entrega.
 
 ## Anexo E. Arquitectura y Flujo de Datos Integrados
 

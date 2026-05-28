@@ -140,9 +140,9 @@ Resultado de la suite completa:
 La ejecucion automatizada cubre pruebas unitarias, controllers, widgets,
 formularios, persistencia local, configuracion, navegacion adaptativa y
 componentes Material 3. Las pruebas fisicas de UI/UX fueron ejecutadas el
-2026-05-27 con Juan, Ariel y Marcos; el reporte consolidado registra 15 casos
-exitosos o exitosos con alerta, promedio global de 17.94 s, 10 hallazgos
-colectivos y 6 acciones correctivas.
+2026-05-27 con Juan, Ariel y Marcos en un Samsung Galaxy S23+; el reporte
+consolidado registra 15 casos exitosos o exitosos con alerta, promedio global
+de 17.94 s, 10 hallazgos colectivos y 6 acciones correctivas.
 
 Comandos recomendados para repetir la ejecucion:
 

@@ -100,7 +100,10 @@ Ariel y Marcos, registradas en `Reporte de Pruebas de Interfaz y Usabilidad.pdf`
 
 ### Functional requirements
 
-El proyecto cuenta con 55 requisitos funcionales documentados. La cobertura
+El proyecto cuenta con 55 requisitos funcionales documentados en formato
+estructurado en `docs/requerimientos/requerimientos_funcionales_formato.md`.
+Cada RF se expresa con actor, accion, objeto de accion, datos de entrada,
+resultado esperado, prioridad, estado y forma de verificacion. La cobertura
 principal por modulo es:
 
 - RF-001 a RF-002: navegacion principal y conservacion de estado entre modulos.
@@ -119,10 +122,10 @@ principal por modulo es:
 - RF-051 a RF-055: recuperacion de acciones, estados de carga, estados vacios,
   diagnostico de validaciones complejas y ayuda contextual.
 
-La mayoria de los requisitos se encuentran en estado Implementado. RF-043 se
-documenta como implementado con cobertura automatizada para scheduler nativo de
-eventos. RF-048 y RF-049 estan implementados con confirmaciones, archivo nativo,
-importacion/exportacion y borrado reforzado mediante `BORRAR`.
+Los 55 RF del formato estructurado se encuentran en estado Implementado. RF-043
+se documenta como implementado con cobertura automatizada para scheduler nativo
+de eventos. RF-048 y RF-049 estan implementados con confirmaciones, archivo
+nativo, importacion/exportacion y borrado reforzado mediante `BORRAR`.
 
 ### Non-functional requirements
 
@@ -145,12 +148,29 @@ los mas relevantes:
 - Manejo visible de errores de persistencia.
 - Scheduler de notificaciones encapsulado y reemplazable.
 
+La verificacion documental y tecnica realizada el 2026-05-28 indica que la
+mayoria de los RNF estan cubiertos para el alcance actual. De 31 RNF
+documentados en `docs/requerimientos/requerimientos_no_funcionales_formato.md`,
+28 se consideran implementados, vigentes con evidencia suficiente o cumplidos
+para el producto actual. Tres RNF requieren cierre adicional o evidencia mas
+fuerte:
+
+| RNF | Estado actualizado | Justificacion |
+| --- | --- | --- |
+| RNF-008 | Parcial | La UI opera principalmente mediante controllers y repositorios, pero algunas pantallas aun instancian DAOs o repositorios concretos dentro de `presentation/`. |
+| RNF-017 | Parcial | Hay validaciones en formularios y dominio de eventos, pero falta reforzar integridad en todas las rutas de dominio/persistencia. |
+| RNF-030 | Parcial | Existe layout responsivo y densidad visual, pero falta evidencia especifica con anchos estrechos y texto escalado. |
+
+RNF-021 se actualiza como implementado, ya que existen pruebas automatizadas
+para clasificacion de tareas, estadisticas semanales, recurrencia semanal,
+solapamientos de horario/eventos y seleccion de fecha.
+
 ### Requirement quality evaluation
 
-Los requisitos funcionales se encuentran identificados con ID unico, prioridad,
-estado, descripcion y criterios de aceptacion cuando aplica. La matriz de
-trazabilidad relaciona requisitos con casos de uso, reglas de negocio, pruebas y
-evidencia tecnica.
+Los requisitos funcionales y no funcionales se encuentran identificados con ID
+unico, prioridad, estado, resultado esperado y verificacion en los documentos
+con formato estructurado. La matriz de trazabilidad relaciona requisitos con
+casos de uso, reglas de negocio, pruebas y evidencia tecnica.
 
 Evaluacion general:
 
@@ -171,10 +191,10 @@ widgets, pruebas unitarias, pruebas de controllers, pruebas de serializacion y
 evidencia TDD. Los casos de prueba documentan precondiciones, pasos, datos,
 resultado esperado, resultado actual, estado, requisito asociado y prioridad.
 
-[PENDIENTE] Ejecutar validacion con usuarios reales. Para cumplir la plantilla,
-se debe aplicar PSSUQ sobre al menos 5 requisitos funcionales, seleccionar una
-muestra estadisticamente valida, registrar respuestas y hacer tratamiento
-estadistico.
+La validacion con usuarios reales ya cuenta con pruebas UI/UX fisicas del
+2026-05-27. Para cumplir la plantilla de satisfaccion, queda pendiente aplicar
+PSSUQ sobre al menos 5 requisitos funcionales, seleccionar una muestra
+estadisticamente valida, registrar respuestas y hacer tratamiento estadistico.
 
 ## Planning phase
 
@@ -223,8 +243,8 @@ Quedan fuera del plan:
 - IEEE 1012 - Standard for System and Software Verification and Validation.
 - ISO/IEC 12207 - Systems and software engineering - Software life cycle
   processes.
-- `docs/requerimientos/requerimientos_funcionales.md`.
-- `docs/requerimientos/requerimientos_no_funcionales.md`.
+- `docs/requerimientos/requerimientos_funcionales_formato.md`.
+- `docs/requerimientos/requerimientos_no_funcionales_formato.md`.
 - `docs/requerimientos/casos_de_uso.md`.
 - `docs/requerimientos/reglas_de_negocio.md`.
 - `docs/requerimientos/trazabilidad.md`.
@@ -389,7 +409,7 @@ Ambientes:
 - Ambiente local de desarrollo.
 - Ambiente de pruebas automatizadas.
 - Ambiente de escritorio Windows/Linux para SQLite FFI.
-- [PENDIENTE] Ambiente movil o emulador usado para validacion real.
+- Dispositivo fisico usado para validacion real: Samsung Galaxy S23+.
 
 #### Configuration management and change control
 
@@ -487,12 +507,15 @@ Mitigacion:
 
 Se verificaron requisitos mediante revision documental de RF, RNF, CU, reglas de
 negocio y matriz de trazabilidad. La documentacion permite rastrear cada RF
-hacia su caso de uso, regla relacionada, prueba o evidencia tecnica.
+hacia su caso de uso, regla relacionada, prueba o evidencia tecnica. Para la
+revision de requisitos se toma como fuente principal el formato estructurado,
+porque explicita actor, accion, objeto, entrada, resultado esperado, prioridad,
+estado y verificacion.
 
 Evidencia:
 
-- `docs/requerimientos/requerimientos_funcionales.md`.
-- `docs/requerimientos/requerimientos_no_funcionales.md`.
+- `docs/requerimientos/requerimientos_funcionales_formato.md`.
+- `docs/requerimientos/requerimientos_no_funcionales_formato.md`.
 - `docs/requerimientos/casos_de_uso.md`.
 - `docs/requerimientos/reglas_de_negocio.md`.
 - `docs/requerimientos/trazabilidad.md`.
@@ -526,9 +549,14 @@ La verificacion de codigo se apoya en:
 - Pruebas de controllers con repositorios falsos o dobles de prueba.
 - Pruebas de serializacion de modelos.
 - Evidencia TDD Red-Green-Refactor.
-- Analisis estatico recomendado con `flutter analyze`.
+- Analisis estatico ejecutado con `flutter analyze`.
 
-Evidencia TDD documentada:
+Resultados actuales de verificacion automatizada:
+
+- `flutter analyze`: sin issues.
+- `flutter test`: 138 pruebas aprobadas, 0 fallidas.
+
+Evidencia TDD documentada, con citas legibles:
 
 - Eventos de calendario: RF-030, RF-031, RF-032 y reglas RN-036 a RN-046.
 - Validaciones de tareas y clases: RF-006, RF-019 y reglas asociadas.
@@ -536,12 +564,22 @@ Evidencia TDD documentada:
 - Ajustes avanzados Material 3: RF-043 a RF-050.
 - Refinamientos Material 3 de calendario, horario y diseno general.
 
+| Ciclo | Evidencia Red | Evidencia Green / Refactor |
+| --- | --- | --- |
+| Eventos de calendario | La bitacora `red_green_refactor_eventos.md` registra pruebas nuevas para titulo obligatorio, rango de fechas, evento puntual, normalizacion, color por defecto, superposiciones, creacion, edicion y eliminacion con confirmacion. | Green implemento `EventoValidator`, `EventoForm`, `EventoListItem` y callbacks de crear/editar/eliminar. Refactor separo reglas de negocio del widget y dejo el formulario sin dependencia de DAO/repositorio. |
+| Validaciones de tareas y clases | `red_green_refactor_validaciones.md` documenta pruebas para titulos solo con espacios, longitudes maximas, fechas pasadas, duplicados exactos y clases solapadas. | Green agrego reloj inyectable, normalizacion con `trim()`, bloqueo de duplicados y validacion de solapamientos. El resultado fueron pruebas focalizadas en verde. |
+| Tareas, configuracion y robustez | `red_green_refactor_tareas_configuracion_robustez.md` agrega pruebas para borrado definitivo, filtros, error visible, superposiciones como advertencia y preferencias invalidas. | Green agrego borrado fisico, `lastError`, snackbars, advertencias y validacion centralizada en `PreferencesHelper`; la suite completa quedo en verde. |
+| Material 3 | Las bitacoras de Material 3 agregan pruebas para tema, navegacion adaptativa, `SegmentedButton`, paneles diarios, estados vacios, metadatos y ajustes avanzados. | Green incorporo `AgendaNavigation`, paneles reutilizables, tarjetas Material 3, `AdvancedSettingsWidget` y aplicacion real de preferencias. Las verificaciones finales reportan `flutter analyze` sin issues y suites en verde. |
+| Recuperacion y feedback | `red_green_refactor_recuperacion_confirmaciones.md` exige `BORRAR`, `Deshacer`, estados `Guardando...`, bloqueo de taps duplicados y conflictos explicativos. | Green agrego confirmacion reforzada, `SnackBarAction`, estados de progreso, estados vacios accionables y omision de recordatorios no futuros. La verificacion focalizada termino con `All tests passed`. |
+
 ### Validation activities
 
 #### Requirements validation
 
 Los requisitos se validaron contra casos de uso, reglas de negocio y pruebas
-automatizadas. La validacion con usuarios reales queda pendiente.
+automatizadas. Ademas, se ejecutaron pruebas fisicas UI/UX el 2026-05-27 con
+tres usuarios reales, Juan, Ariel y Marcos. Queda pendiente aplicar PSSUQ formal
+y tratamiento estadistico.
 
 [PENDIENTE] Aplicar PSSUQ a por lo menos 5 RF. Candidatos sugeridos:
 
@@ -579,13 +617,30 @@ Los modulos principales cuentan con pruebas automatizadas:
   ajustes.
 - Persistencia/modelos: serializacion de Tarea, Evento y Clase.
 
+#### Execution sample by development phase
+
+La ejecucion del plan considero una muestra de artefactos por fase. En codigo
+fuente se considero toda la suite automatizada disponible.
+
+| Fase | Muestra evaluada | Hallazgos | Estado |
+| --- | --- | --- | --- |
+| Requisitos | 55 RF, 31 RNF, casos de uso, reglas de negocio y trazabilidad. | RNF-008, RNF-017 y RNF-030 requieren evidencia adicional o cierre posterior. | Parcial documentado. |
+| Analisis | Flujos principales y alternativos de tareas, horario, calendario y configuracion. | Riesgo de expectativas de usuario no capturadas por pruebas automatizadas. | Mitigado con pruebas UI/UX. |
+| Diseno | Arquitectura feature-first, Material 3, navegacion y pantallas principales. | 10 hallazgos UI/UX de botones, hover, layout, formularios, calendario y borrado visual. | Abierto con acciones correctivas. |
+| Codigo | Todo `lib/` mediante analisis estatico y toda la suite `test/`. | 0 issues de analisis, 0 pruebas fallidas. | Cerrado para el alcance actual. |
+| Integracion/sistema | Persistencia SQLite, preferencias, notificaciones, archivos nativos y navegacion. | Riesgos previos en scheduler, FFI, migracion, duplicados y confirmaciones. | Cerrados con pruebas automatizadas. |
+| Aceptacion | 15 casos UI/UX con usuarios reales en Samsung Galaxy S23+. | 15 casos exitosos o exitosos con alerta; 10 hallazgos colectivos. | Aceptado funcionalmente con remediaciones UI/UX pendientes. |
+
 ### Quantitative evaluation: Metrics
 
 Metricas disponibles desde la documentacion:
 
 - 55 requisitos funcionales documentados.
-- Requisitos no funcionales organizados en plataforma, arquitectura, usabilidad,
-  datos, calidad, robustez y notificaciones.
+- 31 requisitos no funcionales organizados en plataforma, arquitectura,
+  usabilidad, datos, calidad, robustez y notificaciones.
+- 28 RNF implementados, vigentes con evidencia suficiente o cumplidos para el
+  alcance actual.
+- 3 RNF parciales o pendientes de evidencia final: RNF-008, RNF-017 y RNF-030.
 - Casos de prueba por modulo con estado Pass, Partial o Not Executed.
 - Pruebas UI/UX fisicas ejecutadas el 2026-05-27 con Juan, Ariel y Marcos:
   15 casos exitosos o exitosos con alerta, promedio global 17.94 s y 10
@@ -599,20 +654,24 @@ Metricas disponibles desde la documentacion:
   SQLite y smoke test FFI de escritorio.
 - Pruebas agregadas para rechazo de tareas duplicadas exactas normalizadas en
   creacion y edicion.
+- `flutter analyze` ejecutado el 2026-05-28: sin issues.
+- `flutter test` ejecutado el 2026-05-28: 138 pruebas aprobadas, 0 fallidas.
 
-[PENDIENTE] Ejecutar y registrar resultados actuales de:
+| Comando | Resultado | Pruebas aprobadas | Fallidas | Observacion |
+| --- | --- | ---: | ---: | --- |
+| `flutter analyze` | Pass | N/A | 0 | No issues found. |
+| `flutter test` | Pass | 138 | 0 | Suite automatizada completa en verde. |
 
-```powershell
-flutter analyze
-flutter test
-flutter test test/features/tareas
-flutter test test/features/horario
-flutter test test/features/calendario
-flutter test test/features/configuracion
-```
+### Quality level achieved
 
-[PENDIENTE] Agregar tabla final con numero de pruebas ejecutadas, aprobadas,
-fallidas, omitidas y tiempo total.
+El nivel de calidad logrado se clasifica como **Bueno**. La decision se basa en
+que la suite automatizada esta completa y en verde, los RF principales tienen
+trazabilidad, no existen defectos criticos abiertos y las brechas detectadas
+estan documentadas con acciones de mejora.
+
+No se clasifica como Excelente porque permanecen hallazgos UI/UX abiertos,
+accesibilidad solo basica y acciones de remediacion pendientes despues de las
+pruebas con usuarios.
 
 ### Data Analysis and Interpretation
 
@@ -622,6 +681,12 @@ con pruebas automatizadas y trazabilidad. Los modulos de tareas, horario y
 calendario tienen validaciones especificas y pruebas de UI o controller. La
 configuracion avanzada muestra cobertura amplia, incluyendo notificaciones
 nativas, confirmacion de clases y manejo nativo de archivos.
+
+La revision de RNF muestra que el proyecto ya cumple la mayoria de atributos de
+calidad documentados. Las brechas restantes se concentran en tres frentes:
+reducir acoplamiento residual entre presentacion y dependencias concretas,
+reforzar integridad en capas no visuales y generar evidencia especifica de
+robustez responsiva con texto escalado.
 
 Interpretacion preliminar:
 
@@ -652,6 +717,9 @@ Defectos o brechas conocidas:
 | DEF-005 | Plataforma | Smoke test automatizado de SQLite FFI para escritorio agregado. | Cerrado | Ejecutar en CI Windows/Linux. |
 | DEF-006 | Tareas | Duplicados exactos de tareas no se bloqueaban al crear o editar. | Cerrado | Mantener TC-TAR-016 en regresion. |
 | DEF-007 | Usabilidad | Falta PSSUQ con usuarios reales. | Pendiente | Planear muestra, ejecutar cuestionario y analizar resultados. |
+| DEF-008 | RNF | RNF-008 conserva acoplamiento residual por instanciacion de DAOs/repositorios concretos desde pantallas. | Parcial | Introducir factories o inyeccion de dependencias a nivel de composicion. |
+| DEF-009 | RNF | RNF-017 requiere reforzar integridad fuera de formularios para evitar entidades invalidas si se omite la UI. | Parcial | Agregar validadores de dominio o checks en repositorios/DAOs. |
+| DEF-010 | RNF | RNF-030 requiere evidencia especifica con mobile estrecho y texto escalado. | Parcial | Agregar pruebas/resenas responsivas con `textScaleFactor` o escenarios manuales documentados. |
 
 ### Cause Defects Analysis
 
@@ -684,16 +752,35 @@ Mejoras ya implementadas y documentadas:
 - Material 3 en navegacion, tareas, horario, calendario, formularios y ajustes.
 - Ajustes avanzados de tema, vista inicial, densidad e inicio de semana.
 - Manejo de errores visibles en operaciones criticas.
+- Recuperacion/deshacer para acciones reversibles cuando es tecnicamente
+  seguro.
+- Confirmacion reforzada de borrado masivo mediante palabra obligatoria
+  `BORRAR`.
+- Feedback de carga/guardado en formularios y pantallas principales.
+- Estados vacios accionables y diagnostico de conflictos junto al campo o
+  seccion afectada.
 
 Mejoras pendientes:
 
 - Ejecutar PSSUQ y documentar resultados estadisticos.
-- Agregar recuperacion/deshacer para acciones reversibles cuando sea seguro.
-- Reforzar la confirmacion de borrado masivo con una accion deliberada
-  adicional verificable.
-- Mejorar feedback de carga/guardado en formularios y pantallas principales.
-- Mejorar estados vacios accionables y diagnostico de conflictos junto al
-  campo o seccion afectada.
+- Cerrar RNF-008 reduciendo acoplamiento residual en composicion de pantallas.
+- Cerrar RNF-017 reforzando validaciones en dominio, repositorios o
+  persistencia.
+- Cerrar RNF-030 con evidencia responsive en pantallas estrechas y texto
+  escalado.
+
+### TDD vs NO TDD effectiveness
+
+| Criterio | TDD / Red-Green-Refactor | Validacion sin TDD formal |
+| --- | --- | --- |
+| Evidencia | Pruebas unitarias, widgets, controllers, serializacion, migracion y smoke tests. | Observacion con usuarios, revision UI/UX, Pareto y retroalimentacion cualitativa. |
+| Defectos detectados | Duplicados, validaciones, scheduler, confirmaciones, persistencia y regresiones funcionales. | Problemas de aprendibilidad, hover, area reactiva, layout desktop, selector de hora y lectura del calendario. |
+| Efectividad | Alta para asegurar reglas de negocio y evitar regresiones repetibles. | Alta para descubrir problemas de experiencia que no se ven solo en codigo. |
+| Resultado | Mayor calidad interna y funcional. | Mayor calidad externa y satisfaccion percibida. |
+
+La comparacion muestra que TDD fue especialmente efectivo para cerrar defectos
+tecnicos y funcionales, mientras que la validacion sin TDD formal fue necesaria
+para revelar problemas de interfaz, claridad y uso real.
 
 ## Conclusions and future work
 
@@ -710,6 +797,13 @@ con riesgos controlados en las funcionalidades principales. Sin embargo, el
 reporte final debe distinguir claramente entre funcionalidades completas,
 parciales y pendientes para evitar sobredeclarar capacidades.
 
+Aplicar correctamente V&V si mejora significativamente la calidad del software:
+en este proyecto permitio conectar requisitos con pruebas, corregir defectos
+mediante regresion automatizada, detectar riesgos de plataforma y descubrir
+hallazgos de usabilidad con usuarios reales. La calidad se fortalecio porque se
+evaluo el sistema desde requisitos, diseno, codigo, pruebas, integracion y
+aceptacion, no solo desde la ejecucion final.
+
 ### Suggestions for continuous improvement
 
 - Completar pruebas de aceptacion con usuarios reales.
@@ -718,6 +812,8 @@ parciales y pendientes para evitar sobredeclarar capacidades.
 - Mantener pruebas de regresion para notificaciones nativas, archivos,
   migraciones y plataformas.
 - Mantener trazabilidad actualizada ante cada cambio.
+- Actualizar los estados de RNF en los documentos de requerimientos con formato
+  cuando se cierren RNF-008, RNF-017 y RNF-030.
 
 ### Learning experience in the course
 
@@ -746,4 +842,9 @@ Referencias base:
 - Syncfusion Flutter Calendar documentation. https://help.syncfusion.com/flutter/calendar/overview
 - Documentacion interna del proyecto Agenda: `README.md`, `docs/README.md`,
   `docs/arquitectura.md`, `docs/desarrollo.md`, `docs/pruebas.md`,
-  `docs/casos_prueba.md` y `docs/requerimientos/`.
+  `docs/casos_prueba.md`,
+  `docs/requerimientos/requerimientos_funcionales_formato.md`,
+  `docs/requerimientos/requerimientos_no_funcionales_formato.md`,
+  `docs/requerimientos/casos_de_uso.md`,
+  `docs/requerimientos/reglas_de_negocio.md` y
+  `docs/requerimientos/trazabilidad.md`.
