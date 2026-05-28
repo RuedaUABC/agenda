@@ -1,13 +1,11 @@
 # Plan de Verificacion y Validacion de Software - Agenda
 
-Documento separado sin portada. Los campos administrativos de fecha,
-responsables y aprobacion se registran en el historial y en la seccion 14.
-
 ## 0. Historial de Revisiones
 
 | Version | Fecha | Descripcion de cambios | Autor |
 | --- | --- | --- | --- |
-| 1.0 | [PENDIENTE] | Version inicial del Plan de Verificacion y Validacion de Agenda. | [PENDIENTE] |
+| 1.0 | 2026-05-24 | Version inicial del Plan de Verificacion y Validacion de Agenda. | Equipo de V&V |
+| 1.1 | 2026-05-28 | Actualizacion con pruebas de interfaz de usuario, usabilidad, metricas UI, Pareto y resultados actuales de `flutter analyze`/`flutter test`. | Equipo de V&V |
 
 ## 1. Proposito
 
@@ -80,8 +78,8 @@ Quedan fuera de este plan:
 - Auditorias externas de procesos organizacionales.
 - Certificacion externa de entrega de notificaciones por cada sistema
   operativo, mas alla de la integracion y pruebas automatizadas locales.
-- Validacion estadistica final con PSSUQ mientras no existan usuarios
-  participantes ni datos recolectados.
+- Dictamen estadistico final de usabilidad mediante SUS o PSSUQ mientras no
+  existan usuarios participantes ni datos recolectados.
 - Integracion con Firebase u otros servicios externos retirados del alcance
   actual.
 
@@ -92,9 +90,17 @@ Quedan fuera de este plan:
 - IEEE 1012 - Standard for System and Software Verification and Validation.
 - ISO/IEC 12207 - Systems and software engineering - Software life cycle
   processes.
+- ISO/IEC 25010 - Systems and software quality models, aplicado a usabilidad,
+  accesibilidad, compatibilidad, adecuacion funcional, eficiencia,
+  confiabilidad y consistencia de interfaz.
+- ISO 9241-11 - Ergonomics of Human-System Interaction, usado como referencia
+  para efectividad, eficiencia y satisfaccion en pruebas de usabilidad.
 - Buenas practicas de pruebas unitarias, pruebas de widgets y Test-Driven
   Development aplicadas al ecosistema Flutter.
 - Lineamientos Material 3 aplicables al diseno visual y componentes de interfaz.
+- Referencias de usabilidad e interfaz: Nielsen, Norman, Rubin y Chisnell,
+  ISTQB Foundation Level y practicas de pruebas UI documentadas para el
+  proyecto.
 
 ### 3.2. Documentos del Proyecto
 
@@ -118,6 +124,9 @@ mismo sin depender de abrir archivos externos.
   tecnologia.
 - `docs/requerimientos/trazabilidad.md`: matriz de trazabilidad.
 - `docs/red_green_refactor_*.md`: evidencia de ciclos TDD y mejoras.
+- `Pruebas de interfaz de usuario-usabilidad-1.pdf`: insumo actualizado para
+  tipos de prueba UI, atributos de calidad, metricas, herramientas y
+  referencias formales de usabilidad.
 
 ## 4. Definiciones y Acronimos
 
@@ -140,6 +149,21 @@ mismo sin depender de abrir archivos externos.
   persistencia y flujos completos.
 - Matriz de trazabilidad: relacion entre requisitos, casos de uso, reglas,
   pruebas y evidencia tecnica.
+- Prueba de interfaz de usuario: verificacion visual y tecnica de pantallas,
+  botones, formularios, menus, iconos, navegacion, responsividad,
+  retroalimentacion y consistencia grafica.
+- Prueba de usabilidad: evaluacion con usuarios, escenarios, tareas,
+  observacion, cuestionarios y analisis de comportamiento para medir facilidad,
+  eficiencia, aprendizaje, errores y satisfaccion.
+- Accesibilidad: capacidad de la interfaz para ser operable por personas con
+  distintas capacidades, incluyendo objetivos tactiles, contraste, etiquetas,
+  navegacion por teclado y compatibilidad con tecnologias asistivas.
+- SUS: System Usability Scale, cuestionario estandar para medir satisfaccion y
+  percepcion de usabilidad.
+- PSSUQ: Post-Study System Usability Questionnaire, cuestionario post-prueba
+  para valorar utilidad, calidad de informacion y calidad de interfaz.
+- WCAG: Web Content Accessibility Guidelines, referencia para evaluar
+  accesibilidad de interfaces.
 
 ## 5. Descripcion General del Sistema
 
@@ -183,7 +207,7 @@ Responsables nominales:
 - Responsable de V&V: Moreno Lopez Yamir Exel
 - Responsable de QA: Alan Alexis Galvez Necoechea
 - Desarrolladores: Alan Alexis Galvez Necoechea; Moreno Lopez Yamir Exel; Garcia Vargas Kevin Misael; Rueda Gallegos Jorge Alberto
-- Usuario representante: [PENDIENTE]
+- Usuario representante: por reclutar para pruebas de usabilidad y aceptacion.
 - Patrocinador o jefe de proyecto: Luis Ernesto Mellín Pineda
 
 ### 6.2. Independencia de V&V
@@ -318,26 +342,47 @@ Entregables:
 Actividades:
 
 - Ejecutar pruebas funcionales con usuarios representativos.
-- Aplicar cuestionario PSSUQ a funciones clave.
+- Ejecutar pruebas de interfaz de usuario sobre apariencia, navegacion,
+  compatibilidad, responsividad, accesibilidad basica e interacciones.
+- Aplicar cuestionario SUS o PSSUQ a funciones clave cuando existan
+  participantes.
 - Validar tareas, horario, calendario y ajustes en escenarios reales.
-- Registrar defectos de aceptacion, mejoras y acciones pendientes.
+- Registrar tiempo de ejecucion, numero de clics/pasos, errores de usuario,
+  ayudas solicitadas, abandonos, satisfaccion y comentarios.
+- Registrar defectos de aceptacion, hallazgos de interfaz, mejoras y acciones
+  pendientes.
 - Ejecutar regresion despues de correcciones relevantes.
 
-Funciones candidatas para PSSUQ:
+Funciones candidatas para SUS/PSSUQ y escenarios de usabilidad:
 
 - RF-005: creacion de tareas.
+- RF-007/RF-010: edicion, eliminacion logica y recuperacion de tareas.
 - RF-018: creacion de clases semanales.
 - RF-026/RF-028: consulta de calendario y lista diaria.
 - RF-030: creacion de eventos.
 - RF-034/RF-044: configuracion de preferencias y tema visual.
 
+Cobertura UI documentada:
+
+- TC-UI-001: consistencia visual de interfaz.
+- TC-UI-002: navegacion y flujo entre pantallas.
+- TC-UI-003: responsividad de navegacion.
+- TC-UI-004: retroalimentacion ante acciones.
+- TC-UI-005: accesibilidad basica de controles.
+- TC-US-001: prueba de tareas con usuarios reales.
+- TC-US-002: satisfaccion de usuario mediante SUS o PSSUQ.
+
 Entregables:
 
 - Informe de pruebas de aceptacion.
-- Resultados PSSUQ.
+- Resultados de pruebas UI.
+- Resultados SUS/PSSUQ, cuando se ejecuten sesiones con usuarios.
 - Acta de aceptacion o lista de acciones pendientes.
 
-[PENDIENTE] Registrar usuarios participantes, fechas de prueba y resultados.
+Estado actual: las pruebas UI tecnicas cuentan con casos documentados y
+cobertura automatizada/parcial en widgets Material 3. Las pruebas con usuarios
+reales siguen como `Not Executed` hasta registrar participantes, fechas,
+escenarios observados, resultados SUS/PSSUQ y comentarios.
 
 ### 7.2. Metodos y Tecnicas de V&V
 
@@ -361,8 +406,18 @@ Entregables:
 - Pruebas funcionales por modulo.
 - Pruebas de integracion entre modulos.
 - Pruebas de regresion tras correcciones.
+- Pruebas visuales de UI: apariencia, alineacion, colores, tipografia,
+  iconografia y consistencia grafica.
+- Pruebas funcionales de UI: botones, formularios, controles, mensajes y
+  acciones visibles.
+- Pruebas de navegacion y responsividad en anchos movil, tablet y escritorio.
+- Pruebas de interaccion: retroalimentacion visual, estados de guardado,
+  errores, confirmaciones y acciones de recuperacion.
+- Pruebas de accesibilidad basica: objetivos tactiles, controles reconocibles
+  y criterios iniciales de operabilidad.
 - Pruebas manuales de aceptacion.
-- Pruebas de usabilidad mediante PSSUQ.
+- Pruebas de usabilidad con usuarios reales mediante escenarios, observacion y
+  cuestionarios SUS o PSSUQ.
 
 ### 7.3. Criterios de Aceptacion
 
@@ -375,14 +430,18 @@ Para considerar aceptable una version de Agenda:
 - Todo RF declarado como Implementado debe tener evidencia en codigo,
   documentacion o prueba.
 - RF-043 debe conservar evidencia automatizada de scheduler nativo de eventos.
-- RF-048 y RF-049 pueden aceptarse solo como parciales mientras la confirmacion
-  reforzada de borrado total no tenga una accion deliberada adicional
-  verificable.
+- RF-048 y RF-049 deben conservar evidencia de confirmaciones configurables,
+  recuperacion/deshacer cuando aplique, palabra `BORRAR` para borrado total y
+  tratamiento visual destructivo verificable.
 - No deben existir defectos criticos abiertos en tareas, horario, calendario,
   configuracion, navegacion o persistencia.
 - Las pruebas de regresion deben ejecutarse despues de cambios en validaciones,
   persistencia, navegacion o configuracion.
 - Las limitaciones conocidas deben aparecer en reportes y conclusiones.
+- Los casos UI de prioridad Alta deben quedar en Pass o tener hallazgo
+  documentado con accion de mejora.
+- Las pruebas de usabilidad con usuarios reales no deben declararse completadas
+  mientras TC-US-001 y TC-US-002 permanezcan `Not Executed`.
 
 ## 8. Planificacion y Cronograma
 
@@ -397,7 +456,7 @@ planeacion, construccion, verificacion, validacion y cierre.
 | H3 | 13/04/2026 - 21/04/2026 | Revision de arquitectura, diseno de capas, persistencia local y lineamientos Material 3. | Informe de diseno, arquitectura feature-first y criterios de interfaz. | Alan Alexis Galvez Necoechea; Moreno Lopez Yamir Exel; Garcia Vargas Kevin Misael; Rueda Gallegos Jorge Alberto |
 | H4 | 22/04/2026 - 08/05/2026 | Implementacion y verificacion por modulo: tareas, horario, calendario, configuracion y navegacion. | Funcionalidades implementadas, pruebas unitarias/widgets y evidencia Red-Green-Refactor. | Alan Alexis Galvez Necoechea; Moreno Lopez Yamir Exel; Garcia Vargas Kevin Misael; Rueda Gallegos Jorge Alberto |
 | H5 | 09/05/2026 - 17/05/2026 | Pruebas de integracion, pruebas de sistema, revision de persistencia y regresion. | Resultados de `flutter analyze`, `flutter test`, pruebas por feature y lista de defectos/brechas. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea |
-| H6 | 18/05/2026 - 24/05/2026 | Validacion funcional, revision de usabilidad, preparacion de PSSUQ y documentacion de pendientes. | Informe de validacion, candidatos PSSUQ y acciones pendientes. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; Usuario representante [PENDIENTE] |
+| H6 | 18/05/2026 - 24/05/2026 | Validacion funcional, revision de interfaz/usabilidad, preparacion de SUS/PSSUQ y documentacion de pendientes. | Informe de validacion, casos TC-UI/TC-US, candidatos SUS/PSSUQ y acciones pendientes. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; usuarios representativos por reclutar |
 | H7 | 25/05/2026 - 29/05/2026 | Cierre de V&V, consolidacion de metricas, analisis de defectos, conclusiones y aprobacion. | SVVR, aprobacion final o lista de acciones pendientes para liberacion. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; Luis Ernesto Mellín Pineda |
 
 ## 9. Recursos, Herramientas y Ambientes
@@ -408,7 +467,7 @@ planeacion, construccion, verificacion, validacion y cierre.
 - Responsable de QA: Alan Alexis Galvez Necoechea
 - Desarrolladores: Alan Alexis Galvez Necoechea; Moreno Lopez Yamir Exel; Garcia Vargas Kevin Misael; Rueda Gallegos Jorge Alberto
 - Ingenieros de prueba: Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea
-- Usuarios participantes: [PENDIENTE]
+- Usuarios participantes: por reclutar para sesiones TC-US-001 y TC-US-002.
 - Patrocinador o jefe de proyecto: Luis Ernesto Mellín Pineda
 
 ### 9.2. Herramientas
@@ -423,8 +482,13 @@ planeacion, construccion, verificacion, validacion y cierre.
 - `shared_preferences`.
 - Syncfusion Flutter Calendar.
 - Herramientas ofimaticas para reportes, Ishikawa y Pareto.
-- [PENDIENTE] Herramienta formal para incidencias, si se decide usar una
-  distinta a la documentacion Markdown o GitHub.
+- Registro de incidencias mediante documentacion Markdown y, si se requiere
+  seguimiento operativo, GitHub Issues.
+- Pruebas UI automatizadas con `flutter test` y pruebas de widgets.
+- Herramientas de referencia para UI testing externo, si el alcance se amplia:
+  Selenium, Cypress, Playwright o TestComplete.
+- Herramientas de referencia para estudios de usabilidad, si se realizan con
+  usuarios remotos: Maze, UserTesting, Lookback u otra equivalente.
 
 ### 9.3. Ambientes de Prueba
 
@@ -432,8 +496,10 @@ planeacion, construccion, verificacion, validacion y cierre.
 - Ambiente de pruebas automatizadas de Flutter.
 - Ambiente de escritorio Windows/Linux para validar SQLite FFI.
 - Ambiente Web o movil para validar responsividad y navegacion.
-- [PENDIENTE] Dispositivo, emulador o navegador especifico usado en pruebas de
-  aceptacion.
+- Anchos de referencia para UI responsiva documentados en pruebas: 390 px
+  (movil), 800 px (tablet) y 1200 px (escritorio).
+- Dispositivo fisico, emulador o navegador final de aceptacion: pendiente de
+  registrar cuando se ejecuten sesiones con usuarios reales.
 
 ## 10. Gestion de Configuracion y Control de Cambios
 
@@ -535,11 +601,19 @@ Procedimiento:
 6. Identificar las pocas causas vitales que expliquen al menos 70% de los
    defectos.
 
-Formato propuesto:
+Resultado preliminar con defectos y brechas conocidas:
 
 | Categoria | Cantidad | % Total | % Acumulado |
 | --- | ---: | ---: | ---: |
-| [PENDIENTE] | [PENDIENTE] | [PENDIENTE] | [PENDIENTE] |
+| Interfaz/usabilidad | 3 | 33.3% | 33.3% |
+| Configuracion | 2 | 22.2% | 55.5% |
+| Persistencia/plataforma | 2 | 22.2% | 77.7% |
+| Gestion de datos | 1 | 11.1% | 88.8% |
+| Tareas | 1 | 11.2% | 100.0% |
+
+Interpretacion: las tres categorias principales concentran 77.7% de los defectos
+y brechas documentadas, por lo que las acciones de mejora deben priorizar
+interfaz/usabilidad, configuracion y persistencia/plataforma.
 
 Defectos o brechas conocidas actualmente:
 
@@ -551,7 +625,9 @@ Defectos o brechas conocidas actualmente:
 | DEF-004 | Persistencia | Migracion SQLite cubierta por test automatizado con `sqflite_common_ffi`. | Cerrado |
 | DEF-005 | Plataforma | SQLite FFI de escritorio cubierto por smoke test automatizado Windows/Linux. | Cerrado |
 | DEF-006 | Tareas | RF-006/RF-007 bloquean duplicados exactos normalizados en creacion y edicion. | Cerrado |
-| DEF-007 | Usabilidad | Falta aplicar PSSUQ con usuarios reales. | Pendiente |
+| DEF-007 | Usabilidad | Falta ejecutar TC-US-001 y TC-US-002 con usuarios reales y registrar SUS/PSSUQ. | Pendiente |
+| DEF-008 | Accesibilidad | La accesibilidad esta cubierta solo de forma basica; falta auditoria WCAG completa. | Parcial |
+| DEF-009 | Compatibilidad | Falta matriz manual por navegador, resolucion o dispositivo fisico; TC-UI-003 cubre anchos de referencia. | Pendiente |
 
 ## 12. Metricas de V&V y Reportes
 
@@ -572,50 +648,56 @@ Metricas a recolectar:
 - Cobertura de requisitos por casos de prueba.
 - Tiempo medio de resolucion de defectos (MTTR), si se registran fechas de
   apertura y cierre.
+- Tiempo de respuesta de interfaz.
+- Tasa de errores de UI y densidad de defectos visuales.
+- Cobertura de componentes de interfaz probados.
+- Numero de clics o pasos por tarea.
+- Tiempo de navegacion y tiempo de ejecucion de tareas.
+- Compatibilidad multiplataforma por dispositivo, navegador o resolucion.
+- Cumplimiento de accesibilidad basica y, cuando se ejecute, cumplimiento WCAG.
+- Tasa de exito de tareas, ayudas solicitadas, tasa de abandono, carga
+  cognitiva y satisfaccion SUS/PSSUQ.
 
 Estado documental actual:
 
-- 50 requisitos funcionales documentados.
+- 55 requisitos funcionales documentados.
+- 31 requisitos no funcionales documentados.
 - RF-043 documentado como implementado con evidencia automatizada.
-- RF-048 y RF-049 documentados como parciales por la confirmacion reforzada
-  pendiente en borrado total.
-- Casos de prueba formales documentados por modulo en `docs/casos_prueba.md`.
+- RF-048 y RF-049 documentados como implementados con evidencia de
+  confirmaciones, recuperacion/deshacer y confirmacion reforzada para borrado
+  total.
+- 77 casos de prueba formales documentados por modulo en
+  `docs/casos_prueba.md`.
+- 5 casos especificos de UI documentados: TC-UI-001 a TC-UI-005.
+- 2 casos de usabilidad con usuarios reales documentados como `Not Executed`:
+  TC-US-001 y TC-US-002.
 - Matriz de trazabilidad documentada en `docs/requerimientos/trazabilidad.md`.
 - Pruebas automatizadas organizadas por feature en `test/features/`.
 
-Comandos ejecutados y salida registrada el 2026-05-24:
+Comandos ejecutados y salida registrada el 2026-05-28:
 
 ```powershell
 flutter analyze
 flutter test
-flutter test test/features/tareas
-flutter test test/features/horario
-flutter test test/features/calendario
-flutter test test/features/configuracion
-flutter test test/features/diseno_material3
 ```
 
 Tabla de resultados:
 
 | Comando | Fecha | Resultado | Observaciones |
 | --- | --- | --- | --- |
-| `flutter analyze` | 2026-05-24 | Pass | Output: `No issues found! (ran in 5.2s)`. |
-| `flutter test` | 2026-05-24 | Pass | Output final: `+117: All tests passed!`. |
-| `flutter test test/features/tareas` | 2026-05-24 | Pass | Output final: `+15: All tests passed!`. |
-| `flutter test test/features/horario` | 2026-05-24 | Pass | Output final: `+16: All tests passed!`. |
-| `flutter test test/features/calendario` | 2026-05-24 | Pass | Output final: `+23: All tests passed!`. |
-| `flutter test test/features/configuracion` | 2026-05-24 | Pass | Output final: `+28: All tests passed!`. |
-| `flutter test test/features/diseno_material3` | 2026-05-24 | Pass | Output final: `+24: All tests passed!`. |
+| `flutter analyze` | 2026-05-28 | Pass | Output: `No issues found! (ran in 44.1s)`. |
+| `flutter test` | 2026-05-28 | Pass | Output final: `+138: All tests passed!`. |
 
 Resumen de salida:
 
 - Analisis estatico: sin issues detectados.
-- Suite completa: 117 pruebas aprobadas, 0 fallidas.
-- Tareas: 15 pruebas aprobadas, 0 fallidas.
-- Horario: 16 pruebas aprobadas, 0 fallidas.
-- Calendario: 23 pruebas aprobadas, 0 fallidas.
-- Configuracion: 28 pruebas aprobadas, 0 fallidas.
-- Diseno Material 3: 24 pruebas aprobadas, 0 fallidas.
+- Suite completa: 138 pruebas aprobadas, 0 fallidas.
+- La suite cubre pruebas unitarias, controllers, widgets, formularios,
+  persistencia local, configuracion, navegacion adaptativa, componentes
+  Material 3 y evidencia tecnica de UI.
+- Las pruebas de usabilidad con usuarios reales permanecen pendientes porque
+  requieren participantes, observacion directa y cuestionario SUS/PSSUQ
+  aplicado.
 
 ### 12.2. Reportes
 
@@ -625,7 +707,10 @@ Reportes esperados:
 - Informe de revision de arquitectura y diseno.
 - Informe de pruebas automatizadas.
 - Informe de pruebas de integracion y sistema.
+- Informe de pruebas de interfaz de usuario.
 - Informe de pruebas de aceptacion.
+- Informe de usabilidad con resultados SUS/PSSUQ, cuando se ejecute con
+  participantes.
 - Informe de defectos.
 - Analisis de causa raiz.
 - Analisis de Pareto.
@@ -639,6 +724,8 @@ Cada reporte debe indicar:
 - Evidencia consultada.
 - Resultado.
 - Defectos encontrados.
+- Metricas UI/usabilidad aplicables: tiempos, errores, ayudas, clics,
+  abandono, satisfaccion y hallazgos de accesibilidad/compatibilidad.
 - Acciones de mejora.
 - Estado de aceptacion.
 
@@ -646,7 +733,9 @@ Cada reporte debe indicar:
 
 | Riesgo | Impacto | Probabilidad | Mitigacion |
 | --- | --- | --- | --- |
-| Falta de usuarios para pruebas PSSUQ. | Alto | Media | Planear sesiones con anticipacion y usar usuarios representativos. |
+| Falta de usuarios para pruebas SUS/PSSUQ. | Alto | Media | Planear sesiones con anticipacion, usar usuarios representativos y mantener TC-US como `Not Executed` hasta contar con evidencia. |
+| Brechas de accesibilidad no detectadas por pruebas de widgets. | Medio | Media | Complementar TC-UI-005 con revision WCAG, contraste, teclado, etiquetas semanticas y tecnologias asistivas. |
+| Compatibilidad no validada en dispositivos/navegadores reales. | Medio | Media | Construir matriz manual por resolucion, navegador o dispositivo y registrar resultados de TC-UI-003. |
 | Requisitos cambiantes durante el cierre. | Medio | Media | Actualizar matriz de trazabilidad y ejecutar regresion. |
 | Regresion en notificaciones nativas. | Bajo | Alta | Mantener `calendario_repository_notifications_test.dart` y fallback seguro del scheduler. |
 | Regresion de migracion SQLite. | Bajo | Media | Mantener `sqlite_migration_test.dart` con base temporal FFI. |
@@ -722,9 +811,14 @@ el SVVP sin abrir el documento externo de requisitos.
 | RF-045 | Implementado | Baja | El usuario puede elegir el modulo inicial de la aplicacion. |
 | RF-046 | Implementado | Baja | El usuario puede elegir densidad visual comoda o compacta sin reducir objetivos tactiles por debajo de 48x48. |
 | RF-047 | Implementado | Baja | El usuario puede elegir inicio de semana lunes o domingo para calendario y horario. |
-| RF-048 | Parcial | Media | El usuario puede configurar confirmaciones destructivas para tareas, clases y eventos; queda pendiente confirmacion reforzada verificable y recuperacion/deshacer para acciones reversibles. |
-| RF-049 | Parcial | Baja | El usuario puede gestionar datos locales mediante respaldo/importacion/borrado con selector y escritura de archivo nativo; queda pendiente confirmacion reforzada verificable para borrado total. |
+| RF-048 | Implementado | Media | El usuario puede configurar confirmaciones destructivas para tareas, clases y eventos; incluye preferencia, deshacer cuando aplica y confirmacion reforzada real para borrado masivo. |
+| RF-049 | Implementado | Baja | El usuario puede gestionar datos locales mediante respaldo/importacion/borrado con selector y escritura de archivo nativo; el borrado total exige escribir `BORRAR`. |
 | RF-050 | Implementado | Baja | El usuario puede consultar version, almacenamiento local y estado de notificaciones desde Ajustes. |
+| RF-051 | Implementado | Alta | El sistema permite recuperar acciones reversibles mediante `Deshacer` cuando tecnicamente sea seguro revertirlas. |
+| RF-052 | Implementado | Media | El sistema informa claramente estados de carga o guardado y bloquea acciones duplicadas durante operaciones asincronas. |
+| RF-053 | Implementado | Media | El sistema muestra estados vacios especificos con acciones directas cuando existe una siguiente accion natural. |
+| RF-054 | Implementado | Alta | El sistema diagnostica conflictos o validaciones complejas indicando la causa y la forma de corregir el dato. |
+| RF-055 | Implementado | Baja | El sistema incluye ayuda contextual breve en operaciones sensibles como importacion, exportacion y borrado de datos. |
 
 ## Anexo B. Requisitos No Funcionales Integrados
 
@@ -756,10 +850,15 @@ el SVVP sin abrir el documento externo de requisitos.
 | RNF-024 | Sugerido | Media | El sistema no debe almacenar informacion sensible innecesaria en texto plano. |
 | RNF-025 | Vigente | Media | El scheduler de notificaciones debe estar encapsulado y ser reemplazable. |
 | RNF-026 | Vigente | Media | Las notificaciones no deben documentarse como completas mientras no exista implementacion nativa real. |
+| RNF-027 | Sugerido | Alta | Los textos visibles deben mostrarse con codificacion correcta, sin mojibake ni caracteres corruptos en dialogs y pantallas criticas. |
+| RNF-028 | Implementado | Alta | La interfaz debe permitir recuperacion de acciones frecuentes cuando exista una forma tecnica segura de revertirlas. |
+| RNF-029 | Implementado | Media | La interfaz debe mostrar retroalimentacion durante operaciones asincronas y prevenir acciones duplicadas. |
+| RNF-030 | Sugerido | Media | Formularios, dialogs y sheets deben mantener legibilidad y objetivos tactiles adecuados en pantallas estrechas y con texto escalado. |
+| RNF-031 | Implementado | Media | Las acciones destructivas deben tener tratamiento visual consistente y diferenciable de acciones primarias no destructivas. |
 
 ## Anexo C. Casos de Prueba y Cobertura Integrados
 
-La cobertura formal documentada contiene 68 casos de prueba distribuidos por
+La cobertura formal documentada contiene 77 casos de prueba distribuidos por
 modulo. El contenido importante se resume asi:
 
 | Area | Casos | Cobertura principal | Estado relevante |
@@ -768,8 +867,10 @@ modulo. El contenido importante se resume asi:
 | Tareas | 16 | Carga, papelera, creacion, validacion, edicion, completar, restaurar, eliminar, clasificar, progreso, estadisticas, detalle, filtros y duplicados. | Pass |
 | Horario | 10 | Carga, creacion semanal, validacion, solapamientos, vista semanal, lista diaria, edicion, eliminacion y recurrencia. | Pass, incluyendo confirmacion UI para eliminacion de clases. |
 | Calendario y eventos | 14 | Carga, vista mensual, seleccion de fecha, eventos por dia, varios dias, creacion, validacion, edicion, eliminacion y superposiciones. | Pass |
-| Configuracion y notificaciones | 15 | Preferencias, avisos, validaciones, tema, vista inicial, densidad, inicio de semana, confirmaciones, datos locales e informacion de app. | Partial; RF-043 completo, RF-048 y RF-049 parciales por refuerzo de borrado total. |
+| Configuracion y notificaciones | 16 | Preferencias, avisos, validaciones, tema, vista inicial, densidad, inicio de semana, confirmaciones, datos locales e informacion de app. | Pass; RF-043, RF-048 y RF-049 cuentan con evidencia automatizada y documentada. |
 | Diseno Material 3 | 6 | Tema, navegacion adaptativa, tareas, formularios, ajustes, horario y calendario Material 3. | Pass |
+| Interfaz de usuario | 5 | Consistencia visual, navegacion, responsividad, retroalimentacion y accesibilidad basica. | Pass/Partial; accesibilidad basica no sustituye auditoria WCAG completa. |
+| Usabilidad | 2 | Escenarios con usuarios reales y medicion de satisfaccion SUS/PSSUQ. | Not Executed; requiere participantes, observacion y cuestionario aplicado. |
 | Persistencia y modelos | 6 | Serializacion de entidades, migracion, SQLite escritorio y error visible de persistencia. | Pass, incluyendo migracion y smoke test FFI de escritorio. |
 
 Seguimiento de cobertura:
@@ -778,11 +879,13 @@ Seguimiento de cobertura:
 | --- | --- | --- |
 | Tareas | Sin brecha abierta para duplicados exactos; TC-TAR-016 automatizado. | TC-TAR-016 |
 | Horario | Sin brecha abierta; confirmacion UI al eliminar clases cubierta. | TC-HOR-008 |
-| Configuracion | RF-048 mantiene pendiente confirmacion reforzada verificable y recuperacion/deshacer. | TC-CONF-012 |
-| Gestion de datos | RF-049 mantiene pendiente confirmacion reforzada verificable para borrado total. | TC-CONF-013 |
+| Configuracion | Sin brecha abierta para RF-048; confirmaciones y recuperacion/deshacer cubiertas. | TC-CONF-012 |
+| Gestion de datos | Sin brecha abierta para RF-049; importacion/exportacion y borrado con `BORRAR` cubiertos. | TC-CONF-013 |
 | Persistencia | Sin brecha abierta; migracion SQLite automatizada. | TC-PER-004 |
 | Escritorio | Sin brecha abierta; smoke test SQLite FFI automatizado. | TC-PER-005 |
-| Usabilidad | Falta PSSUQ con usuarios reales. | [PENDIENTE] |
+| Interfaz | Falta matriz manual por dispositivo/navegador real; TC-UI-003 solo cubre anchos de referencia. | TC-UI-003 |
+| Accesibilidad | Cobertura basica; falta auditoria WCAG completa. | TC-UI-005 |
+| Usabilidad | Faltan sesiones con usuarios reales y resultados SUS/PSSUQ. | TC-US-001, TC-US-002 |
 
 ## Anexo D. Evidencia TDD y Mejoras Integradas
 
@@ -797,7 +900,7 @@ archivos; su contenido clave es:
 | Diseno Material 3 | Tema, navegacion adaptativa, filtros, formularios, ajustes y componentes Material 3. | UI consistente con Material 3 y pruebas especificas de diseño. |
 | Horario Material 3 | Vista semanal/dia, panel diario, tarjetas de clase, chips y estado vacio. | Pantalla Horario validada con widgets y componentes responsive. |
 | Calendario Material 3 | Vista mensual/dia, panel diario, tarjetas de evento, chips y estado vacio. | Pantalla Calendario validada con comportamiento responsive. |
-| Ajustes avanzados Material 3 | RF-043 a RF-050: aviso de eventos, tema, vista inicial, densidad, inicio de semana, confirmaciones, gestion de datos e informacion. | RF-043 a RF-050 completos. |
+| Ajustes avanzados Material 3 | RF-043 a RF-055: aviso de eventos, tema, vista inicial, densidad, inicio de semana, confirmaciones, gestion de datos, informacion, recuperacion, estados de carga, estados vacios, diagnostico y ayuda contextual. | RF-043 a RF-055 completos, con usabilidad humana pendiente en TC-US-001/TC-US-002. |
 
 ## Anexo E. Arquitectura y Flujo de Datos Integrados
 
