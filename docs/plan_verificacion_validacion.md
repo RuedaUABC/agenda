@@ -6,6 +6,7 @@
 | --- | --- | --- | --- |
 | 1.0 | 2026-05-24 | Version inicial del Plan de Verificacion y Validacion de Agenda. | Equipo de V&V |
 | 1.1 | 2026-05-28 | Actualizacion con pruebas de interfaz de usuario, usabilidad, metricas UI, Pareto y resultados actuales de `flutter analyze`/`flutter test`. | Equipo de V&V |
+| 1.2 | 2026-05-28 | Actualizacion con resultados del reporte integrado de pruebas UI/UX ejecutado el 2026-05-27. | Equipo de V&V |
 
 ## 1. Proposito
 
@@ -78,8 +79,8 @@ Quedan fuera de este plan:
 - Auditorias externas de procesos organizacionales.
 - Certificacion externa de entrega de notificaciones por cada sistema
   operativo, mas alla de la integracion y pruebas automatizadas locales.
-- Dictamen estadistico final de usabilidad mediante SUS o PSSUQ mientras no
-  existan usuarios participantes ni datos recolectados.
+- Seguimiento posterior de remediaciones UI/UX despues de aplicar las acciones
+  correctivas derivadas del reporte del 2026-05-27.
 - Integracion con Firebase u otros servicios externos retirados del alcance
   actual.
 
@@ -127,6 +128,9 @@ mismo sin depender de abrir archivos externos.
 - `Pruebas de interfaz de usuario-usabilidad-1.pdf`: insumo actualizado para
   tipos de prueba UI, atributos de calidad, metricas, herramientas y
   referencias formales de usabilidad.
+- `Reporte de Pruebas de Interfaz y Usabilidad.pdf`: resultados integrados de
+  pruebas fisicas UI/UX ejecutadas el 2026-05-27 con usuarios reales y equipo
+  de desarrollo.
 
 ## 4. Definiciones y Acronimos
 
@@ -207,7 +211,7 @@ Responsables nominales:
 - Responsable de V&V: Moreno Lopez Yamir Exel
 - Responsable de QA: Alan Alexis Galvez Necoechea
 - Desarrolladores: Alan Alexis Galvez Necoechea; Moreno Lopez Yamir Exel; Garcia Vargas Kevin Misael; Rueda Gallegos Jorge Alberto
-- Usuario representante: por reclutar para pruebas de usabilidad y aceptacion.
+- Usuarios representantes en pruebas UI/UX: Juan, Ariel y Marcos.
 - Patrocinador o jefe de proyecto: Luis Ernesto Mellín Pineda
 
 ### 6.2. Independencia de V&V
@@ -379,10 +383,58 @@ Entregables:
 - Resultados SUS/PSSUQ, cuando se ejecuten sesiones con usuarios.
 - Acta de aceptacion o lista de acciones pendientes.
 
-Estado actual: las pruebas UI tecnicas cuentan con casos documentados y
-cobertura automatizada/parcial en widgets Material 3. Las pruebas con usuarios
-reales siguen como `Not Executed` hasta registrar participantes, fechas,
-escenarios observados, resultados SUS/PSSUQ y comentarios.
+Estado actual: las pruebas UI/UX fisicas fueron ejecutadas el 2026-05-27 con
+tres usuarios reales, Juan, Ariel y Marcos, y evaluacion tecnica del equipo de
+desarrollo sobre el port de escritorio. El reporte integrado registra 15 casos
+ejecutados, todos con estado final exitoso o exitoso con alerta, y 10 hallazgos
+colectivos de interfaz/usabilidad que quedan como acciones de remediacion.
+
+Resultados cuantitativos del reporte UI/UX:
+
+| Caso | Modulo | Tarea | Meta | Promedio | Estado |
+| --- | --- | --- | --- | ---: | --- |
+| TC-TAR-004 | Tareas | Validacion completa de tarea | < 45 s | 25.84 s | Exitoso |
+| TC-TAR-016 | Tareas | Rechazo de tarea duplicada | < 30 s | 21.74 s | Exitoso con alerta |
+| TC-TAR-008 | Tareas | Eliminacion logica de tarea | < 25 s | 8.17 s | Exitoso |
+| TC-TAR-011 | Tareas | Clasificacion de tareas | < 30 s | 10.77 s | Exitoso |
+| TC-HOR-002 | Horario | Creacion de clase semanal | < 60 s | 35.07 s | Exitoso |
+| TC-HOR-004 | Horario | Rango horario y solapamiento | < 35 s | 12.51 s | Exitoso |
+| TC-CAL-010 | Calendario | Validar rango de evento | < 30 s | 22.17 s | Exitoso con alerta |
+| TC-CAL-014 | Calendario | Advertencia de superposiciones | < 40 s | 19.04 s | Exitoso |
+| TC-CONF-012 | Ajustes | Confirmaciones configurables | < 40 s | 15.14 s | Exitoso |
+| TC-CONF-013 | Ajustes | Exportar respaldo JSON | < 30 s | 15.40 s | Exitoso |
+| TC-CONF-014 | Ajustes | Borrado de datos con `BORRAR` | < 20 s | 17.10 s | Exitoso |
+| TC-CONF-015 | Ajustes | Aplicacion en tiempo real | < 25 s | 15.40 s | Exitoso |
+| TC-CONF-016 | Ajustes | Importar respaldo JSON | < 25 s | 22.70 s | Exitoso |
+| TC-M3-002 | Interfaz | Navegacion adaptativa Material 3 | < 20 s | 10.11 s | Exitoso |
+| TC-UI-004 | Interfaz | Retroalimentacion con snackbar | < 30 s | 18.00 s | Exitoso |
+
+Hallazgos colectivos del reporte UI/UX:
+
+- Area reactiva inconsistente en botones con texto e icono.
+- Falta de cursor tipo pointer/hand en elementos interactivos de escritorio.
+- Desajustes geometricos en pantallas grandes por traduccion directa del
+  layout movil.
+- Falta de flujo guiado para creacion de eventos.
+- Selector de hora circular poco intuitivo.
+- Entrada de hora por teclado demasiado oculta o con contraste insuficiente.
+- Boton para agregar otra clase desencuadrado tras agregar una materia.
+- Baja densidad informativa del calendario al indicar eventos solo con puntos.
+- Redundancia de informacion en la vista de calendario.
+- Retraso visual despues del borrado local de datos, aunque la accion tecnica
+  se ejecuta internamente.
+
+Acciones correctivas definidas:
+
+- Expandir el area seleccionable completa de botones y forzar `cursor: pointer`
+  en hover.
+- Establecer ancho maximo y padding automatico en pantallas mayores a 1024 px.
+- Sustituir el selector circular de hora por entrada directa tipo `00:00`.
+- Eliminar etiquetas redundantes del calendario y usar badges o etiquetas con
+  titulo parcial del evento.
+- Fijar la posicion del boton "Agregar clase" con contenedor flexible estable.
+- Vincular la confirmacion `BORRAR` con actualizacion global de estado para
+  repintar la UI inmediatamente.
 
 ### 7.2. Metodos y Tecnicas de V&V
 
@@ -440,8 +492,9 @@ Para considerar aceptable una version de Agenda:
 - Las limitaciones conocidas deben aparecer en reportes y conclusiones.
 - Los casos UI de prioridad Alta deben quedar en Pass o tener hallazgo
   documentado con accion de mejora.
-- Las pruebas de usabilidad con usuarios reales no deben declararse completadas
-  mientras TC-US-001 y TC-US-002 permanezcan `Not Executed`.
+- Las pruebas de usabilidad con usuarios reales deben conservar evidencia de
+  tiempos, participantes, hallazgos y acciones correctivas; las remediaciones
+  UI/UX deben re-probarse antes de cierre final.
 
 ## 8. Planificacion y Cronograma
 
@@ -451,13 +504,13 @@ planeacion, construccion, verificacion, validacion y cierre.
 
 | Hito | Periodo | Actividad | Entregable | Responsable |
 | --- | --- | --- | --- | --- |
-| H1 | 27/03/2026 - 03/04/2026 | Inicio del proyecto, definicion de alcance, identificacion de modulos y levantamiento inicial de requisitos. | Alcance inicial, lista preliminar de RF/RNF y casos de uso base. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea |
-| H2 | 04/04/2026 - 12/04/2026 | Revision y refinamiento de requisitos, reglas de negocio y trazabilidad inicial. | Requisitos funcionales/no funcionales, reglas de negocio y matriz de trazabilidad preliminar. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea |
+| H1 | 27/03/2026 - 03/04/2026 | Inicio del proyecto, definicion de alcance, identificacion de modulos y levantamiento inicial de requisitos. | Alcance inicial, lista preliminar de RF/RNF y casos de uso base. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; Rueda Gallegos Jorge Alberto |
+| H2 | 04/04/2026 - 12/04/2026 | Revision y refinamiento de requisitos, reglas de negocio y trazabilidad inicial. | Requisitos funcionales/no funcionales, reglas de negocio y matriz de trazabilidad preliminar. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; Rueda Gallegos Jorge Alberto |
 | H3 | 13/04/2026 - 21/04/2026 | Revision de arquitectura, diseno de capas, persistencia local y lineamientos Material 3. | Informe de diseno, arquitectura feature-first y criterios de interfaz. | Alan Alexis Galvez Necoechea; Moreno Lopez Yamir Exel; Garcia Vargas Kevin Misael; Rueda Gallegos Jorge Alberto |
 | H4 | 22/04/2026 - 08/05/2026 | Implementacion y verificacion por modulo: tareas, horario, calendario, configuracion y navegacion. | Funcionalidades implementadas, pruebas unitarias/widgets y evidencia Red-Green-Refactor. | Alan Alexis Galvez Necoechea; Moreno Lopez Yamir Exel; Garcia Vargas Kevin Misael; Rueda Gallegos Jorge Alberto |
-| H5 | 09/05/2026 - 17/05/2026 | Pruebas de integracion, pruebas de sistema, revision de persistencia y regresion. | Resultados de `flutter analyze`, `flutter test`, pruebas por feature y lista de defectos/brechas. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea |
-| H6 | 18/05/2026 - 24/05/2026 | Validacion funcional, revision de interfaz/usabilidad, preparacion de SUS/PSSUQ y documentacion de pendientes. | Informe de validacion, casos TC-UI/TC-US, candidatos SUS/PSSUQ y acciones pendientes. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; usuarios representativos por reclutar |
-| H7 | 25/05/2026 - 29/05/2026 | Cierre de V&V, consolidacion de metricas, analisis de defectos, conclusiones y aprobacion. | SVVR, aprobacion final o lista de acciones pendientes para liberacion. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; Luis Ernesto Mellín Pineda |
+| H5 | 09/05/2026 - 17/05/2026 | Pruebas de integracion, pruebas de sistema, revision de persistencia y regresion. | Resultados de `flutter analyze`, `flutter test`, pruebas por feature y lista de defectos/brechas. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; Rueda Gallegos Jorge Alberto |
+| H6 | 18/05/2026 - 24/05/2026 | Validacion funcional, revision de interfaz/usabilidad, preparacion de SUS/PSSUQ y documentacion de pendientes. | Informe de validacion, casos TC-UI/TC-US, candidatos SUS/PSSUQ y acciones pendientes. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; Rueda Gallegos Jorge Alberto; usuarios Juan, Ariel y Marcos |
+| H7 | 25/05/2026 - 29/05/2026 | Cierre de V&V, consolidacion de metricas, analisis de defectos, conclusiones y aprobacion. | SVVR, aprobacion final o lista de acciones pendientes para liberacion. | Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea; Rueda Gallegos Jorge Alberto; Luis Ernesto Mellín Pineda |
 
 ## 9. Recursos, Herramientas y Ambientes
 
@@ -467,7 +520,7 @@ planeacion, construccion, verificacion, validacion y cierre.
 - Responsable de QA: Alan Alexis Galvez Necoechea
 - Desarrolladores: Alan Alexis Galvez Necoechea; Moreno Lopez Yamir Exel; Garcia Vargas Kevin Misael; Rueda Gallegos Jorge Alberto
 - Ingenieros de prueba: Moreno Lopez Yamir Exel; Alan Alexis Galvez Necoechea
-- Usuarios participantes: por reclutar para sesiones TC-US-001 y TC-US-002.
+- Usuarios participantes: Juan, Ariel y Marcos.
 - Patrocinador o jefe de proyecto: Luis Ernesto Mellín Pineda
 
 ### 9.2. Herramientas
@@ -601,19 +654,20 @@ Procedimiento:
 6. Identificar las pocas causas vitales que expliquen al menos 70% de los
    defectos.
 
-Resultado preliminar con defectos y brechas conocidas:
+Resultado del reporte UI/UX del 2026-05-27:
 
 | Categoria | Cantidad | % Total | % Acumulado |
 | --- | ---: | ---: | ---: |
-| Interfaz/usabilidad | 3 | 33.3% | 33.3% |
-| Configuracion | 2 | 22.2% | 55.5% |
-| Persistencia/plataforma | 2 | 22.2% | 77.7% |
-| Gestion de datos | 1 | 11.1% | 88.8% |
-| Tareas | 1 | 11.2% | 100.0% |
+| Formularios/aprendizabilidad | 3 | 30.0% | 30.0% |
+| Interaccion/operabilidad | 2 | 20.0% | 50.0% |
+| Calendario/estetica | 2 | 20.0% | 70.0% |
+| Layout/compatibilidad | 1 | 10.0% | 80.0% |
+| Horario/consistencia visual | 1 | 10.0% | 90.0% |
+| Persistencia/confiabilidad UI | 1 | 10.0% | 100.0% |
 
-Interpretacion: las tres categorias principales concentran 77.7% de los defectos
-y brechas documentadas, por lo que las acciones de mejora deben priorizar
-interfaz/usabilidad, configuracion y persistencia/plataforma.
+Interpretacion: las tres categorias principales concentran 70% de los
+hallazgos UI/UX, por lo que las acciones de mejora deben priorizar
+formularios/aprendizabilidad, interaccion/operabilidad y calendario/estetica.
 
 Defectos o brechas conocidas actualmente:
 
@@ -625,9 +679,18 @@ Defectos o brechas conocidas actualmente:
 | DEF-004 | Persistencia | Migracion SQLite cubierta por test automatizado con `sqflite_common_ffi`. | Cerrado |
 | DEF-005 | Plataforma | SQLite FFI de escritorio cubierto por smoke test automatizado Windows/Linux. | Cerrado |
 | DEF-006 | Tareas | RF-006/RF-007 bloquean duplicados exactos normalizados en creacion y edicion. | Cerrado |
-| DEF-007 | Usabilidad | Falta ejecutar TC-US-001 y TC-US-002 con usuarios reales y registrar SUS/PSSUQ. | Pendiente |
+| DEF-007 | Usabilidad | Sesiones UI/UX ejecutadas con Juan, Ariel y Marcos; 15 casos con estado final exitoso o exitoso con alerta. | Cerrado |
 | DEF-008 | Accesibilidad | La accesibilidad esta cubierta solo de forma basica; falta auditoria WCAG completa. | Parcial |
-| DEF-009 | Compatibilidad | Falta matriz manual por navegador, resolucion o dispositivo fisico; TC-UI-003 cubre anchos de referencia. | Pendiente |
+| DEF-009 | Compatibilidad | El reporte detecta desajustes geometricos en pantallas grandes por adaptacion de layout movil a escritorio. | Abierto |
+| DEF-010 | Interaccion | Botones con texto e icono no iluminan ni activan todo el contenedor. | Abierto |
+| DEF-011 | Interaccion | Elementos interactivos no muestran cursor pointer/hand en hover. | Abierto |
+| DEF-012 | Formularios | Creacion de eventos carece de flujo guiado o secuencia visual intuitiva. | Abierto |
+| DEF-013 | Formularios | Selector de hora circular resulta poco intuitivo para usuarios finales. | Abierto |
+| DEF-014 | Formularios | Entrada de hora por teclado esta oculta o tiene contraste insuficiente. | Abierto |
+| DEF-015 | Horario | Boton para agregar otra clase se desencuadra tras registrar una materia. | Abierto |
+| DEF-016 | Calendario | Vista mensual usa puntos pequenos que reducen lectura anticipada de actividades. | Abierto |
+| DEF-017 | Calendario | Existen elementos informativos duplicados o superpuestos. | Abierto |
+| DEF-018 | Gestion de datos | Borrado local ejecuta la accion, pero las vistas activas no se actualizan inmediatamente. | Abierto |
 
 ## 12. Metricas de V&V y Reportes
 
@@ -669,8 +732,12 @@ Estado documental actual:
 - 77 casos de prueba formales documentados por modulo en
   `docs/casos_prueba.md`.
 - 5 casos especificos de UI documentados: TC-UI-001 a TC-UI-005.
-- 2 casos de usabilidad con usuarios reales documentados como `Not Executed`:
-  TC-US-001 y TC-US-002.
+- Pruebas UI/UX fisicas ejecutadas el 2026-05-27 con tres usuarios reales:
+  Juan, Ariel y Marcos.
+- 15 casos ejecutados en vivo con tiempo cronometrado; todos finalizaron como
+  exitosos o exitosos con alerta.
+- Tiempo promedio global de los casos ejecutados: 17.94 segundos.
+- Hallazgos colectivos UI/UX documentados: 10.
 - Matriz de trazabilidad documentada en `docs/requerimientos/trazabilidad.md`.
 - Pruebas automatizadas organizadas por feature en `test/features/`.
 
@@ -695,9 +762,9 @@ Resumen de salida:
 - La suite cubre pruebas unitarias, controllers, widgets, formularios,
   persistencia local, configuracion, navegacion adaptativa, componentes
   Material 3 y evidencia tecnica de UI.
-- Las pruebas de usabilidad con usuarios reales permanecen pendientes porque
-  requieren participantes, observacion directa y cuestionario SUS/PSSUQ
-  aplicado.
+- El reporte UI/UX del 2026-05-27 complementa la suite automatizada con pruebas
+  fisicas presenciales, tiempos de ejecucion, usuarios reales y hallazgos de
+  interfaz/usabilidad.
 
 ### 12.2. Reportes
 
@@ -709,8 +776,8 @@ Reportes esperados:
 - Informe de pruebas de integracion y sistema.
 - Informe de pruebas de interfaz de usuario.
 - Informe de pruebas de aceptacion.
-- Informe de usabilidad con resultados SUS/PSSUQ, cuando se ejecute con
-  participantes.
+- Informe de usabilidad con resultados UI/UX, tiempos por usuario, hallazgos y
+  acciones correctivas.
 - Informe de defectos.
 - Analisis de causa raiz.
 - Analisis de Pareto.
@@ -733,9 +800,9 @@ Cada reporte debe indicar:
 
 | Riesgo | Impacto | Probabilidad | Mitigacion |
 | --- | --- | --- | --- |
-| Falta de usuarios para pruebas SUS/PSSUQ. | Alto | Media | Planear sesiones con anticipacion, usar usuarios representativos y mantener TC-US como `Not Executed` hasta contar con evidencia. |
+| Hallazgos UI/UX abiertos despues de pruebas fisicas. | Alto | Alta | Ejecutar el plan de remediacion del reporte: botones, hover, layout desktop, formularios de hora, calendario y borrado de datos. |
 | Brechas de accesibilidad no detectadas por pruebas de widgets. | Medio | Media | Complementar TC-UI-005 con revision WCAG, contraste, teclado, etiquetas semanticas y tecnologias asistivas. |
-| Compatibilidad no validada en dispositivos/navegadores reales. | Medio | Media | Construir matriz manual por resolucion, navegador o dispositivo y registrar resultados de TC-UI-003. |
+| Adaptacion desktop inconsistente. | Medio | Alta | Establecer ancho maximo y padding automatico en pantallas mayores a 1024 px; repetir pruebas responsivas despues del cambio. |
 | Requisitos cambiantes durante el cierre. | Medio | Media | Actualizar matriz de trazabilidad y ejecutar regresion. |
 | Regresion en notificaciones nativas. | Bajo | Alta | Mantener `calendario_repository_notifications_test.dart` y fallback seguro del scheduler. |
 | Regresion de migracion SQLite. | Bajo | Media | Mantener `sqlite_migration_test.dart` con base temporal FFI. |
@@ -869,8 +936,8 @@ modulo. El contenido importante se resume asi:
 | Calendario y eventos | 14 | Carga, vista mensual, seleccion de fecha, eventos por dia, varios dias, creacion, validacion, edicion, eliminacion y superposiciones. | Pass |
 | Configuracion y notificaciones | 16 | Preferencias, avisos, validaciones, tema, vista inicial, densidad, inicio de semana, confirmaciones, datos locales e informacion de app. | Pass; RF-043, RF-048 y RF-049 cuentan con evidencia automatizada y documentada. |
 | Diseno Material 3 | 6 | Tema, navegacion adaptativa, tareas, formularios, ajustes, horario y calendario Material 3. | Pass |
-| Interfaz de usuario | 5 | Consistencia visual, navegacion, responsividad, retroalimentacion y accesibilidad basica. | Pass/Partial; accesibilidad basica no sustituye auditoria WCAG completa. |
-| Usabilidad | 2 | Escenarios con usuarios reales y medicion de satisfaccion SUS/PSSUQ. | Not Executed; requiere participantes, observacion y cuestionario aplicado. |
+| Interfaz de usuario | 5 | Consistencia visual, navegacion, responsividad, retroalimentacion y accesibilidad basica. | Executed with findings; reporte UI/UX registra hallazgos de botones, hover, layout desktop, calendario y borrado visual. |
+| Usabilidad | 2 | Escenarios con usuarios reales, tiempos de ejecucion y retroalimentacion cualitativa. | Executed; 3 usuarios, 15 casos, promedio global 17.94 s y 10 hallazgos colectivos. |
 | Persistencia y modelos | 6 | Serializacion de entidades, migracion, SQLite escritorio y error visible de persistencia. | Pass, incluyendo migracion y smoke test FFI de escritorio. |
 
 Seguimiento de cobertura:
@@ -883,9 +950,9 @@ Seguimiento de cobertura:
 | Gestion de datos | Sin brecha abierta para RF-049; importacion/exportacion y borrado con `BORRAR` cubiertos. | TC-CONF-013 |
 | Persistencia | Sin brecha abierta; migracion SQLite automatizada. | TC-PER-004 |
 | Escritorio | Sin brecha abierta; smoke test SQLite FFI automatizado. | TC-PER-005 |
-| Interfaz | Falta matriz manual por dispositivo/navegador real; TC-UI-003 solo cubre anchos de referencia. | TC-UI-003 |
+| Interfaz | Hallazgos abiertos de botones, hover, layout desktop, calendario y simetria en horario. | TC-UI-003, TC-UI-004, TC-M3-002 |
 | Accesibilidad | Cobertura basica; falta auditoria WCAG completa. | TC-UI-005 |
-| Usabilidad | Faltan sesiones con usuarios reales y resultados SUS/PSSUQ. | TC-US-001, TC-US-002 |
+| Usabilidad | Sesiones con usuarios reales ejecutadas; quedan acciones de remediacion UI/UX y eventual re-prueba. | TC-US-001, TC-US-002 |
 
 ## Anexo D. Evidencia TDD y Mejoras Integradas
 
@@ -900,7 +967,7 @@ archivos; su contenido clave es:
 | Diseno Material 3 | Tema, navegacion adaptativa, filtros, formularios, ajustes y componentes Material 3. | UI consistente con Material 3 y pruebas especificas de diseño. |
 | Horario Material 3 | Vista semanal/dia, panel diario, tarjetas de clase, chips y estado vacio. | Pantalla Horario validada con widgets y componentes responsive. |
 | Calendario Material 3 | Vista mensual/dia, panel diario, tarjetas de evento, chips y estado vacio. | Pantalla Calendario validada con comportamiento responsive. |
-| Ajustes avanzados Material 3 | RF-043 a RF-055: aviso de eventos, tema, vista inicial, densidad, inicio de semana, confirmaciones, gestion de datos, informacion, recuperacion, estados de carga, estados vacios, diagnostico y ayuda contextual. | RF-043 a RF-055 completos, con usabilidad humana pendiente en TC-US-001/TC-US-002. |
+| Ajustes avanzados Material 3 | RF-043 a RF-055: aviso de eventos, tema, vista inicial, densidad, inicio de semana, confirmaciones, gestion de datos, informacion, recuperacion, estados de carga, estados vacios, diagnostico y ayuda contextual. | RF-043 a RF-055 completos; reporte UI/UX agrega hallazgo de refresco visual tras borrado local. |
 
 ## Anexo E. Arquitectura y Flujo de Datos Integrados
 

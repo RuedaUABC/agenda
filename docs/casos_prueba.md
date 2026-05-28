@@ -110,8 +110,8 @@ automatizada especifica.
 | TC-UI-003 | Responsividad de navegacion | Verifica que la interfaz adapte la navegacion a distintos anchos de pantalla. | La navegacion se renderiza con paginas de prueba. | 1. Probar ancho movil.<br>2. Probar ancho tablet.<br>3. Probar ancho escritorio. | Anchos: 390, 800 y 1200 px. | Se usa barra inferior en movil, rail en tablet y rail extendido en escritorio. | La navegacion queda adaptada al dispositivo. | Pass en `material3_navigation_test.dart`. | Pass | Relacionado con pruebas responsivas del PDF. | RNF-009, RNF-010 | Alta |
 | TC-UI-004 | Retroalimentacion ante acciones | Verifica que la interfaz informe guardado, errores, eliminaciones y recuperacion. | Existen formularios y elementos eliminables. | 1. Guardar tarea, clase y evento.<br>2. Ejecutar eliminaciones reversibles.<br>3. Provocar error de persistencia simulado.<br>4. Revisar mensajes. | Guardados validos, eliminaciones y error `db down`. | La app muestra estado de guardado, snackbar, accion `Deshacer` cuando aplica y errores visibles. | El usuario recibe confirmacion o recuperacion de la accion. | Pass en `widget_test.dart`, `tarea_form_test.dart`, `clase_form_test.dart`, `evento_form_test.dart` y widgets de calendario/horario. | Pass | Relacionado con pruebas de interaccion del PDF. | RNF-023, RF-048, RF-051 | Alta |
 | TC-UI-005 | Accesibilidad basica de controles | Verifica objetivos tactiles minimos y controles reconocibles en formularios y ajustes. | Formularios y ajustes estan disponibles. | 1. Revisar selectores de color.<br>2. Revisar densidad compacta.<br>3. Revisar controles de ajustes.<br>4. Confirmar que no se reduzcan objetivos tactiles criticos. | Color picker `48x48`; densidad compacta. | Los controles principales conservan objetivos tactiles minimos y usan componentes reconocibles. | La interfaz mantiene operabilidad basica. | Pass parcial en pruebas de Material 3; no sustituye una auditoria WCAG completa. | Partial | Relacionado con accesibilidad del PDF. | RNF-010, RNF-027 | Media |
-| TC-US-001 | Prueba de tareas con usuarios reales | Evalua si usuarios representativos completan tareas comunes con facilidad, eficiencia y pocos errores. | Deben reclutarse usuarios o representantes y preparar escenarios. | 1. Pedir crear una tarea.<br>2. Pedir editarla.<br>3. Pedir enviarla a papelera y recuperarla.<br>4. Registrar errores, ayudas y tiempo. | Escenario de tarea academica real. | El usuario completa el flujo sin bloqueos, con pocas ayudas y comprendiendo confirmaciones. | Se obtiene evidencia de facilidad de uso. | No ejecutado; no hay sesiones con usuarios reales registradas. | Not Executed | Relacionado con pruebas de usabilidad del PDF: usuarios, tareas, observacion y analisis. | RF-005, RF-007, RF-009, RF-010 | Alta |
-| TC-US-002 | Satisfaccion de usuario | Mide satisfaccion percibida despues de completar escenarios principales. | Deben existir participantes y cuestionario definido. | 1. Ejecutar escenarios de uso.<br>2. Aplicar SUS o PSSUQ.<br>3. Calcular puntuacion.<br>4. Registrar comentarios. | Cuestionario SUS o PSSUQ. | Se obtiene una medicion de satisfaccion y oportunidades de mejora. | La evaluacion queda documentada para priorizar ajustes de UX. | No ejecutado; pendiente hasta contar con usuarios y cuestionario aplicado. | Not Executed | Relacionado con metrica de satisfaccion/SUS del PDF. | RNF-012, RNF-027 | Media |
+| TC-US-001 | Prueba de tareas con usuarios reales | Evalua si usuarios representativos completan tareas comunes con facilidad, eficiencia y pocos errores. | Usuarios Juan, Ariel y Marcos participaron en pruebas fisicas el 2026-05-27. | 1. Ejecutar escenarios de tareas, horario, calendario, ajustes e interfaz.<br>2. Cronometrar tiempos por usuario.<br>3. Registrar alertas y comentarios.<br>4. Consolidar hallazgos. | Escenarios de tareas, horario, calendario, ajustes e interfaz. | El usuario completa los flujos sin bloqueos y los tiempos promedio quedan dentro de las metas. | Se obtiene evidencia de facilidad de uso y lista de remediaciones. | Ejecutado en reporte UI/UX: 15 casos exitosos o exitosos con alerta; promedio global 17.94 s. | Pass with Findings | Evidencia: `Reporte de Pruebas de Interfaz y Usabilidad.pdf`; hallazgos de botones, hover, layout desktop, calendario, selector de hora y borrado visual. | RF-005, RF-007, RF-009, RF-010 | Alta |
+| TC-US-002 | Satisfaccion de usuario | Mide satisfaccion percibida despues de completar escenarios principales. | Usuarios Juan, Ariel y Marcos participaron en pruebas fisicas el 2026-05-27. | 1. Ejecutar escenarios de uso.<br>2. Recopilar retroalimentacion cualitativa.<br>3. Consolidar hallazgos colectivos.<br>4. Priorizar acciones de UX. | Feedback de usuarios y reporte UI/UX. | Se obtiene una medicion de satisfaccion/experiencia y oportunidades de mejora. | La evaluacion queda documentada para priorizar ajustes de UX. | Ejecutado mediante retroalimentacion cualitativa: se registraron 10 hallazgos colectivos y 6 acciones correctivas. | Pass with Findings | Evidencia: `Reporte de Pruebas de Interfaz y Usabilidad.pdf`; no se reporta puntaje SUS numerico, pero si resultados observacionales y plan de remediacion. | RNF-012, RNF-027 | Media |
 
 ## Persistencia y Modelos
 
@@ -137,10 +137,12 @@ Resultado de la suite completa:
 | --- | --- | --- |
 | `flutter test` | 138 pruebas aprobadas, 0 fallidas. | Pass |
 
-La ejecucion cubre pruebas unitarias, controllers, widgets, formularios,
-persistencia local, configuracion, navegacion adaptativa y componentes Material
-3. Las pruebas de usabilidad con usuarios reales quedan registradas como `Not
-Executed`, porque requieren participantes, observacion y cuestionarios.
+La ejecucion automatizada cubre pruebas unitarias, controllers, widgets,
+formularios, persistencia local, configuracion, navegacion adaptativa y
+componentes Material 3. Las pruebas fisicas de UI/UX fueron ejecutadas el
+2026-05-27 con Juan, Ariel y Marcos; el reporte consolidado registra 15 casos
+exitosos o exitosos con alerta, promedio global de 17.94 s, 10 hallazgos
+colectivos y 6 acciones correctivas.
 
 Comandos recomendados para repetir la ejecucion:
 
@@ -156,7 +158,7 @@ flutter test test/features/configuracion
 
 | ID | Area | Hallazgo / error | Evidencia | Estado | Accion recomendada |
 | --- | --- | --- | --- | --- | --- |
-| H-UI-001 | Usabilidad | No se han ejecutado pruebas con usuarios reales, por lo que aun no hay medicion de facilidad, eficiencia, errores de usuario o satisfaccion. | TC-US-001 y TC-US-002. | Abierto | Ejecutar escenarios con usuarios representativos y registrar tiempo, ayudas, errores y SUS/PSSUQ. |
+| H-UI-001 | Usabilidad | Las pruebas con usuarios reales ya fueron ejecutadas; quedan 10 hallazgos colectivos de UI/UX por remediar. | TC-US-001, TC-US-002 y `Reporte de Pruebas de Interfaz y Usabilidad.pdf`. | Parcial | Aplicar plan de remediacion y repetir escenarios criticos. |
 | H-UI-002 | Accesibilidad | La accesibilidad esta cubierta solo de forma basica mediante objetivos tactiles y controles reconocibles; no hay auditoria WCAG completa. | TC-UI-005. | Parcial | Revisar contraste, navegacion por teclado, etiquetas semanticas y lectura por tecnologias asistivas. |
 | H-UI-003 | Compatibilidad | La suite automatizada valida comportamiento de widgets, pero no documenta una matriz manual por navegador, resolucion o dispositivo fisico. | TC-UI-003 cubre anchos; falta matriz real de dispositivos. | Abierto | Probar en al menos movil, tablet/escritorio y navegador objetivo, registrando resolucion y resultado. |
 
@@ -168,4 +170,4 @@ flutter test test/features/configuracion
 | M-002 | Se reforzaron estados de guardado para evitar taps duplicados y dar retroalimentacion visible. | TC-UI-004 y pruebas de formularios en tareas, horario y calendario. | Implementada |
 | M-003 | Se agrego recuperacion mediante `Deshacer` y confirmaciones reforzadas en acciones destructivas. | TC-CONF-012, TC-UI-004 y pruebas de widgets. | Implementada |
 | M-004 | Se mejoro la consistencia visual con Material 3 en formularios, ajustes, horario y calendario. | TC-M3-001 a TC-M3-006 y TC-UI-001. | Implementada |
-| M-005 | Se documentaron pruebas de usabilidad pendientes para no confundir cobertura automatizada con validacion humana. | TC-US-001, TC-US-002 y hallazgo H-UI-001. | Documentada |
+| M-005 | Se ejecutaron pruebas fisicas UI/UX con tres usuarios reales y se consolidaron tiempos, hallazgos y acciones correctivas. | TC-US-001, TC-US-002 y `Reporte de Pruebas de Interfaz y Usabilidad.pdf`. | Documentada |

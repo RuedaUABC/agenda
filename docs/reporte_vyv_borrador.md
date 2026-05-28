@@ -95,12 +95,12 @@ pantallas, controllers, repositorios, modelos y pruebas automatizadas. Las
 fuentes revisadas incluyen `lib/main.dart`, `lib/core/`, `lib/features/`,
 `test/features/` y `test/widget_test.dart`.
 
-[PENDIENTE] Complementar con un metodo directo de indagacion con usuarios
-reales, por ejemplo entrevista, encuesta o prueba de usabilidad.
+Complementado con pruebas fisicas UI/UX ejecutadas el 2026-05-27 con Juan,
+Ariel y Marcos, registradas en `Reporte de Pruebas de Interfaz y Usabilidad.pdf`.
 
 ### Functional requirements
 
-El proyecto cuenta con 50 requisitos funcionales documentados. La cobertura
+El proyecto cuenta con 55 requisitos funcionales documentados. La cobertura
 principal por modulo es:
 
 - RF-001 a RF-002: navegacion principal y conservacion de estado entre modulos.
@@ -116,12 +116,13 @@ principal por modulo es:
 - RF-043 a RF-050: ajustes avanzados, aviso de eventos, tema, vista inicial,
   densidad, inicio de semana, confirmaciones, gestion de datos e informacion de
   la aplicacion.
+- RF-051 a RF-055: recuperacion de acciones, estados de carga, estados vacios,
+  diagnostico de validaciones complejas y ayuda contextual.
 
 La mayoria de los requisitos se encuentran en estado Implementado. RF-043 se
 documenta como implementado con cobertura automatizada para scheduler nativo de
-eventos. RF-048 y RF-049 permanecen parciales: las confirmaciones comunes,
-archivo nativo e importacion/exportacion estan cubiertos, pero falta una
-confirmacion reforzada verificable para borrado total.
+eventos. RF-048 y RF-049 estan implementados con confirmaciones, archivo nativo,
+importacion/exportacion y borrado reforzado mediante `BORRAR`.
 
 ### Non-functional requirements
 
@@ -449,6 +450,7 @@ Reportes:
 - Informe de revision de diseno.
 - Informe de pruebas unitarias/widgets.
 - Informe de pruebas de integracion y sistema.
+- Informe de pruebas integradas UI/UX con usuarios reales.
 - Informe de defectos.
 - SVVR: informe global de V&V con conclusiones de aceptabilidad.
 
@@ -457,7 +459,7 @@ Reportes:
 Riesgos:
 
 - Cambios frecuentes en requisitos o comportamiento esperado.
-- Falta de usuarios reales para validacion PSSUQ.
+- Hallazgos UI/UX abiertos despues de pruebas con usuarios reales.
 - Falta de datos representativos para pruebas.
 - Regresiones en integraciones nativas de notificaciones, archivos o SQLite FFI.
 
@@ -466,7 +468,7 @@ Mitigacion:
 - Mantener trazabilidad actualizada.
 - Usar pruebas automatizadas por feature.
 - Registrar pendientes sin presentarlos como completos.
-- Planear sesiones de usuario con anticipacion.
+- Aplicar el plan de remediacion UI/UX y repetir escenarios criticos.
 - Generar datos de prueba representativos.
 
 #### Approval
@@ -581,14 +583,17 @@ Los modulos principales cuentan con pruebas automatizadas:
 
 Metricas disponibles desde la documentacion:
 
-- 50 requisitos funcionales documentados.
+- 55 requisitos funcionales documentados.
 - Requisitos no funcionales organizados en plataforma, arquitectura, usabilidad,
   datos, calidad, robustez y notificaciones.
 - Casos de prueba por modulo con estado Pass, Partial o Not Executed.
+- Pruebas UI/UX fisicas ejecutadas el 2026-05-27 con Juan, Ariel y Marcos:
+  15 casos exitosos o exitosos con alerta, promedio global 17.94 s y 10
+  hallazgos colectivos.
 - Suites automatizadas recomendadas por feature.
 - RF-043 cerrado como implementado.
-- RF-048 y RF-049 identificados como parciales por la confirmacion reforzada
-  pendiente en borrado total.
+- RF-048 y RF-049 cerrados como implementados con confirmaciones,
+  recuperacion/deshacer y borrado reforzado mediante `BORRAR`.
 - Pruebas agregadas para confirmacion de eliminacion de clases,
   selector/escritura de archivo nativo, scheduler nativo de eventos, migracion
   SQLite y smoke test FFI de escritorio.
